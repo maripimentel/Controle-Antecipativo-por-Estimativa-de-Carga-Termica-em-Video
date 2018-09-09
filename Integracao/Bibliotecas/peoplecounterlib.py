@@ -13,13 +13,23 @@ import personlib
 import time
 import sys
 
-def (cnt_up, cnt_down, name, videoName):
+def (cnt_up, cnt_down, name):
 
     # Result's path on Raspberry Pi
     path = '../../../Resultados/'+name
 
     # Open video
-    cap = cv2.VideoCapture(video_name + '.avi') #Open video file
+
+    # initialize the camera and grab a reference to the raw camera capture
+    camera = PiCamera()
+    camera.resolution = (640, 480)
+    camera.framerate = 32
+    rawCapture = PiRGBArray(camera, size=(640, 480))
+    #cap = cv2.VideoCapture(video_name + '.avi') #Open video file
+
+    # allow the camera to warmup
+    time.sleep(0.1)
+ 
 
     # Calculate the threshold to define if it is or not a person
     w = cap.get(3)
@@ -73,7 +83,7 @@ def (cnt_up, cnt_down, name, videoName):
     pid = 1
 
     cont = 1
-    while(cap.isOpened()):
+    for cap in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
     ##Para um vídeo contínuo camera.capture_continuous(rawCapture, format="bgr", use_video_port=True)
         
         #Read a frame
