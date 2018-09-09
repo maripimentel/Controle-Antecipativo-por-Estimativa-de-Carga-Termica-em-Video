@@ -15,24 +15,21 @@ import sys
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 
-def PeopleCounter(cnt_up, cnt_down, name):
+def PeopleCounter(cnt_up, cnt_down, name, saveResults):
 
-    # Result's path on Raspberry Pi
-    path = '../../../Resultados/'+name
-    video_name = name
+    if(saveResults):
+        # Result's path on Raspberry Pi
+        path = '../../Resultados/'+name
+        video_name = name
 
-    # Open video
-
-    # initialize the camera and grab a reference to the raw camera capture
+    # Initialize the camera and grab a reference to the raw camera capture
     camera = PiCamera()
     camera.resolution = (640, 480)
     camera.framerate = 32
     rawCapture = PiRGBArray(camera, size=(640, 480))
-    #cap = cv2.VideoCapture(1) #Open video file
 
-    # allow the camera to warmup
+    # Allow the camera to warmup
     time.sleep(0.1)
- 
 
     # Calculate the threshold to define if it is or not a person
     w = 640
@@ -72,7 +69,7 @@ def PeopleCounter(cnt_up, cnt_down, name):
     pts_L4 = np.array([pt7,pt8], np.int32)
     pts_L4 = pts_L4.reshape((-1,1,2))
 
-    #Creates the backgroud subtractor
+    # Creates the backgroud subtractor
     fgbg = cv2.createBackgroundSubtractorMOG2(detectShadows = True)
 
     # Necessary to apply filters and morfological transforms
@@ -87,9 +84,9 @@ def PeopleCounter(cnt_up, cnt_down, name):
 
     cont = 1
     for cap in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
-    ##Para um vídeo contínuo camera.capture_continuous(rawCapture, format="bgr", use_video_port=True)
+    # Para um vídeo contínuo camera.capture_continuous(rawCapture, format="bgr", use_video_port=True)
         
-        #Read a frame
+        # Read a frame
         frame = cap.array
 
         for i in persons:
@@ -99,14 +96,15 @@ def PeopleCounter(cnt_up, cnt_down, name):
         #      PRÉ-PROCESS      #
         #########################
         
-        #Apply background subtraction
+        # Apply background subtraction
         fgmask = fgbg.apply(frame)
         fgmask2 = fgbg.apply(frame)
         
-        name_img_original = path + '/' + video_name + '_' + str(cont) + '_original.jpg'
-        name_img_sub = path + '/' + video_name + '_' + str(cont) + '_subtractor.jpg'
-        cv2.imwrite(name_img_original,frame)
-        cv2.imwrite(name_img_sub,fgmask)
+        if(saveResults):
+            name_img_original = path + '/' + video_name + '_' + str(cont) + '_original.jpg'
+            name_img_sub = path + '/' + video_name + '_' + str(cont) + '_subtractor.jpg'
+            cv2.imwrite(name_img_original,frame)
+            cv2.imwrite(name_img_sub,fgmask)
 
         try:
             # Eliminate shadows
@@ -180,12 +178,16 @@ def PeopleCounter(cnt_up, cnt_down, name):
                 
                 cv2.circle(frame,(cx,cy), 5, (0,0,255), -1)
                 img = cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),2)
-                name_img_rectangle = path + '/' + video_name + '_' + str(cont) + '_rectangle.jpg'
-                cv2.imwrite(name_img_rectangle,img)
+
+                if (saveResults):
+                    name_img_rectangle = path + '/' + video_name + '_' + str(cont) + '_rectangle.jpg'
+                    cv2.imwrite(name_img_rectangle,img)
                 
                 img_contours = cv2.drawContours(frame, cnt, -1, (0,255,0), 3)
-                name_img_cont = path + '/' + video_name + '_' + str(cont) + '_contours.jpg'
-                cv2.imwrite(name_img_cont,img_contours)
+
+                if (saveResults):
+                    name_img_cont = path + '/' + video_name + '_' + str(cont) + '_contours.jpg'
+                    cv2.imwrite(name_img_cont,img_contours)
                 
         #############################
         #     DRAWING TRACKING      #
@@ -214,8 +216,10 @@ def PeopleCounter(cnt_up, cnt_down, name):
         cv2.putText(frame, str_down ,(10,90),font,0.5,(255,0,0),1,cv2.LINE_AA)
 
         cv2.imshow('Frame',frame)
-        name_img_final = path + '/' + video_name + '_' + str(cont) + '_final.jpg'
-        cv2.imwrite(name_img_final,frame)
+
+        if (saveResults):
+            name_img_final = path + '/' + video_name + '_' + str(cont) + '_final.jpg'
+            cv2.imwrite(name_img_final,frame)
         cont+=1
         #cv2.imshow('Mask',mask)    
         

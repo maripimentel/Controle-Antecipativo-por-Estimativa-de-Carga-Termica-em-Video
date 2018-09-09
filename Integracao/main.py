@@ -3,4 +3,10 @@ sys.path.insert(0, '/home/pi/Documents/Controle-Antecipativo-por-Estimativa-de-C
 
 from Bibliotecas.peoplecounterlib import PeopleCounter
 
-numberPeople = PeopleCounter(0, 0, 'teste')
+SAVE_RESULTS = True
+
+# Calculates inicial time
+timestamp = time.time()
+time = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+
+numberPeople = PeopleCounter(0, 0, (str)time, SAVE_RESULTS)
