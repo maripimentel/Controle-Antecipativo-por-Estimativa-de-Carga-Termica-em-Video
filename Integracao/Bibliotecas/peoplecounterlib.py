@@ -12,11 +12,14 @@ import cv2
 import personlib
 import time
 import sys
+from picamera.array import PiRGBArray
+from picamera import PiCamera
 
-def (cnt_up, cnt_down, name):
+def PeopleCounter(cnt_up, cnt_down, name):
 
     # Result's path on Raspberry Pi
     path = '../../../Resultados/'+name
+    video_name = name
 
     # Open video
 
@@ -25,15 +28,15 @@ def (cnt_up, cnt_down, name):
     camera.resolution = (640, 480)
     camera.framerate = 32
     rawCapture = PiRGBArray(camera, size=(640, 480))
-    #cap = cv2.VideoCapture(video_name + '.avi') #Open video file
+    #cap = cv2.VideoCapture(1) #Open video file
 
     # allow the camera to warmup
     time.sleep(0.1)
  
 
     # Calculate the threshold to define if it is or not a person
-    w = cap.get(3)
-    h = cap.get(4)
+    w = 640
+    h = 480
     frameArea = h*w
     areaTH = frameArea/250
     print ('Area Threshold', areaTH)
@@ -87,7 +90,7 @@ def (cnt_up, cnt_down, name):
     ##Para um vídeo contínuo camera.capture_continuous(rawCapture, format="bgr", use_video_port=True)
         
         #Read a frame
-        ret, frame = cap.read()
+        frame = cap.array
 
         for i in persons:
             i.age_one()
@@ -167,7 +170,7 @@ def (cnt_up, cnt_down, name):
                             persons.pop(index)
                             del i     
                     if new == True:
-                        p = MyPerson.MyPerson(pid,cx,cy, max_p_age)
+                        p = personlib.MyPerson(pid,cx,cy, max_p_age)
                         persons.append(p)
                         pid += 1
                         
@@ -220,11 +223,13 @@ def (cnt_up, cnt_down, name):
         k = cv2.waitKey(30) & 0xff
         if k == 27:
             break
+        rawCapture.truncate(0)
         
     #################
     #     CLEAR     #
     #################
-    cap.release()
+##    cap.release()
+    
     cv2.destroyAllWindows()
 
     return cnt_up - cont_down
