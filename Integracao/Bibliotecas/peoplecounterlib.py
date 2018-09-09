@@ -14,6 +14,7 @@ import time
 import sys
 from picamera.array import PiRGBArray
 from picamera import PiCamera
+import os
 
 def PeopleCounter(cnt_up, cnt_down, name, saveResults):
 
@@ -21,6 +22,9 @@ def PeopleCounter(cnt_up, cnt_down, name, saveResults):
         # Result's path on Raspberry Pi
         path = '../../Resultados/'+name
         video_name = name
+        
+        if not os.path.exists(path):
+            os.makedirs(path)
 
     # Initialize the camera and grab a reference to the raw camera capture
     camera = PiCamera()
@@ -103,6 +107,8 @@ def PeopleCounter(cnt_up, cnt_down, name, saveResults):
         if(saveResults):
             name_img_original = path + '/' + video_name + '_' + str(cont) + '_original.jpg'
             name_img_sub = path + '/' + video_name + '_' + str(cont) + '_subtractor.jpg'
+            print(name_img_original)
+            input()
             cv2.imwrite(name_img_original,frame)
             cv2.imwrite(name_img_sub,fgmask)
 
@@ -236,4 +242,4 @@ def PeopleCounter(cnt_up, cnt_down, name, saveResults):
     
     cv2.destroyAllWindows()
 
-    return cnt_up - cont_down
+    return cnt_up - cnt_down
