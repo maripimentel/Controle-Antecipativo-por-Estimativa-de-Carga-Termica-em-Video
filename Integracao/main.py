@@ -20,7 +20,7 @@ def data():
 	global database
 	while runEvent.is_set():
 		numPeople = settings.cntUp-settings.cntDown
-		print(TAG+'Numero de Pessoas: '+str(numberPeople))
+		print(TAG+'Numero de Pessoas: '+str(numPeople))
 
 		# Calculates inicial time
 		timestamp = time.time()
