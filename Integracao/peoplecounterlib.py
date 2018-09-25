@@ -71,7 +71,6 @@ def PeopleCounter(cnt_up, cnt_down, name, saveResults):
     kernelOp2 = np.ones((5,5),np.uint8)
     kernelCl = np.ones((11,11),np.uint8)
 
-    font = cv2.FONT_HERSHEY_SIMPLEX
     persons = []
     max_p_age = 5
     pid = 1
@@ -169,53 +168,16 @@ def PeopleCounter(cnt_up, cnt_down, name, saveResults):
                 ##############################
                 #      DRAWING PERSONS       #
                 ##############################
-                
-                cv2.circle(frame,(cx,cy), 5, (0,0,255), -1)
-                img = cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),2)
 
-                if (saveResults):
-                    name_img_rectangle = path + '/' + video_name + '_' + str(cont) + '_rectangle.jpg'
-                    cv2.imwrite(name_img_rectangle,img)
-                
-                img_contours = cv2.drawContours(frame, cnt, -1, (0,255,0), 3)
-
-                if (saveResults):
-                    name_img_cont = path + '/' + video_name + '_' + str(cont) + '_contours.jpg'
-                    cv2.imwrite(name_img_cont,img_contours)
+                drawPersons(frame, cx, cy, x, y, w, h, saveResults, path, video_name, cnt)
                 
         #############################
         #     DRAWING TRACKING      #
         #############################
-        for i in persons:
-    ##        if len(i.getTracks()) >= 2:
-    ##            pts = np.array(i.getTracks(), np.int32)
-    ##            pts = pts.reshape((-1,1,2))
-    ##            frame = cv2.polylines(frame,[pts],False,i.getRGB())
-    ##        if i.getId() == 9:
-    ##            print str(i.getX()), ',', str(i.getY())
-            cv2.putText(frame, str(i.getId()),(i.getX(),i.getY()),font,0.3,i.getRGB(),1,cv2.LINE_AA)
-            
-        #################
-        #     IMAGES    #
-        #################
-        str_up = 'UP: '+ str(cnt_up)
-        str_down = 'DOWN: '+ str(cnt_down)
-        frame = cv2.polylines(frame,[pts_L1],False,line_down_color,thickness=2)
-        frame = cv2.polylines(frame,[pts_L2],False,line_up_color,thickness=2)
-        frame = cv2.polylines(frame,[pts_L3],False,(255,255,255),thickness=1)
-        frame = cv2.polylines(frame,[pts_L4],False,(255,255,255),thickness=1)
-        cv2.putText(frame, str_up ,(10,40),font,0.5,(255,255,255),2,cv2.LINE_AA)
-        cv2.putText(frame, str_up ,(10,40),font,0.5,(0,0,255),1,cv2.LINE_AA)
-        cv2.putText(frame, str_down ,(10,90),font,0.5,(255,255,255),2,cv2.LINE_AA)
-        cv2.putText(frame, str_down ,(10,90),font,0.5,(255,0,0),1,cv2.LINE_AA)
 
-        cv2.imshow('Frame',frame)
-
-        if (saveResults):
-            name_img_final = path + '/' + video_name + '_' + str(cont) + '_final.jpg'
-            cv2.imwrite(name_img_final,frame)
-        cont+=1
-        #cv2.imshow('Mask',mask)    
+        drawTrack(frame, persons, cnt_up, cnt_down, pts_L1, pts_L2, pts_L3, pts_L4, saveResults, path, video_name, cont)
+        
+        cont+=1 
         
         #If ESC is pressed, stop
         k = cv2.waitKey(30) & 0xff
@@ -261,3 +223,44 @@ def calculateLinePoints(pt1, pt2, pt3, pt4, pt5, pt6, pt7, pt8):
     pts_L4 = pts_L4.reshape((-1,1,2))
 
     return (pts_L1, pts_L2, pts_L3, pts_L4)
+
+def drawTrack(frame, persons, cnt_up, cnt_down, pts_L1, pts_L2, pts_L3, pts_L4, saveResults, path, video_name, cont):
+    font = cv2.FONT_HERSHEY_SIMPLEX
+
+    for i in persons:
+        cv2.putText(frame, str(i.getId()),(i.getX(),i.getY()),font,0.3,i.getRGB(),1,cv2.LINE_AA)
+            
+    #################
+    #     IMAGES    #
+    #################
+    str_up = 'UP: '+ str(cnt_up)
+    str_down = 'DOWN: '+ str(cnt_down)
+    frame = cv2.polylines(frame,[pts_L1],False,line_down_color,thickness=2)
+    frame = cv2.polylines(frame,[pts_L2],False,line_up_color,thickness=2)
+    frame = cv2.polylines(frame,[pts_L3],False,(255,255,255),thickness=1)
+    frame = cv2.polylines(frame,[pts_L4],False,(255,255,255),thickness=1)
+    cv2.putText(frame, str_up ,(10,40),font,0.5,(255,255,255),2,cv2.LINE_AA)
+    cv2.putText(frame, str_up ,(10,40),font,0.5,(0,0,255),1,cv2.LINE_AA)
+    cv2.putText(frame, str_down ,(10,90),font,0.5,(255,255,255),2,cv2.LINE_AA)
+    cv2.putText(frame, str_down ,(10,90),font,0.5,(255,0,0),1,cv2.LINE_AA)
+
+    cv2.imshow('Frame',frame)
+
+    if (saveResults):
+        name_img_final = path + '/' + video_name + '_' + str(cont) + '_final.jpg'
+        cv2.imwrite(name_img_final,frame)
+
+def drawPersons(frame, cx, cy, x, y, w, h, saveResults, path, video_name, cnt):
+    cv2.circle(frame,(cx,cy), 5, (0,0,255), -1)
+    img = cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),2)
+
+    if (saveResults):
+        name_img_rectangle = path + '/' + video_name + '_' + str(cont) + '_rectangle.jpg'
+        cv2.imwrite(name_img_rectangle,img)
+    
+    img_contours = cv2.drawContours(frame, cnt, -1, (0,255,0), 3)
+
+    if (saveResults):
+        name_img_cont = path + '/' + video_name + '_' + str(cont) + '_contours.jpg'
+        cv2.imwrite(name_img_cont,img_contours)
+
