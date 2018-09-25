@@ -175,7 +175,7 @@ def PeopleCounter(cnt_up, cnt_down, name, saveResults):
         #     DRAWING TRACKING      #
         #############################
 
-        drawTrack(frame, persons, cnt_up, cnt_down, pts_L1, pts_L2, pts_L3, pts_L4, saveResults, path, video_name, cont)
+        drawTrack(frame, persons, cnt_up, cnt_down, line_down_color, line_up_color, pts_L1, pts_L2, pts_L3, pts_L4, saveResults, path, video_name, cont)
         
         cont+=1 
         
@@ -224,7 +224,7 @@ def calculateLinePoints(pt1, pt2, pt3, pt4, pt5, pt6, pt7, pt8):
 
     return (pts_L1, pts_L2, pts_L3, pts_L4)
 
-def drawTrack(frame, persons, cnt_up, cnt_down, pts_L1, pts_L2, pts_L3, pts_L4, saveResults, path, video_name, cont):
+def drawTrack(frame, persons, cnt_up, cnt_down, line_down_color, line_up_color, pts_L1, pts_L2, pts_L3, pts_L4, saveResults, path, video_name, cont):
     font = cv2.FONT_HERSHEY_SIMPLEX
 
     for i in persons:
