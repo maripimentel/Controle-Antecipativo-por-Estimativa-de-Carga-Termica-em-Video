@@ -48,7 +48,7 @@ try:
 	while(True):
 		time.sleep(0.3)
 except KeyboardInterrupt:
-	data.clear()
+	runEvent.clear()
     threadPeopleCounter.join()
     threadPeopleData.join()
 
