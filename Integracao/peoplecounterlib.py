@@ -20,7 +20,7 @@ from cameralib import *
 import os
 
 def PeopleCounter(cnt_up, cnt_down, name, saveResults):
-    TAG = '(peoplecouterlib.PeopleCounter) '
+    TAG = '(peoplecouterlib) '
 
     if(saveResults):
         # Result's path on Raspberry Pi
@@ -92,30 +92,14 @@ def PeopleCounter(cnt_up, cnt_down, name, saveResults):
         # Apply background subtraction
         fgmask = fgbg.apply(frame)
         fgmask2 = fgbg.apply(frame)
-        
-        if(saveResults):
-            name_img_original = path + '/' + video_name + '_' + str(cont) + '_original.jpg'
-            name_img_sub = path + '/' + video_name + '_' + str(cont) + '_subtractor.jpg'
-            cv2.imwrite(name_img_original,frame)
-            cv2.imwrite(name_img_sub,fgmask)
+
+        saveSubtractorImages(saveResults, path, video_name, cont, frame, fgmask)
 
         try:
-            # Eliminate shadows
-            ret,imBin= cv2.threshold(fgmask,200,255,cv2.THRESH_BINARY)
-            ret,imBin2 = cv2.threshold(fgmask2,200,255,cv2.THRESH_BINARY)
-            # Eliminate noise
-            mask = cv2.morphologyEx(imBin, cv2.MORPH_OPEN, kernelOp)
-            mask2 = cv2.morphologyEx(imBin2, cv2.MORPH_OPEN, kernelOp)
-            # Join white parts
-            mask =  cv2.morphologyEx(mask , cv2.MORPH_CLOSE, kernelCl)
-            mask2 = cv2.morphologyEx(mask2, cv2.MORPH_CLOSE, kernelCl)
-            
-            name_img_transf = path + '/' + video_name + '_' + str(cont) + '_transformation.jpg'
-            cv2.imwrite(name_img_transf,mask)
+            (mask, mask2) = preProcess(fgmask, fgmask2, saveResults, path, video_name, cont)
         except:
-            print('EOF')
-            print ('UP:',cnt_up)
-            print ('DOWN:',cnt_down)
+            print (TAG+'para cima: ',cnt_up)
+            print (TAG+'para baixo: ',cnt_down)
             break
         
         #################
@@ -139,42 +123,18 @@ def PeopleCounter(cnt_up, cnt_down, name, saveResults):
                 new = True
                 if cy in range(up_limit,down_limit):
                     for i in persons:
-                        if abs(cx-i.getX()) <= w and abs(cy-i.getY()) <= h:
-                            # Close to a person already detected
-                            new = False
-                            i.updateCoords(cx,cy)   #Refresh
-                            if i.going_UP(line_down,line_up) == True:
-                                cnt_up += 1;
-                                print("ID:",i.getId(),'crossed going up at',time.strftime("%c"))
-                            elif i.going_DOWN(line_down,line_up) == True:
-                                cnt_down += 1;
-                                print("ID:",i.getId(),'crossed going down at',time.strftime("%c"))
-                            break
-                        if i.getState() == '1':
-                            if i.getDir() == 'down' and i.getY() > down_limit:
-                                i.setDone()
-                            elif i.getDir() == 'up' and i.getY() < up_limit:
-                                i.setDone()
-                        if i.timedOut():
-                            # If it reaches timeout, remove person from list
-                            index = persons.index(i)
-                            persons.pop(index)
-                            del i     
+                        (i, persons, cnt_up, cnt_down) = defineDirection(i, cx, cy, w, h, new, cnt_up, cnt_down, line_up, line_down, up_limit, down_limit, persons, TAG)
+                            
                     if new == True:
                         p = personlib.MyPerson(pid,cx,cy, max_p_age)
                         persons.append(p)
                         pid += 1
                         
-                ##############################
-                #      DRAWING PERSONS       #
-                ##############################
-
+                
+                # Drawing persons
                 drawPersons(frame, cx, cy, x, y, w, h, saveResults, path, video_name, cnt)
                 
-        #############################
-        #     DRAWING TRACKING      #
-        #############################
-
+        # Drawing tracking
         drawTrack(frame, persons, cnt_up, cnt_down, line_down_color, line_up_color, pts_L1, pts_L2, pts_L3, pts_L4, saveResults, path, video_name, cont)
         
         cont+=1 
@@ -263,4 +223,55 @@ def drawPersons(frame, cx, cy, x, y, w, h, saveResults, path, video_name, cnt):
     if (saveResults):
         name_img_cont = path + '/' + video_name + '_' + str(cont) + '_contours.jpg'
         cv2.imwrite(name_img_cont,img_contours)
+
+def saveSubtractorImages(saveResults, path, video_name, cont, frame, fgmask)
+    if(saveResults):
+        name_img_original = path + '/' + video_name + '_' + str(cont) + '_original.jpg'
+        name_img_sub = path + '/' + video_name + '_' + str(cont) + '_subtractor.jpg'
+        cv2.imwrite(name_img_original,frame)
+        cv2.imwrite(name_img_sub,fgmask)
+
+def preProcess(fgmask, fgmask2, saveResults, path, video_name, cont)
+
+    # Eliminate shadows
+    ret,imBin= cv2.threshold(fgmask,200,255,cv2.THRESH_BINARY)
+    ret,imBin2 = cv2.threshold(fgmask2,200,255,cv2.THRESH_BINARY)
+
+    # Eliminate noise
+    mask = cv2.morphologyEx(imBin, cv2.MORPH_OPEN, kernelOp)
+    mask2 = cv2.morphologyEx(imBin2, cv2.MORPH_OPEN, kernelOp)
+
+    # Join white parts
+    mask =  cv2.morphologyEx(mask , cv2.MORPH_CLOSE, kernelCl)
+    mask2 = cv2.morphologyEx(mask2, cv2.MORPH_CLOSE, kernelCl)
+    
+    name_img_transf = path + '/' + video_name + '_' + str(cont) + '_transformation.jpg'
+    cv2.imwrite(name_img_transf,mask)
+
+    return (mask, mask2)
+
+def  defineDirection(i, cx, cy, w, h, new, cnt_up, cnt_down, line_up, line_down, up_limit, down_limit, persons, TAG)
+    if abs(cx-i.getX()) <= w and abs(cy-i.getY()) <= h:
+        # Close to a person already detected
+        new = False
+        i.updateCoords(cx,cy)   #Refresh
+        if i.going_UP(line_down,line_up) == True:
+            cnt_up += 1;
+            print(TAG+str(i.getId()) +' foi para cima aos '+time.strftime("%c"))
+        elif i.going_DOWN(line_down,line_up) == True:
+            cnt_down += 1;
+            print(TAG+str(i.getId()) +' foi para baixo aos '+time.strftime("%c"))
+        break
+    if i.getState() == '1':
+        if i.getDir() == 'down' and i.getY() > down_limit:
+            i.setDone()
+        elif i.getDir() == 'up' and i.getY() < up_limit:
+            i.setDone()
+    if i.timedOut():
+        # If it reaches timeout, remove person from list
+        index = persons.index(i)
+        persons.pop(index)
+        del i    
+
+    return (i, persons, cnt_up, cnt_down)
 
