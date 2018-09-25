@@ -124,6 +124,11 @@ def PeopleCounter(cnt_up, cnt_down, name, saveResults):
                 if cy in range(up_limit,down_limit):
                     for i in persons:
                         (i, persons, cnt_up, cnt_down, stopLoop, new) = defineDirection(i, cx, cy, w, h, new, cnt_up, cnt_down, line_up, line_down, up_limit, down_limit, persons, TAG)
+                        if i.timedOut():
+                            # If it reaches timeout, remove person from list
+                            index = persons.index(i)
+                            persons.pop(index)
+                            del i  
                         if (stopLoop):
                             break
 
@@ -273,12 +278,7 @@ def  defineDirection(i, cx, cy, w, h, new, cnt_up, cnt_down, line_up, line_down,
         if i.getDir() == 'down' and i.getY() > down_limit:
             i.setDone()
         elif i.getDir() == 'up' and i.getY() < up_limit:
-            i.setDone()
-    if i.timedOut():
-        # If it reaches timeout, remove person from list
-        index = persons.index(i)
-        persons.pop(index)
-        del i    
+            i.setDone()  
 
     return (i, persons, cnt_up, cnt_down, stopLoop, new)
 
