@@ -15,8 +15,9 @@ import time
 import datetime
 
 def logs():
-	print(TAG+'Final: '+str(settings.cntUp-settings.cntDown))
-	time.sleep(0.3)
+	while(True):
+		print(TAG+'Final: '+str(settings.cntUp-settings.cntDown))
+		time.sleep(0.3)
 
 def counter():
 	global SAVE_RESULTS
