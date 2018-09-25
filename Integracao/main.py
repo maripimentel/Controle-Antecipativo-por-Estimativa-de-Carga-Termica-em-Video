@@ -1,6 +1,6 @@
 ##Controle Antecipativo por Estimativa de Carga Termica em Video
 ##Codigo Principal
-##Trabalho de Graduação
+##Trabalho de Graduacao
 ##Versao 1
 ##Autores:
 ##    Alexandre Saran

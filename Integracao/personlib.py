@@ -1,11 +1,13 @@
 ##Controle Antecipativo por Estimativa de Carga Termica em Video
 ##Classe para Representar uma Pessoa
-##Trabalho de Graduação
-##Versão 1
+##Trabalho de Graduacao
+##Versao 1
 ##Autores:
 ##    Alexandre Saran
 ##    Mariana Pimentel
 ##Baseado no Material de: Federico Mejia
+
+# coding=utf-8
 
 from random import randint
 

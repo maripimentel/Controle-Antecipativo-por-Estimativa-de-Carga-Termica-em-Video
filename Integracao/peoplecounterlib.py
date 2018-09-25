@@ -1,11 +1,13 @@
 ##Controle Antecipativo por Estimativa de Carga Termica em Video
-##Biblioteca para Identificação e Contagem do Número de Pessoas por Vídeo
-##Trabalho de Graduação
+##Biblioteca para Identificacao e Contagem do Numero de Pessoas por Video
+##Trabalho de Graduacao
 ##Versao 9
 ##Autores:
 ##    Alexandre Saran
 ##    Mariana Pimentel
 ##Baseado no Material de: Federico Mejia
+
+# coding=utf-8
 
 import numpy as np
 import cv2
@@ -88,7 +90,7 @@ def PeopleCounter(cnt_up, cnt_down, name, saveResults):
 
     cont = 1
     for cap in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
-    # Para um vídeo contínuo camera.capture_continuous(rawCapture, format="bgr", use_video_port=True)
+    # Para um video continuo camera.capture_continuous(rawCapture, format="bgr", use_video_port=True)
         
         # Read a frame
         frame = cap.array
@@ -97,7 +99,7 @@ def PeopleCounter(cnt_up, cnt_down, name, saveResults):
             i.age_one()
             
         #########################
-        #      PRÉ-PROCESS      #
+        #      PRE-PROCESS      #
         #########################
         
         # Apply background subtraction
