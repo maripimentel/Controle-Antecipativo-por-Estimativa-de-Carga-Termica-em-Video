@@ -107,8 +107,6 @@ def PeopleCounter(cnt_up, cnt_down, name, saveResults):
         if(saveResults):
             name_img_original = path + '/' + video_name + '_' + str(cont) + '_original.jpg'
             name_img_sub = path + '/' + video_name + '_' + str(cont) + '_subtractor.jpg'
-            print(name_img_original)
-            input()
             cv2.imwrite(name_img_original,frame)
             cv2.imwrite(name_img_sub,fgmask)
 
