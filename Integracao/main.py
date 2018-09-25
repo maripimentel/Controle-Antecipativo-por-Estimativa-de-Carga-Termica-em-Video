@@ -17,7 +17,10 @@ import datetime
 
 def data():
 	global runEvent
-	global database
+	
+	database = InicializeDatabase(str(timeHour))
+	CreateTable(database)
+
 	while runEvent.is_set():
 		numPeople = settings.cntUp-settings.cntDown
 		print(TAG+'Numero de Pessoas: '+str(numPeople))
@@ -43,9 +46,6 @@ timestamp = time.time()
 timeHour = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
 
 print(TAG+'data/hora: '+ str(timeHour))
-
-database = InicializeDatabase(str(timeHour))
-CreateTable(database)
 
 settings.init()
 
