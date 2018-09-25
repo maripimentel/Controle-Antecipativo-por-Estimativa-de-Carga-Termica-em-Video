@@ -1,7 +1,12 @@
-import sys
-sys.path.insert(0, '/home/pi/Documents/Controle-Antecipativo-por-Estimativa-de-Carga-Termica-em-Video/Integracao/Bibliotecas')
+##Controle Antecipativo por Estimativa de Carga Termica em Video
+##Codigo Principal
+##Trabalho de Graduação
+##Versao 1
+##Autores:
+##    Alexandre Saran
+##    Mariana Pimentel
 
-from Bibliotecas.peoplecounterlib import PeopleCounter
+from peoplecounterlib import *
 import time
 import datetime
 
