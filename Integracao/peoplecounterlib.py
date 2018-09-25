@@ -96,7 +96,7 @@ def PeopleCounter(cnt_up, cnt_down, name, saveResults):
         saveSubtractorImages(saveResults, path, video_name, cont, frame, fgmask)
 
         try:
-            (mask, mask2) = preProcess(fgmask, fgmask2, saveResults, path, video_name, cont)
+            (mask, mask2) = preProcess(fgmask, fgmask2, saveResults, path, video_name, cont, kernelOp, kernelCl)
         except:
             print (TAG+'para cima: ',cnt_up)
             print (TAG+'para baixo: ',cnt_down)
@@ -233,7 +233,7 @@ def saveSubtractorImages(saveResults, path, video_name, cont, frame, fgmask):
         cv2.imwrite(name_img_original,frame)
         cv2.imwrite(name_img_sub,fgmask)
 
-def preProcess(fgmask, fgmask2, saveResults, path, video_name, cont):
+def preProcess(fgmask, fgmask2, saveResults, path, video_name, cont, kernelOp, kernelCl):
 
     # Eliminate shadows
     ret,imBin= cv2.threshold(fgmask,200,255,cv2.THRESH_BINARY)
@@ -247,8 +247,9 @@ def preProcess(fgmask, fgmask2, saveResults, path, video_name, cont):
     mask =  cv2.morphologyEx(mask , cv2.MORPH_CLOSE, kernelCl)
     mask2 = cv2.morphologyEx(mask2, cv2.MORPH_CLOSE, kernelCl)
     
-    name_img_transf = path + '/' + video_name + '_' + str(cont) + '_transformation.jpg'
-    cv2.imwrite(name_img_transf,mask)
+    if(saveResults):
+        name_img_transf = path + '/' + video_name + '_' + str(cont) + '_transformation.jpg'
+        cv2.imwrite(name_img_transf,mask)
 
     return (mask, mask2)
 
