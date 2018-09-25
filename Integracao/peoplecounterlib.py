@@ -10,6 +10,7 @@
 # coding=utf-8
 
 from cameralib import *
+import settings
 import numpy as np
 import cv2
 import personlib
@@ -77,7 +78,8 @@ def PeopleCounter(cntUp, cntDown, name, saveResults):
     for cap in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
     # Para um video continuo camera.capture_continuous(rawCapture, format="bgr", use_video_port=True)
 
-
+        settings.cntDown = cntDown
+        settings.cntUp = cntUp
         
         # Read a frame
         frame = cap.array
