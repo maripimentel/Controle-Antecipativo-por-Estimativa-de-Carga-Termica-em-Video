@@ -50,8 +50,8 @@ try:
 		time.sleep(0.3)
 except KeyboardInterrupt:
 	runEvent.clear()
-    threadPeopleCounter.join()
-    threadPeopleData.join()
+	threadPeopleCounter.join()
+	threadPeopleData.join()
 
 
 # print(TAG+'Final2: '+str(numberPeople))
