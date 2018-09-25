@@ -224,14 +224,14 @@ def drawPersons(frame, cx, cy, x, y, w, h, saveResults, path, video_name, cnt):
         name_img_cont = path + '/' + video_name + '_' + str(cont) + '_contours.jpg'
         cv2.imwrite(name_img_cont,img_contours)
 
-def saveSubtractorImages(saveResults, path, video_name, cont, frame, fgmask)
+def saveSubtractorImages(saveResults, path, video_name, cont, frame, fgmask):
     if(saveResults):
         name_img_original = path + '/' + video_name + '_' + str(cont) + '_original.jpg'
         name_img_sub = path + '/' + video_name + '_' + str(cont) + '_subtractor.jpg'
         cv2.imwrite(name_img_original,frame)
         cv2.imwrite(name_img_sub,fgmask)
 
-def preProcess(fgmask, fgmask2, saveResults, path, video_name, cont)
+def preProcess(fgmask, fgmask2, saveResults, path, video_name, cont):
 
     # Eliminate shadows
     ret,imBin= cv2.threshold(fgmask,200,255,cv2.THRESH_BINARY)
@@ -250,7 +250,7 @@ def preProcess(fgmask, fgmask2, saveResults, path, video_name, cont)
 
     return (mask, mask2)
 
-def  defineDirection(i, cx, cy, w, h, new, cnt_up, cnt_down, line_up, line_down, up_limit, down_limit, persons, TAG)
+def  defineDirection(i, cx, cy, w, h, new, cnt_up, cnt_down, line_up, line_down, up_limit, down_limit, persons, TAG):
     if abs(cx-i.getX()) <= w and abs(cy-i.getY()) <= h:
         # Close to a person already detected
         new = False
