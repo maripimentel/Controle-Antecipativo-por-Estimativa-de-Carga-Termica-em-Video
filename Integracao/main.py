@@ -24,7 +24,7 @@ def data(runEvent):
         threadPeopleCounter.join()
         threadPeopleData.join()
 
-def counter(timeHour, SAVE_RESULTS):
+def counter(timeHour, SAVE_RESULTS, runEvent):
 	numberPeople = PeopleCounter(0, 0, str(timeHour), SAVE_RESULTS)
 
 SAVE_RESULTS = True
