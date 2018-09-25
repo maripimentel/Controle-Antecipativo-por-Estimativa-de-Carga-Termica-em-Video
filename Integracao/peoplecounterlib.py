@@ -161,7 +161,7 @@ def PeopleCounter(cntUp, cntDown, name, saveResults):
     
     cv2.destroyAllWindows()
 
-    return cntUp - cntDown
+    # return cntUp - cntDown
 
 def calculatePoints(w, lineUp, lineDown, upLimit, downLimit):
     pt1 =  [0, lineDown];
