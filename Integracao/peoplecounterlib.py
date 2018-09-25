@@ -14,7 +14,7 @@ import cv2
 import personlib
 import time
 import sys
-from picamera.array import PiRGBArray
+
 from picamera import PiCamera
 from cameralib import *
 import os
@@ -60,7 +60,7 @@ def PeopleCounter(cnt_up, cnt_down, name, saveResults):
     line_down_color = (255,0,0)
     line_up_color = (0,0,255)
 
-    (pt1, pt2, pt3, pt4, pt5, pt6, pt7, pt8) = calculatePoints(w, line_up, line_down)
+    (pt1, pt2, pt3, pt4, pt5, pt6, pt7, pt8) = calculatePoints(w, line_up, line_down, up_limit, down_limit)
     (pts_L1, pts_L2, pts_L3, pts_L4) = calculateLinePoints(pt1, pt2, pt3, pt4, pt5, pt6, pt7, pt8)
 
     # Creates the backgroud subtractor
@@ -232,7 +232,7 @@ def PeopleCounter(cnt_up, cnt_down, name, saveResults):
 
     return cnt_up - cnt_down
 
-def calculatePoints(w, line_up, line_down):
+def calculatePoints(w, line_up, line_down, up_limit, down_limit):
     pt1 =  [0, line_down];
     pt2 =  [w, line_down];
 
