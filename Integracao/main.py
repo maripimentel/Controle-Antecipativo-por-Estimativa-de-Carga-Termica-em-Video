@@ -19,7 +19,9 @@ def logs():
 	time.sleep(0.3)
 
 def counter():
-	numberPeople = PeopleCounter(0, 0, str(time), SAVE_RESULTS)
+	global SAVE_RESULTS
+	global timeHour
+	numberPeople = PeopleCounter(0, 0, str(timeHour), SAVE_RESULTS)
 
 SAVE_RESULTS = True
 
@@ -27,9 +29,9 @@ TAG = '(main) '
 
 # Calculates inicial time
 timestamp = time.time()
-time = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+timeHour = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
 
-print(TAG+'data/hora: '+ str(time))
+print(TAG+'data/hora: '+ str(timeHour))
 
 settings.init()
 
