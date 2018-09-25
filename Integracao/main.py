@@ -42,10 +42,10 @@ settings.init()
 runEvent = threading.Event()
 runEvent.set()
 
-threadPeopleCounter = threading.Thread(name='people_counter', target=counter, args = (runEvent))
+threadPeopleCounter = threading.Thread(name='people_counter', target=counter, args = (str(timeHour), SAVE_RESULTS, runEvent))
 threadPeopleCounter.start()
 # numberPeople = PeopleCounter(0, 0, str(time), SAVE_RESULTS)
-threadPeopleData = threading.Thread(name='data', target=data, args = (str(timeHour), SAVE_RESULTS, runEvent))
+threadPeopleData = threading.Thread(name='data', target=data, args = (runEvent))
 threadPeopleData.start()
 
 
