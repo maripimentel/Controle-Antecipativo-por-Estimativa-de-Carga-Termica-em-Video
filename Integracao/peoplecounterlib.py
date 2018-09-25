@@ -253,10 +253,10 @@ def preProcess(fgmask, fgmask2, saveResults, path, video_name, cont, kernelOp, k
 
     return (mask, mask2)
 
-def  defineDirection(person, cx, cy, w, h, new, cnt_up, cnt_down, line_up, line_down, up_limit, down_limit, persons, TAG):
+def  defineDirection(i, cx, cy, w, h, new, cnt_up, cnt_down, line_up, line_down, up_limit, down_limit, persons, TAG):
     stopLoop = False
 
-    i = person
+    print ('I: '+str(i))
 
     if abs(cx-i.getX()) <= w and abs(cy-i.getY()) <= h:
         # Close to a person already detected
