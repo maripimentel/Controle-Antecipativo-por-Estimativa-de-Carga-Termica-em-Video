@@ -48,15 +48,9 @@ try:
 	while(True):
 		time.sleep(0.3)
 except KeyboardInterrupt:
-<<<<<<< HEAD
-	data.clear()
-	threadPeopleCounter.join()
-	threadPeopleData.join()
-=======
 	runEvent.clear()
     threadPeopleCounter.join()
     threadPeopleData.join()
->>>>>>> ef1b6404b1cfeb213311a0175d97ec14f4802a67
 
 
 # print(TAG+'Final2: '+str(numberPeople))
