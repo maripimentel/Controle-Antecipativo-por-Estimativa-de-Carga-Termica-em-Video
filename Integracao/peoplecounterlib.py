@@ -123,7 +123,7 @@ def PeopleCounter(cnt_up, cnt_down, name, saveResults):
                 new = True
                 if cy in range(up_limit,down_limit):
                     for i in persons:
-                        (i, persons, cnt_up, cnt_down, stopLoop) = defineDirection(i, cx, cy, w, h, new, cnt_up, cnt_down, line_up, line_down, up_limit, down_limit, persons, TAG)
+                        (i, persons, cnt_up, cnt_down, stopLoop, new) = defineDirection(i, cx, cy, w, h, new, cnt_up, cnt_down, line_up, line_down, up_limit, down_limit, persons, TAG)
                         if (stopLoop):
                             break
 
@@ -254,6 +254,7 @@ def preProcess(fgmask, fgmask2, saveResults, path, video_name, cont):
 
 def  defineDirection(i, cx, cy, w, h, new, cnt_up, cnt_down, line_up, line_down, up_limit, down_limit, persons, TAG):
     stopLoop = False
+
     if abs(cx-i.getX()) <= w and abs(cy-i.getY()) <= h:
         # Close to a person already detected
         new = False
@@ -276,5 +277,5 @@ def  defineDirection(i, cx, cy, w, h, new, cnt_up, cnt_down, line_up, line_down,
         persons.pop(index)
         del i    
 
-    return (i, persons, cnt_up, cnt_down, stopLoop)
+    return (i, persons, cnt_up, cnt_down, stopLoop, new)
 
