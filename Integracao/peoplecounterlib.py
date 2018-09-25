@@ -98,8 +98,8 @@ def PeopleCounter(cnt_up, cnt_down, name, saveResults):
         try:
             (mask, mask2) = preProcess(fgmask, fgmask2, saveResults, path, video_name, cont, kernelOp, kernelCl)
         except:
-            print (TAG+'para cima: ',cnt_up)
-            print (TAG+'para baixo: ',cnt_down)
+            print (TAG+'para cima: '+str(cnt_up))
+            print (TAG+'para baixo: '+str(cnt_down))
             break
         
         #################
@@ -134,7 +134,7 @@ def PeopleCounter(cnt_up, cnt_down, name, saveResults):
                         
                 
                 # Drawing persons
-                drawPersons(frame, cx, cy, x, y, w, h, saveResults, path, video_name, cnt)
+                drawPersons(frame, cx, cy, x, y, w, h, saveResults, path, video_name, cont, cnt)
                 
         # Drawing tracking
         drawTrack(frame, persons, cnt_up, cnt_down, line_down_color, line_up_color, pts_L1, pts_L2, pts_L3, pts_L4, saveResults, path, video_name, cont)
@@ -212,7 +212,7 @@ def drawTrack(frame, persons, cnt_up, cnt_down, line_down_color, line_up_color, 
         name_img_final = path + '/' + video_name + '_' + str(cont) + '_final.jpg'
         cv2.imwrite(name_img_final,frame)
 
-def drawPersons(frame, cx, cy, x, y, w, h, saveResults, path, video_name, cnt):
+def drawPersons(frame, cx, cy, x, y, w, h, saveResults, path, video_name, cont, cnt):
     cv2.circle(frame,(cx,cy), 5, (0,0,255), -1)
     img = cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),2)
 
