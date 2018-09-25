@@ -1,7 +1,7 @@
 ##Controle Antecipativo por Estimativa de Carga Termica em Video
 ##Biblioteca para Identificacao e Contagem do Numero de Pessoas por Video
 ##Trabalho de Graduacao
-##Versao 9
+##Versao 10
 ##Autores:
 ##    Alexandre Saran
 ##    Mariana Pimentel
@@ -16,6 +16,7 @@ import time
 import sys
 from picamera.array import PiRGBArray
 from picamera import PiCamera
+from cameralib import *
 import os
 
 def PeopleCounter(cnt_up, cnt_down, name, saveResults):
@@ -33,10 +34,7 @@ def PeopleCounter(cnt_up, cnt_down, name, saveResults):
             os.makedirs(path)
 
     # Initialize the camera and grab a reference to the raw camera capture
-    camera = PiCamera()
-    camera.resolution = (640, 480)
-    camera.framerate = 32
-    rawCapture = PiRGBArray(camera, size=(640, 480))
+    (camera,rawCapture) = InicializeCamera()
 
     # Allow the camera to warmup
     time.sleep(0.1)
@@ -46,7 +44,7 @@ def PeopleCounter(cnt_up, cnt_down, name, saveResults):
     h = 480
     frameArea = h*w
     areaTH = frameArea/250
-    print ('Area Threshold', areaTH)
+    print(TAG+'threshold:'+str(areaTH))
 
     # Define up and down line
     line_up = int(2*(h/5))
@@ -57,27 +55,13 @@ def PeopleCounter(cnt_up, cnt_down, name, saveResults):
     down_limit = int(4*(h/5))
 
     # Calculate important points
-    print ("Red line y:",str(line_down))
-    print ("Blue line y:", str(line_up))
+    print(TAG+"y da linha inferior:"+str(line_down))
+    print(TAG+"y da linha superior:"+str(line_up))
     line_down_color = (255,0,0)
     line_up_color = (0,0,255)
-    pt1 =  [0, line_down];
-    pt2 =  [w, line_down];
-    pts_L1 = np.array([pt1,pt2], np.int32)
-    pts_L1 = pts_L1.reshape((-1,1,2))
-    pt3 =  [0, line_up];
-    pt4 =  [w, line_up];
-    pts_L2 = np.array([pt3,pt4], np.int32)
-    pts_L2 = pts_L2.reshape((-1,1,2))
 
-    pt5 =  [0, up_limit];
-    pt6 =  [w, up_limit];
-    pts_L3 = np.array([pt5,pt6], np.int32)
-    pts_L3 = pts_L3.reshape((-1,1,2))
-    pt7 =  [0, down_limit];
-    pt8 =  [w, down_limit];
-    pts_L4 = np.array([pt7,pt8], np.int32)
-    pts_L4 = pts_L4.reshape((-1,1,2))
+    (pt1, pt2, pt3, pt4, pt5, pt6, pt7, pt8) = calculatePoints(w, line_up, line_down)
+    (pts_L1, pts_L2, pts_L3, pts_L4) = calculateLinePoints(pt1, pt2, pt3, pt4, pt5, pt6, pt7, pt8)
 
     # Creates the backgroud subtractor
     fgbg = cv2.createBackgroundSubtractorMOG2(detectShadows = True)
@@ -247,3 +231,33 @@ def PeopleCounter(cnt_up, cnt_down, name, saveResults):
     cv2.destroyAllWindows()
 
     return cnt_up - cnt_down
+
+def calculatePoints(w, line_up, line_down):
+    pt1 =  [0, line_down];
+    pt2 =  [w, line_down];
+
+    pt3 =  [0, line_up];
+    pt4 =  [w, line_up];
+
+    pt5 =  [0, up_limit];
+    pt6 =  [w, up_limit];
+    
+    pt7 =  [0, down_limit];
+    pt8 =  [w, down_limit];
+
+    return (pt1, pt2, pt3, pt4, pt5, pt6, pt7, pt8)
+
+def calculateLinePoints(pt1, pt2, pt3, pt4, pt5, pt6, pt7, pt8):
+    pts_L1 = np.array([pt1,pt2], np.int32)
+    pts_L1 = pts_L1.reshape((-1,1,2))
+
+    pts_L2 = np.array([pt3,pt4], np.int32)
+    pts_L2 = pts_L2.reshape((-1,1,2))
+
+    pts_L3 = np.array([pt5,pt6], np.int32)
+    pts_L3 = pts_L3.reshape((-1,1,2))
+
+    pts_L4 = np.array([pt7,pt8], np.int32)
+    pts_L4 = pts_L4.reshape((-1,1,2))
+
+    return (pts_L1, pts_L2, pts_L3, pts_L4)

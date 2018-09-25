@@ -1,7 +1,7 @@
 ##Controle Antecipativo por Estimativa de Carga Termica em Video
 ##Biblioteca para Comunicacao com a Camera
 ##Trabalho de Graduacao
-##Versao 1
+##Versao 2
 ##Autores:
 ##    Alexandre Saran
 ##    Mariana Pimentel
@@ -14,7 +14,10 @@ from time import sleep
 # Inicialize camera object
 def InicializeCamera():
 	camera = PiCamera()
-	return camera
+	camera.resolution = (640, 480)
+    camera.framerate = 32
+    rawCapture = PiRGBArray(camera, size=(640, 480))
+	return (camera,rawCapture)
 
 # Start recording and setup the file name
 def StartVideo(camera, name):
