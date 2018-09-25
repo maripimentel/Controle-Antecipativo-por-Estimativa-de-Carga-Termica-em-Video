@@ -14,14 +14,17 @@ import settings
 import time
 import datetime
 
-def logs():
-	while(True):
-		print(TAG+'Final: '+str(settings.cntUp-settings.cntDown))
-		time.sleep(0.3)
+def data(runEvent):
+	try:
+		while(True):
+			print(TAG+'Final: '+str(settings.cntUp-settings.cntDown))
+			runEvent.sleep(0.3)
+	except KeyboardInterrupt:
+		data.clear()
+        threadPeopleCounter.join()
+        threadPeopleData.join()
 
-def counter():
-	global SAVE_RESULTS
-	global timeHour
+def counter(timeHour, SAVE_RESULTS):
 	numberPeople = PeopleCounter(0, 0, str(timeHour), SAVE_RESULTS)
 
 SAVE_RESULTS = True
@@ -36,11 +39,14 @@ print(TAG+'data/hora: '+ str(timeHour))
 
 settings.init()
 
-t = threading.Thread(name='people_counter', target=counter)
-t.start()
+runEvent = threading.Event()
+runEvent.set()
+
+threadPeopleCounter = threading.Thread(name='people_counter', target=counter, args = (runEvent))
+threadPeopleCounter.start()
 # numberPeople = PeopleCounter(0, 0, str(time), SAVE_RESULTS)
-d = threading.Thread(name='logs', target=logs)
-d.start()
+threadPeopleData = threading.Thread(name='data', target=data, args = (str(timeHour), SAVE_RESULTS, runEvent))
+threadPeopleData.start()
 
 
 # print(TAG+'Final2: '+str(numberPeople))
