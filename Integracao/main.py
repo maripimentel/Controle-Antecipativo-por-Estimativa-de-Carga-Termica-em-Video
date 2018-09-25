@@ -15,8 +15,9 @@ import settings
 import time
 import datetime
 
-def data(database):
+def data():
 	global runEvent
+	global database
 	while runEvent.is_set():
 		numberPeople = settings.cntUp-settings.cntDown
 		print(TAG+'Numero de Pessoas: '+str(numberPeople))
@@ -54,7 +55,7 @@ runEvent.set()
 threadPeopleCounter = threading.Thread(name='people_counter', target=counter, args = (str(timeHour), SAVE_RESULTS))
 threadPeopleCounter.start()
 # numberPeople = PeopleCounter(0, 0, str(time), SAVE_RESULTS)
-threadPeopleData = threading.Thread(name='data', target=data, args = (database))
+threadPeopleData = threading.Thread(name='data', target=data)
 threadPeopleData.start()
 
 try:
