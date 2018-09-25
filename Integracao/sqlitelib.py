@@ -12,7 +12,7 @@ import sqlite3
 
 # Inicialize database
 def InicializeDatabase(name):
-	database = sqlite3.connect('../../../Dados/'+name)
+	database = sqlite3.connect('../../Dados/'+name)
 	return database
 
 
