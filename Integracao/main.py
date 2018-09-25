@@ -14,6 +14,13 @@ import settings
 import time
 import datetime
 
+def logs():
+	print(TAG+'Final: '+str(settings.cntUp-settings.cntDown))
+	time.sleep(0.3)
+
+def counter():
+	numberPeople = PeopleCounter(0, 0, str(time), SAVE_RESULTS)
+
 SAVE_RESULTS = True
 
 TAG = '(main) '
@@ -37,12 +44,7 @@ d.start()
 
 print(TAG+'end')
 
-def logs():
-	print(TAG+'Final: '+str(settings.cntUp-settings.cntDown))
-	time.sleep(0.3)
 
-def counter():
-	numberPeople = PeopleCounter(0, 0, str(time), SAVE_RESULTS)
-	
+
 
 
