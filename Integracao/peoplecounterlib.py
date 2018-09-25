@@ -1,7 +1,7 @@
 ##Controle Antecipativo por Estimativa de Carga Termica em Video
 ##Biblioteca para Identificação e Contagem do Número de Pessoas por Vídeo
 ##Trabalho de Graduação
-##Versão 9
+##Versao 9
 ##Autores:
 ##    Alexandre Saran
 ##    Mariana Pimentel
