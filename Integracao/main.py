@@ -6,14 +6,22 @@
 ##    Alexandre Saran
 ##    Mariana Pimentel
 
+# coding=utf-8
+
 from peoplecounterlib import *
 import time
 import datetime
 
 SAVE_RESULTS = True
 
+TAG = '(main) '
+
 # Calculates inicial time
 timestamp = time.time()
 time = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
 
+print(TAG+'data/hora: '+ str(time))
+
 numberPeople = PeopleCounter(0, 0, str(time), SAVE_RESULTS)
+
+print(TAG+'end')

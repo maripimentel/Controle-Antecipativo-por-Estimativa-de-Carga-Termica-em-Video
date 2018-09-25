@@ -1,10 +1,12 @@
 ##Controle Antecipativo por Estimativa de Carga Termica em Video
 ##Biblioteca para Comunicacao com a Base de Dados
-##Trabalho de Graduação
-##Versão 1
+##Trabalho de Graduacao
+##Versao 1
 ##Autores:
 ##    Alexandre Saran
 ##    Mariana Pimentel
+
+# coding=utf-8
 
 import sqlite3
 

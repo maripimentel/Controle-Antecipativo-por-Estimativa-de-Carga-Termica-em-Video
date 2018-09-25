@@ -19,11 +19,15 @@ from picamera import PiCamera
 import os
 
 def PeopleCounter(cnt_up, cnt_down, name, saveResults):
+    TAG = '(peoplecouterlib.PeopleCounter) '
 
     if(saveResults):
         # Result's path on Raspberry Pi
         path = '../../Resultados/'+name
         video_name = name
+
+        print(TAG+'caminho: '+ str(path))
+        print(TAG+'nome do video: '+ str(video_name))
         
         if not os.path.exists(path):
             os.makedirs(path)
