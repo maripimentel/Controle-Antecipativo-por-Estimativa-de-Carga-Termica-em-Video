@@ -30,25 +30,30 @@ def CreateTable(database):
 # Insert data in table
 def InsertData(database, dateTime, tempMeetingRoom, tempLara, tempExternal, doorSignal, numPeople, compressorSignal):
 	cursor = database.cursor()
+	TAG = '(sqlite) '
 	try:
 		cursor.execute('''INSERT INTO informacaoSala(dataHora,tempSala,tempVizinha,tempExterna,sinalPorta,numPessoas,sinalCompressor)
 	                  VALUES(?,?,?,?,?,?,?)''', (dateTime, tempMeetingRoom, tempLara, tempExternal, doorSignal, numPeople, compressorSignal))
+		print(TAG+'Coluna[{0}] -> dataHora:{1} -> numPessoas:{2}'.format(cont, line[0], line[1]))
 	except Exception as e:
-		print('Falha ao inserir dados')
+		print(TAG+'Falha ao inserir dados')
 	database.commit()
 	return database
 
 # Read all data from the table
 def ReadTable(database):
+	TAG = '(sqlite) '
 	cursor = database.cursor()
 	try:
 		cursor.execute('''SELECT dataHora,numPessoas FROM informacaoSala''')
 	except Exception as e:
-		print('Falha ao ler os dados')
+		print(TAG+'Falha ao ler os dados')
 	# Prints each line information
 	data = cursor.fetchall()
+	cont = 0
 	for line in data:
-	    print('{0} -> {1}'.format(line[0], line[1]))
+	    print(TAG+'Coluna[{0}] -> dataHora:{1} -> numPessoas:{2}'.format(cont, line[0], line[1]))
+	    cont = cont + 1
 	return data
 
 # Close the table
