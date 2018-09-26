@@ -62,10 +62,12 @@ try:
 	while(True):
 		time.sleep(0.3)
 except KeyboardInterrupt:
+	database = InicializeDatabase(str(timeHour))
+	ReadTable(database)
+
 	runEvent.clear()
 	threadPeopleCounter.join()
 	threadPeopleData.join()
-	ReadTable(database)
 
 # print(TAG+'Final2: '+str(numberPeople))
 
