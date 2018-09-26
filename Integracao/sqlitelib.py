@@ -42,13 +42,13 @@ def InsertData(database, dateTime, tempMeetingRoom, tempLara, tempExternal, door
 def ReadTable(database):
 	cursor = database.cursor()
 	try:
-		cursor.execute('''SELECT dataHora,tempSala,tempVizinha FROM informacaoSala''')
+		cursor.execute('''SELECT dataHora,numPessoas FROM informacaoSala''')
 	except Exception as e:
 		print('Falha ao ler os dados')
 	# Prints each line information
 	data = cursor.fetchall()
 	for line in data:
-	    print('{0} : {1}, {2}'.format(line[0], line[1], line[2]))
+	    print('{0} -> {1}'.format(line[0], line[1]))
 	return data
 
 # Close the table
