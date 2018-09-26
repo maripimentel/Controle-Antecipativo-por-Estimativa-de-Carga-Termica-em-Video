@@ -64,6 +64,7 @@ try:
 except KeyboardInterrupt:
 	database = InicializeDatabase(str(timeHour))
 	ReadTable(database)
+	CloseTable(database)
 
 	runEvent.clear()
 	threadPeopleCounter.join()
