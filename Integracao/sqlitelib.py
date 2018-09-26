@@ -34,7 +34,7 @@ def InsertData(database, dateTime, tempMeetingRoom, tempLara, tempExternal, door
 	try:
 		cursor.execute('''INSERT INTO informacaoSala(dataHora,tempSala,tempVizinha,tempExterna,sinalPorta,numPessoas,sinalCompressor)
 	                  VALUES(?,?,?,?,?,?,?)''', (dateTime, tempMeetingRoom, tempLara, tempExternal, doorSignal, numPeople, compressorSignal))
-		print(TAG+'dataHora:{1} | numPessoas:{2}'.format(dateTime, numPeople))
+		print(TAG+'dataHora:{0} | numPessoas:{1}'.format(dateTime, numPeople))
 	except Exception as e:
 		print(TAG+'Falha ao inserir dados')
 	database.commit()
