@@ -14,6 +14,7 @@ import threading
 import settings
 import time
 import datetime
+import cv2
 
 def data():
 	global runEvent
@@ -35,7 +36,11 @@ def data():
 		time.sleep(60)
 
 def counter(timeHour, SAVE_RESULTS):
-	PeopleCounter(0, 0, str(timeHour), SAVE_RESULTS)
+        try:
+                PeopleCounter(0, 0, str(timeHour), SAVE_RESULTS)
+        except KeyboardInterrupt:
+                print("Destruindo Janelas Abertas")
+                cv2.destroyAllWindows()
 
 SAVE_RESULTS = True
 
@@ -53,6 +58,7 @@ runEvent = threading.Event()
 runEvent.set()
 
 threadPeopleCounter = threading.Thread(name='people_counter', target=counter, args = (str(timeHour), SAVE_RESULTS))
+threadPeopleCounter.daemon = True
 threadPeopleCounter.start()
 # numberPeople = PeopleCounter(0, 0, str(time), SAVE_RESULTS)
 threadPeopleData = threading.Thread(name='data', target=data)
@@ -65,6 +71,8 @@ except KeyboardInterrupt:
 	database = InicializeDatabase(str(timeHour))
 	ReadTable(database)
 	CloseTable(database)
+    
+	cv2.destroyAllWindows()
 
 	runEvent.clear()
 	threadPeopleCounter.join()

@@ -34,6 +34,7 @@ def PeopleCounter(cntUp, cntDown, name, saveResults):
 
     # Initialize the camera and grab a reference to the raw camera capture
     (camera,rawCapture) = InicializeCamera()
+    settings.camera = camera
 
     # Allow the camera to warmup
     time.sleep(0.1)
@@ -151,6 +152,7 @@ def PeopleCounter(cntUp, cntDown, name, saveResults):
         #If ESC is pressed, stop
         k = cv2.waitKey(30) & 0xff
         if k == 27:
+            camera.close()
             break
         rawCapture.truncate(0)
         
