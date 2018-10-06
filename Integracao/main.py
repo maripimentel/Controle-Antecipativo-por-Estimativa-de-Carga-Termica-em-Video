@@ -10,6 +10,7 @@
 
 from peoplecounterlib import *
 from sqlitelib import *
+from controllerlib import *
 import threading
 import settings
 import time
@@ -39,8 +40,12 @@ def counter(timeHour, SAVE_RESULTS):
         try:
                 PeopleCounter(0, 0, str(timeHour), SAVE_RESULTS)
         except KeyboardInterrupt:
-                print("Destruindo Janelas Abertas")
                 cv2.destroyAllWindows()
+
+def controller():
+        global runEvent
+	while runEvent.is_set():
+                Controller()
 
 SAVE_RESULTS = True
 
@@ -64,6 +69,9 @@ threadPeopleCounter.start()
 threadPeopleData = threading.Thread(name='data', target=data)
 threadPeopleData.start()
 
+threadController = threading.Thread(name='controller', target=controller)
+threadController.start()
+
 try:
 	while(True):
 		time.sleep(0.3)
@@ -77,6 +85,7 @@ except KeyboardInterrupt:
 	runEvent.clear()
 	threadPeopleCounter.join()
 	threadPeopleData.join()
+	threadController.join()
 
 # print(TAG+'Final2: '+str(numberPeople))
 
