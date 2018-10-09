@@ -35,7 +35,7 @@ def PWM(output, TAG):
 
 def writeRele(onTime, period, TAG):
     
-    ser=serial.Seria("/dev/ttyACM0",14400, timeout=1)
+    ser=serial.Serial("/dev/ttyACM0",9600, timeout=1)
     
     if (onTime>0):
         data = 'l'
