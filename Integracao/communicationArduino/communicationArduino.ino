@@ -1,29 +1,30 @@
 float f;
-char compSignal
+char compSignal;
+int rele = 7;
 
 void setup() {
-
   Serial.begin(9600);
-  rele = pinMode(5, OUTPUT);
+  pinMode(rele, OUTPUT);
 }
 
 void loop() {
-   compSignal = recvInfo();
-   if(compSignal == 'l') {
-     digitalWrite(rele, LOW)
-   }
-   else if(compSignal == 'l') {
-     digitalWrite(rele,HIGH)
-   }
+  compSignal = recvInfo();
+  if(compSignal == 'l') {
+    digitalWrite(rele, LOW);
+  }
+  else if(compSignal == 'l') {
+    digitalWrite(rele,HIGH);
+  }
    
-   delay(100)
+  delay(100);
 }
 
- char recvInfo() {
-    if (Serial.available() > 0) {
-      received = Serial.read();
-      Serial.println(received);
-    }
-    return received;
+char recvInfo() {
+  char received;
+  if (Serial.available() > 0) {
+    received = Serial.read();
+    Serial.println(received);
   }
+  return received;
+}
 
