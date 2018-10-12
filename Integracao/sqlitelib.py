@@ -9,6 +9,8 @@
 # coding=utf-8
 
 import sqlite3
+import serial.tools.list_ports
+import time
 
 # Inicialize database
 def InicializeDatabase(name):
@@ -59,4 +61,62 @@ def ReadTable(database):
 # Close the table
 def CloseTable(database):
 	database.close()
+	
+def readTempHum(tempMeetingRoom, humMeetingRoom, tempLara, tempExternal):
+	TAG = '(sqlite) '
+
+        ports = list(serial.tools.list_ports.comports())
+
+        for p in ports:
+                if "Arduino" in p[1]:
+                        print(TAG+"Arduino Port: "+str(p[0]))
+                        ser=serial.Serial(p[0], 9600, timeout=1)
+                        break
+        
+        try:
+                ser.flush()
+                read = ser.readline()
+                print(TAG + "read: " + str(read))
+        except:
+                print(TAG + "Sem dados")
+                readOk = False
+                return (readOk, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal)
+        
+        if(read == "" or len(read) < 4):
+            readOk = False
+            return (readOk, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal)
+        
+        time.sleep(1)
+        read = read[:-2]
+        data = read.split("|")
+        print(TAG + "Data: " + str(data))
+    
+        for values in data:
+                print(TAG + "Values: " + str(values))
+                try:
+                    key,value = values.split(":")
+                except:
+                    key,value = "Not found", "Not found"
+                
+                
+                if(key == 'TM' and value != "Not found"):
+                    #print("Meeting Room")
+                    tempMeetingRoom = value
+                elif(key == 'HM' and value != "Not found"):
+                    #print("Hum Meeting Room")
+                    humMeetingRoom = value
+                elif(key == 'TL' and value != "Not found"):
+                    #print("Lara")
+                    tempLara = value
+                elif(key == 'TE' and value != "Not found"):
+                    #print("External")
+                    tempExternal = value
+                
+        print(TAG + "Temperatura Sala de Reuniao: " + str(tempMeetingRoom))
+        print(TAG + "Humidade Sala de Reuniao: " + str(humMeetingRoom))
+        print(TAG + "Temperatura Lara: " + str(tempLara))
+        print(TAG + "Temperatura Externa: " + str(tempExternal))
+        readOk = True
+                
+        return (readOk, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal)
 

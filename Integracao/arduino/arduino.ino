@@ -93,39 +93,32 @@ void loop()
     }
     break;
   default:
-    Serial.println("How did I get here?");
+    //Serial.println("How did I get here?");
     break;
   }
 }
 
 void logData() {
-  Serial.print("Temp MeetingRoom: ");   Serial.print(tempMeetingRoom);
-  Serial.print(" *C, Hum MeetingRoom: ");  Serial.print(humMeetingRoom);
-  Serial.println(" %");
-  
-  // Divide a variavel tempc por 8, para obter precisão na medição
   tempLara = tempLara/8.0;
   tempExternal = tempExternal/8.0;
-  delay(100);
-  Serial.print("Temp Lara: ");
-  Serial.println(tempLara,2);
-  Serial.println("*C ");
-  delay(100);
-  Serial.print("Temp External: ");
-  Serial.print(tempExternal,2);
-  Serial.println("*C ");
-  Serial.println("****************************");
+  
+  Serial.print("TM:");   Serial.print(tempMeetingRoom);
+  Serial.print("|HM:");  Serial.print(humMeetingRoom);
+  Serial.print("|TL:");  Serial.print(tempLara,2);
+  Serial.print("|TE:");  Serial.print(tempExternal,2);
+  Serial.println();
+
   delay(100);
   tempLara = 0;
   tempExternal = 0;
-} 
+ } 
 
 char recvInfo() {
   char received;
   if (Serial.available() > 0) {
     received = Serial.read();
-    Serial.print("Signal Rele: ");
-    Serial.println(received);
+//    Serial.print("Signal Rele: ");
+//    Serial.println(received);
   }
   return received;
 }

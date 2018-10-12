@@ -22,6 +22,8 @@ def data():
 	
 	database = InicializeDatabase(str(timeHour))
 	CreateTable(database)
+	
+        (tempMeetingRoom, humMeetingRoom, tempLara, tempExternal) = (0,0,0,0)
 
 	while runEvent.is_set():
 		numPeople = settings.cntUp-settings.cntDown
@@ -30,8 +32,13 @@ def data():
 		# Calculates inicial time
 		timestamp = time.time()
 		dateTime = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+		
+		for i in range (10):
+                    (readOk, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal) = readTempHum(tempMeetingRoom, humMeetingRoom, tempLara, tempExternal)
+                    if(readOk):
+                        break
 
-		(tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal, compressorSignal) = (0,0,0,0,0,0)
+		(doorSignal, compressorSignal) = (0,0)
 
 		InsertData(database, dateTime, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal, numPeople, compressorSignal)
 		time.sleep(60)
@@ -65,7 +72,7 @@ runEvent.set()
 threadPeopleCounter = threading.Thread(name='people_counter', target=counter, args = (str(timeHour), SAVE_RESULTS))
 threadPeopleCounter.daemon = True
 threadPeopleCounter.start()
-# numberPeople = PeopleCounter(0, 0, str(time), SAVE_RESULTS)
+
 threadPeopleData = threading.Thread(name='data', target=data)
 threadPeopleData.start()
 
@@ -76,7 +83,7 @@ try:
 	while(True):
 		time.sleep(0.3)
 except KeyboardInterrupt:
-        writeRele(0, 4*60, "(controllerlib) ")
+        writeRele(0, 10, "(controllerlib) ")
     
 	database = InicializeDatabase(str(timeHour))
 	ReadTable(database)

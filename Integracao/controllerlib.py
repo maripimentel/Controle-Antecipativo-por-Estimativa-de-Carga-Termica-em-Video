@@ -1,13 +1,12 @@
 import serial
 import time
 import struct
+import serial.tools.list_ports
 
 def Controller():
     TAG = '(controller) '
     
-    readTempHum(TAG)
-    
-    output = 50
+    output = 100
     
     (onTime, period) = PWM(output, TAG)
     
@@ -21,7 +20,7 @@ def PWM(output, TAG):
     
     percentage = float(output)/float(OUTPUT_MAX)
     
-    if percentage>0.9:
+    if percentage > 0.9:
         percentage = 1
     elif percentage < 0:
         percentage = 0
@@ -37,7 +36,12 @@ def PWM(output, TAG):
 
 def writeRele(onTime, period, TAG):
     
-    ser=serial.Serial("/dev/ttyACM0",9600, timeout=1)
+    ports = list(serial.tools.list_ports.comports())
+
+    for p in ports:
+        if "Arduino" in p[1]:
+            print(TAG+"Arduino Port: "+str(p[0]))
+            ser=serial.Serial(p[0], 9600, timeout=1)
     
     if (onTime>0):
         data = 'l'
@@ -55,8 +59,3 @@ def writeRele(onTime, period, TAG):
         ser.flush()
         time.sleep(period - onTime)
         
-def readTempHum(TAG):
-    ser=serial.Serial("/dev/ttyACM0",9600, timeout=1)
-    
-    read = ser.readline() 
-    print(TAG+read)
