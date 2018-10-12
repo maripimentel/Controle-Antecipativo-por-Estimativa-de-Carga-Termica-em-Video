@@ -9,14 +9,13 @@
 
 #include <Sensirion.h>
 
-const uint8_t dataPin =  2;            // SHT serial data
-const uint8_t sclkPin =  3;            // SHT serial clock
+const uint8_t sclkPin =  2;            // SHT serial clock
+const uint8_t dataPin =  3;            // SHT serial data
 const uint8_t dataPin2 =  4;            // SHT serial data
-const uint8_t sclkPin2 =  5;            // SHT serial clock
 const uint32_t TRHSTEP   = 3000UL;     // Sensor query period
 
 Sensirion sht = Sensirion(dataPin, sclkPin);
-Sensirion sht2 = Sensirion(dataPin2, sclkPin2);
+Sensirion sht2 = Sensirion(dataPin2, sclkPin);
 
 uint16_t rawData, rawData2;
 float temperature, temperature2;
