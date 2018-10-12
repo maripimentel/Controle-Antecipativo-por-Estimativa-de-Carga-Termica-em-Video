@@ -31,9 +31,9 @@ def data():
 		timestamp = time.time()
 		dateTime = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
 
-		(tempMeetingRoom, tempLara, tempExternal, doorSignal, compressorSignal) = (0,0,0,0,0)
+		(tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal, compressorSignal) = (0,0,0,0,0,0)
 
-		InsertData(database, dateTime, tempMeetingRoom, tempLara, tempExternal, doorSignal, numPeople, compressorSignal)
+		InsertData(database, dateTime, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal, numPeople, compressorSignal)
 		time.sleep(60)
 
 def counter(timeHour, SAVE_RESULTS):
@@ -47,7 +47,7 @@ def controller():
 	while runEvent.is_set():
                 Controller()
 
-SAVE_RESULTS = True
+SAVE_RESULTS = False
 
 TAG = '(main) '
 
