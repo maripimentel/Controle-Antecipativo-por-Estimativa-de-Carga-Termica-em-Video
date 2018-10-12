@@ -21,8 +21,8 @@ def CreateTable(database):
 	cursor = database.cursor()
 	cursor.execute('''
 	    CREATE TABLE IF NOT EXISTS informacaoSala(dataHora TEXT PRIMARY KEY, tempSala REAL,
-	                       tempVizinha REAL, tempExterna REAL, sinalPorta INTEGER,
-	                       numPessoas INTEGER, sinalCompressor INTEGER)
+	                       humSala REAL, tempVizinha REAL, tempExterna REAL,
+	                       sinalPorta INTEGER, numPessoas INTEGER, sinalCompressor INTEGER)
 	''')
 	database.commit()
 	return database 
@@ -32,8 +32,8 @@ def InsertData(database, dateTime, tempMeetingRoom, tempLara, tempExternal, door
 	cursor = database.cursor()
 	TAG = '(sqlite) '
 	try:
-		cursor.execute('''INSERT INTO informacaoSala(dataHora,tempSala,tempVizinha,tempExterna,sinalPorta,numPessoas,sinalCompressor)
-	                  VALUES(?,?,?,?,?,?,?)''', (dateTime, tempMeetingRoom, tempLara, tempExternal, doorSignal, numPeople, compressorSignal))
+		cursor.execute('''INSERT INTO informacaoSala(dataHora,tempSala,humSala,tempVizinha,tempExterna,sinalPorta,numPessoas,sinalCompressor)
+	                  VALUES(?,?,?,?,?,?,?)''', (dateTime, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal, numPeople, compressorSignal))
 		print(TAG+'dataHora:{0} | numPessoas:{1}'.format(dateTime, numPeople))
 	except Exception as e:
 		print(TAG+'Falha ao inserir dados')
@@ -45,14 +45,14 @@ def ReadTable(database):
 	TAG = '(sqlite) '
 	cursor = database.cursor()
 	try:
-		cursor.execute('''SELECT dataHora,numPessoas FROM informacaoSala''')
+		cursor.execute('''SELECT dataHora,tempSala,humSala,tempVizinha,tempExterna,sinalPorta,numPessoas,sinalCompressor FROM informacaoSala''')
 	except Exception as e:
 		print(TAG+'Falha ao ler os dados')
 	# Prints each line information
 	data = cursor.fetchall()
 	cont = 0
 	for line in data:
-	    print(TAG+'Coluna[{0}] -> dataHora:{1} | numPessoas:{2}'.format(cont, line[0], line[1]))
+	    print(TAG+'Coluna[{0}] -> dataHora:{1} | tempSala:{2} | humSala:{3} | tempVizinha:{4} | tempExterna:{5} | sinalPorta:{6} | numPessoas:{7} | sinalCompressor:{8}'.format(cont, line[0], line[1], line[2], line[3], line[4], line[5], line[6], line[7]))
 	    cont = cont + 1
 	return data
 
