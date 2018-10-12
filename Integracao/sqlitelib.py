@@ -28,12 +28,12 @@ def CreateTable(database):
 	return database 
 
 # Insert data in table
-def InsertData(database, dateTime, tempMeetingRoom, tempLara, tempExternal, doorSignal, numPeople, compressorSignal):
+def InsertData(database, dateTime, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal, numPeople, compressorSignal):
 	cursor = database.cursor()
 	TAG = '(sqlite) '
 	try:
 		cursor.execute('''INSERT INTO informacaoSala(dataHora,tempSala,humSala,tempVizinha,tempExterna,sinalPorta,numPessoas,sinalCompressor)
-	                  VALUES(?,?,?,?,?,?,?)''', (dateTime, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal, numPeople, compressorSignal))
+	                  VALUES(?,?,?,?,?,?,?,?)''', (dateTime, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal, numPeople, compressorSignal))
 		print(TAG+'dataHora:{0} | numPessoas:{1}'.format(dateTime, numPeople))
 	except Exception as e:
 		print(TAG+'Falha ao inserir dados')

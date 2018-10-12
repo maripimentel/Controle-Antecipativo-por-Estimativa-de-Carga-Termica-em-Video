@@ -5,6 +5,8 @@ import struct
 def Controller():
     TAG = '(controller) '
     
+    readTempHum(TAG)
+    
     output = 50
     
     (onTime, period) = PWM(output, TAG)
@@ -52,3 +54,9 @@ def writeRele(onTime, period, TAG):
         time.sleep(1)
         ser.flush()
         time.sleep(period - onTime)
+        
+def readTempHum(TAG):
+    ser=serial.Serial("/dev/ttyACM0",9600, timeout=1)
+    
+    read = ser.readline() 
+    print(TAG+read)

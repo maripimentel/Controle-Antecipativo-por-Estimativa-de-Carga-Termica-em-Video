@@ -21,14 +21,14 @@ import os
 def PeopleCounter(cntUp, cntDown, name, saveResults):
     TAG = '(peoplecouterlib) '
 
-    if(saveResults):
-        # Result's path on Raspberry Pi
-        path = '../../Resultados/'+name
-        videoName = name
-
-        print(TAG+'caminho: '+ str(path))
-        print(TAG+'nome do video: '+ str(videoName))
+    # Result's path on Raspberry Pi
+    path = '../../Resultados/'+name
+    videoName = name
+    
+    print(TAG+'caminho: '+ str(path))
+    print(TAG+'nome do video: '+ str(videoName))
         
+    if(saveResults):
         if not os.path.exists(path):
             os.makedirs(path)
 

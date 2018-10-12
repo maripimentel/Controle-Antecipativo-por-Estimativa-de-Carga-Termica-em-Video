@@ -76,6 +76,8 @@ try:
 	while(True):
 		time.sleep(0.3)
 except KeyboardInterrupt:
+        writeRele(0, 4*60, "(controllerlib) ")
+    
 	database = InicializeDatabase(str(timeHour))
 	ReadTable(database)
 	CloseTable(database)

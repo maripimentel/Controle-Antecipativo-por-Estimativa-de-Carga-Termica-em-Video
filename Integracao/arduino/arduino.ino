@@ -21,11 +21,17 @@ float tempLara = 0, tempExternal; // Variaveis que armazenam a temperatura em Ce
 float samplesLara[8], samplesExternal[8]; // Array para precisão na medição
 int i;
 
+// Rele
+float f;
+char compSignal;
+int rele = 7;
+const uint32_t TRHCOM   = 100UL;
+
 // Time
 unsigned long curMillis;               // Time interval tracking
 unsigned long trhMillis = 0;
-unsigned long blinkMillis = 0;
-
+unsigned long curMillisCom;               // Time interval tracking
+unsigned long trhMillisCom = 0;
 
 void setup()
 {
@@ -34,12 +40,25 @@ void setup()
   tempMeetingRoom = sht.calcTemp(rawData);
   sht.measHumi(&rawData);              // Maps to: sht.meas(HUMI, &rawData, BLOCK)
   humMeetingRoom = sht.calcHumi(rawData, tempMeetingRoom);
+  pinMode(rele, OUTPUT);
   logData();
 }
 
 void loop()
 {
   curMillis = millis();
+  curMillisCom = millis();
+  
+  if (curMillisCom - trhMillisCom >= TRHCOM) {
+    compSignal = recvInfo();
+    if(compSignal == 'l') {
+      digitalWrite(rele, LOW);
+    }
+    else if(compSignal == 'd') {
+      digitalWrite(rele,HIGH);
+    }
+    trhMillisCom = curMillisCom;
+  }  
 
   switch (shtState) {
   case 0:
@@ -87,15 +106,26 @@ void logData() {
   // Divide a variavel tempc por 8, para obter precisão na medição
   tempLara = tempLara/8.0;
   tempExternal = tempExternal/8.0;
-  
+  delay(100);
   Serial.print("Temp Lara: ");
-  Serial.print(tempLara,2);
+  Serial.println(tempLara,2);
   Serial.println("*C ");
+  delay(100);
   Serial.print("Temp External: ");
   Serial.print(tempExternal,2);
   Serial.println("*C ");
   Serial.println("****************************");
-  
+  delay(100);
   tempLara = 0;
   tempExternal = 0;
 } 
+
+char recvInfo() {
+  char received;
+  if (Serial.available() > 0) {
+    received = Serial.read();
+    Serial.print("Signal Rele: ");
+    Serial.println(received);
+  }
+  return received;
+}
