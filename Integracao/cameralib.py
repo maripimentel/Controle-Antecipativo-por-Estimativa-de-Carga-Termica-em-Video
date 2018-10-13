@@ -14,20 +14,20 @@ from picamera.array import PiRGBArray
 
 # Inicialize camera object
 def InicializeCamera():
-	camera = PiCamera()
-	camera.resolution = (640, 480)
-        camera.framerate = 32
-        rawCapture = PiRGBArray(camera, size=(640, 480))
-	return (camera,rawCapture)
+    camera = PiCamera()
+    camera.resolution = (640, 480)
+    camera.framerate = 32
+    rawCapture = PiRGBArray(camera, size=(640, 480))
+    return (camera,rawCapture)
 
 # Start recording and setup the file name
 def StartVideo(camera, name):
-	camera.start_preview()
-	camera.start_recording('../../../Videos/'+name+'.h264')
-	return camera
+    camera.start_preview()
+    camera.start_recording('../../../Videos/'+name+'.h264')
+    return camera
 
 # Stop recording
 def StopVideo(camera):
-	camera.stop_recording()
-	camera.stop_preview()
-	return camera
+    camera.stop_recording()
+    camera.stop_preview()
+    return camera

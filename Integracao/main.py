@@ -18,30 +18,30 @@ import datetime
 import cv2
 
 def data():
-	global runEvent
+    global runEvent
 	
-	database = InicializeDatabase(str(timeHour))
-	CreateTable(database)
-	
-        (tempMeetingRoom, humMeetingRoom, tempLara, tempExternal) = (0,0,0,0)
+    database = InicializeDatabase(str(timeHour))
+    CreateTable(database)
+    
+    (tempMeetingRoom, humMeetingRoom, tempLara, tempExternal) = (0,0,0,0)
+    
+    while runEvent.is_set():
+        numPeople = settings.cntUp-settings.cntDown
+        print(TAG+'Numero de Pessoas: '+str(numPeople))
 
-	while runEvent.is_set():
-		numPeople = settings.cntUp-settings.cntDown
-		print(TAG+'Numero de Pessoas: '+str(numPeople))
+        # Calculates inicial time
+        timestamp = time.time()
+        dateTime = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+        
+        for i in range (10):
+            (readOk, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal) = readTempHum(tempMeetingRoom, humMeetingRoom, tempLara, tempExternal)
+            if(readOk):
+                break
 
-		# Calculates inicial time
-		timestamp = time.time()
-		dateTime = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
-		
-		for i in range (10):
-                    (readOk, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal) = readTempHum(tempMeetingRoom, humMeetingRoom, tempLara, tempExternal)
-                    if(readOk):
-                        break
+        (doorSignal, compressorSignal) = (0,0)
 
-		(doorSignal, compressorSignal) = (0,0)
-
-		InsertData(database, dateTime, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal, numPeople, compressorSignal)
-		time.sleep(60)
+        InsertData(database, dateTime, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal, numPeople, compressorSignal)
+        time.sleep(60)
 
 def counter(timeHour, SAVE_RESULTS):
         try:
@@ -50,9 +50,9 @@ def counter(timeHour, SAVE_RESULTS):
                 cv2.destroyAllWindows()
 
 def controller():
-        global runEvent
-	while runEvent.is_set():
-                Controller()
+    global runEvent
+    while runEvent.is_set():
+        Controller()
 
 SAVE_RESULTS = False
 
@@ -80,21 +80,22 @@ threadController = threading.Thread(name='controller', target=controller)
 threadController.start()
 
 try:
-	while(True):
-		time.sleep(0.3)
+    while(True):
+        time.sleep(0.3)
 except KeyboardInterrupt:
-        writeRele(0, 10, "(controllerlib) ")
-    
-	database = InicializeDatabase(str(timeHour))
-	ReadTable(database)
-	CloseTable(database)
-    
-	cv2.destroyAllWindows()
 
-	runEvent.clear()
-	threadPeopleCounter.join()
-	threadPeopleData.join()
-	threadController.join()
+    database = InicializeDatabase(str(timeHour))
+    ReadTable(database)
+    CloseTable(database)
+
+    cv2.destroyAllWindows()
+
+    runEvent.clear()
+    threadPeopleCounter.join()
+    threadPeopleData.join()
+    threadController.join()
+    
+    writeRele(0, 10, "(controllerlib) ")
 
 # print(TAG+'Final2: '+str(numberPeople))
 

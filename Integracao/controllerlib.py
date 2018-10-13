@@ -44,17 +44,17 @@ def writeRele(onTime, period, TAG):
             ser=serial.Serial(p[0], 9600, timeout=1)
     
     if (onTime>0):
-        data = 'l'
+        data = '1'
         print(TAG + 'Sinal para o compressor ligar por '+str(onTime)+' segundos')
-        ser.write(str(data))
+        ser.write(data)
         time.sleep(1)
         ser.flush()
         time.sleep(onTime)
         
     if (onTime != period):
-        data = 'd'
+        data = '0'
         print(TAG + 'Sinal para o compressor desligar por '+str(period - onTime)+' segundos')
-        ser.write(str(data))
+        ser.write(data)
         time.sleep(1)
         ser.flush()
         time.sleep(period - onTime)
