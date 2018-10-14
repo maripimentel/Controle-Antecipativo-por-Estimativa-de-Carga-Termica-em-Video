@@ -24,6 +24,7 @@ int i;
 // Rele
 float f;
 char compSignal;
+char lastCompSignal;
 int rele = 7;
 const uint32_t TRHCOM   = 100UL;
 
@@ -51,12 +52,15 @@ void loop()
   
   if (curMillisCom - trhMillisCom >= TRHCOM) {
     compSignal = recvInfo();
-    if(compSignal == 'l') {
-      digitalWrite(rele, LOW);
+    if(lastCompSignal == compSignal) {
+      if(compSignal == '1') {
+        digitalWrite(rele, LOW);
+      }
+      else if(compSignal == '0') {
+        digitalWrite(rele,HIGH);
+      }
     }
-    else if(compSignal == 'd') {
-      digitalWrite(rele,HIGH);
-    }
+    lastCompSignal = compSignal;
     trhMillisCom = curMillisCom;
   }  
 

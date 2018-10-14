@@ -51,6 +51,7 @@ def counter(timeHour, SAVE_RESULTS):
 
 def controller():
     global runEvent
+
     while runEvent.is_set():
         Controller()
 
