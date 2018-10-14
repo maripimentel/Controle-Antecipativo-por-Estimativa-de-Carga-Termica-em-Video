@@ -4,7 +4,7 @@ import struct
 import serial.tools.list_ports
 import settings
 
-def Controller():
+def Controller(lastOutput):
     TAG = '(controller) '
 
     if (settings.controllerType == 0):
@@ -17,10 +17,12 @@ def Controller():
         MIN_TEMP = 20
         MAX_TEMP = 22
 
-        if(settings.tempMeetingRoom > 22):
+        if(float(settings.tempMeetingRoom) > 22.00):
             output = 100
-        elif(settings.tempMeetingRoom < 20):
+        elif(float(settings.tempMeetingRoom) < 20.00):
             output = 0
+        else:
+            output = lastOutput
 
     elif(settings.controllerType == 2):
         # PI
@@ -31,6 +33,8 @@ def Controller():
     (onTime, period) = PWM(output, TAG)
     
     writeRele(onTime, period, TAG)
+
+    return output
 
     
 def PWM(output, TAG):
