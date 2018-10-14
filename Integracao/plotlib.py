@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 from sqlitelib import *
 
+# coding=utf-8
+
 def plotModel (database, name):
     data = ReadTable(database)
     

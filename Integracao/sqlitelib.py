@@ -83,7 +83,7 @@ def readTempHum(tempMeetingRoom, humMeetingRoom, tempLara, tempExternal):
         readOk = False
         return (readOk, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal)
     time.sleep(1)
-    read = str(read)
+    read = read.decode("utf-8")
     #print(read)
     read = read[:-2]
     #print(read)
