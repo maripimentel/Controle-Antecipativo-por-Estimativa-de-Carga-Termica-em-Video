@@ -9,8 +9,7 @@ def Controller():
 
     if (settings.controllerType == 0):
         # Identificacao
-        output = 100
-
+        output = 50
     elif(settings.controllerType == 1):
         # Liga-Desliga
 
@@ -22,11 +21,11 @@ def Controller():
         elif(settings.tempMeetingRoom < 20):
             output = 0
 
-    elif(settings.controllerType == 2):
-        # PI
-
-    elif(settings.controllerType == 3):
-        #Adaptativo
+##    elif(settings.controllerType == 2):
+##        # PI
+##        
+##    elif(settings.controllerType == 3):
+##        #Adaptativo
     
     (onTime, period) = PWM(output, TAG)
     
