@@ -2,15 +2,36 @@ import serial
 import time
 import struct
 import serial.tools.list_ports
+import settings
 
 def Controller():
     TAG = '(controller) '
-    
-    output = 100
+
+    if (settings.controllerType == 0):
+        # Identificacao
+        output = 100
+
+    elif(settings.controllerType == 1):
+        # Liga-Desliga
+
+        MIN_TEMP = 20
+        MAX_TEMP = 22
+
+        if(settings.tempMeetingRoom > 22):
+            output = 100
+        elif(settings.tempMeetingRoom < 20):
+            output = 0
+
+    elif(settings.controllerType == 2):
+        # PI
+
+    elif(settings.controllerType == 3):
+        #Adaptativo
     
     (onTime, period) = PWM(output, TAG)
     
     writeRele(onTime, period, TAG)
+
     
 def PWM(output, TAG):
     OUTPUT_MAX = 100

@@ -11,6 +11,7 @@
 import sqlite3
 import serial.tools.list_ports
 import time
+import settings
 
 # Inicialize database
 def InicializeDatabase(name):
@@ -117,6 +118,9 @@ def readTempHum(tempMeetingRoom, humMeetingRoom, tempLara, tempExternal):
     print(TAG + "Humidade Sala de Reuniao: " + str(humMeetingRoom))
     print(TAG + "Temperatura Lara: " + str(tempLara))
     print(TAG + "Temperatura Externa: " + str(tempExternal))
+
+    settings.tempMeetingRoom = tempMeetingRoom
+
     readOk = True
             
     return (readOk, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal)
