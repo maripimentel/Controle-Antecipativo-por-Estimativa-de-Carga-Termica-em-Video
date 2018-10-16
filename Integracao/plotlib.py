@@ -11,7 +11,7 @@ def plotModel (database, name):
     humMeetingRoom = []
     tempLara = []
     tempExternal = []
-    cont = 1
+    cont = 0
     contArray = []
     
     for line in data:
@@ -22,10 +22,13 @@ def plotModel (database, name):
         tempExternal.append(line[4])
         contArray.append(cont)
         cont = cont+1
+        
+        if(cont>1180):
+            break
     
     plt.figure()
-    plt.plot(contArray, tempMeetingRoom)
-    plt.title("Identificação do Modelo")
+    plt.plot(contArray[1000:], tempMeetingRoom[1000:])
+    plt.title("Liga-Desliga")
     plt.ylabel("Temperatura")
     plt.xlabel("Minutos")
     #plt.xticks(range(0, 80, 20), dateTime)

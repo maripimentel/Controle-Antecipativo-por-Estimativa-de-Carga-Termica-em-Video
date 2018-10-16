@@ -52,7 +52,7 @@ void loop()
   
   if (curMillisCom - trhMillisCom >= TRHCOM) {
     compSignal = recvInfo();
-    if(lastCompSignal == compSignal) {
+    if(lastCompSignal != compSignal) {
       if(compSignal == '1') {
         digitalWrite(rele, LOW);
       }

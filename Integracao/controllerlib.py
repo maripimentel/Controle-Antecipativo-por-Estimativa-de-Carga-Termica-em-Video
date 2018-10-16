@@ -9,18 +9,25 @@ def Controller(lastOutput):
 
     if (settings.controllerType == 0):
         # Identificacao
-        output = 50
+        output = 100
     elif(settings.controllerType == 1):
+        print(TAG + "Controlador: Liga-Desliga")
+        
         # Liga-Desliga
 
         MIN_TEMP = 20
         MAX_TEMP = 22
 
+        
+        print(TAG + "Temperatuda da Sala: "+ str(settings.tempMeetingRoom))
         if(float(settings.tempMeetingRoom) > 22.00):
+            print(TAG + "Liga-Desliga: LIGA")
             output = 100
         elif(float(settings.tempMeetingRoom) < 20.00):
+            print(TAG + "Liga-Desliga: DESLIGA")
             output = 0
         else:
+            print(TAG + "Liga-Desliga: MANTEM")
             output = lastOutput
 
 ##    elif(settings.controllerType == 2):
@@ -38,7 +45,7 @@ def Controller(lastOutput):
     
 def PWM(output, TAG):
     OUTPUT_MAX = 100
-    PERIOD = 4 * 60
+    PERIOD = 1 * 60
     
     period = float(PERIOD)
     
@@ -46,7 +53,7 @@ def PWM(output, TAG):
     
     if percentage > 0.9:
         percentage = 1
-    elif percentage < 0:
+    elif percentage <= 0:
         percentage = 0
     elif percentage < 0.1:
         percentage = 0.1
