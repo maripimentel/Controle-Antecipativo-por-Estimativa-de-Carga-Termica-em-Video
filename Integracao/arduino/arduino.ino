@@ -17,7 +17,7 @@ byte shtState = 0;
 // LM35
 int pinLara = A0, pinExternal = A1; // Pino analogico para ligacao do LM35
 
-float tempLara = 0, tempExternal; // Variaveis que armazenam a temperatura em Celsius
+float tempLara = 0, tempExternal = 0; // Variaveis que armazenam a temperatura em Celsius
 float samplesLara[8], samplesExternal[8]; // Array para precisão na medição
 int i;
 
@@ -42,6 +42,8 @@ void setup()
   sht.measHumi(&rawData);              // Maps to: sht.meas(HUMI, &rawData, BLOCK)
   humMeetingRoom = sht.calcHumi(rawData, tempMeetingRoom);
   pinMode(rele, OUTPUT);
+  pinMode(pinLara, INPUT);
+  pinMode(pinExternal, INPUT);
   logData();
 }
 
@@ -69,13 +71,11 @@ void loop()
     if (curMillis - trhMillis >= TRHSTEP) {      // Start new temp/humi measurement?
       sht.meas(TEMP, &rawData, NONBLOCK);
       
-      for(i = 0;i<=7;i++){ // Loop que faz a leitura da temperatura 8 vezes
-        samplesLara[i] = ( 5.0 * analogRead(pinLara) * 100.0) / 1024.0;
-        samplesExternal[i] = ( 5.0 * analogRead(pinExternal) * 100.0) / 1024.0;
-        
-        //A cada leitura, incrementa o valor da variavel tempc
-        tempLara = tempLara + samplesLara[i];
-        tempExternal = tempExternal + samplesExternal[i]; 
+      for (i = 0; i < 100; i++) {
+        tempLara = tempLara + (float(analogRead(pinLara))*5/(1023))/0.01;
+        delay(10);
+        tempExternal = tempExternal + (float(analogRead(pinExternal))*5/(1023))/0.01;
+        delay(10);
       } 
       
       shtState++;
@@ -103,8 +103,8 @@ void loop()
 }
 
 void logData() {
-  tempLara = tempLara/8.0;
-  tempExternal = tempExternal/8.0;
+  tempLara = tempLara / 100;
+  tempExternal = tempExternal / 100;
   
   Serial.print("TM:");   Serial.print(tempMeetingRoom);
   Serial.print("|HM:");  Serial.print(humMeetingRoom);
