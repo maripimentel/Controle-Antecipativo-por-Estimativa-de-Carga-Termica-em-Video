@@ -1,18 +1,14 @@
-#include <Sensirion.h>
+#include <DHT.h>
 
-// SHT71
-const uint8_t pinMeetingRoom =  3;            // SHT serial data
-const uint8_t pinClkMeetingRoom =  2;       // SHT serial clock
-const uint32_t TRHSTEP   = 3000UL;     // Sensor query period
-const uint32_t BLINKSTEP =  250UL;     // LED blink period
+/* How to use the DHT-22 sensor with Arduino uno
+   Temperature and humidity sensor
+*/
 
-Sensirion sht = Sensirion(pinMeetingRoom, pinClkMeetingRoom);
 
-uint16_t rawData;
-float tempMeetingRoom;
-float humMeetingRoom;
-
-byte shtState = 0;
+//Constants
+#define DHTPIN 2     // what pin we're connected to
+#define DHTTYPE DHT22   // DHT 22  (AM2302)
+DHT dht(DHTPIN, DHTTYPE); //// Initialize DHT sensor for normal 16mhz Arduino
 
 // LM35
 int pinLara = A0, pinExternal = A1; // Pino analogico para ligacao do LM35
