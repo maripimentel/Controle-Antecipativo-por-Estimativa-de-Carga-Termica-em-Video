@@ -4,7 +4,7 @@
 
 
 // Pino conectado ao pino de dados do sensor
-#define DHTPIN 3
+#define DHTPIN 8
 
 // Utilize a linha de acordo com o modelo do sensor
 //#define DHTTYPE DHT11   // Sensor DHT11
