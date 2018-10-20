@@ -33,12 +33,17 @@ def data():
         timestamp = time.time()
         dateTime = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
         
+        # Read temperatura e humidity sensors
         for i in range (10):
             (readOk, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal) = readTempHum(tempMeetingRoom, humMeetingRoom, tempLara, tempExternal)
             if(readOk):
                 break
 
-        (doorSignal, compressorSignal) = (0,0)
+        # TODO: read door signal
+        doorSignal = 0
+
+        # Read compressor signal
+        compressorSignal = settings.compressorSignal
 
         InsertData(database, dateTime, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal, numPeople, compressorSignal)
         time.sleep(60)

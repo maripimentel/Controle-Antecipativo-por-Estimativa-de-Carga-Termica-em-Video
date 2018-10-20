@@ -8,12 +8,19 @@ def Controller(lastOutput):
     TAG = '(controller) '
 
     if (settings.controllerType == 0):
-        # Identificacao
-        output = 100
+        # Identificacao do Modelo
+
+        print(TAG + "Identificação do Modelo")
+
+        PERIOD = 4 * 60 # 4 horas
+        output = 75 # 3 horas ligado e 1 hora desligado
+
     elif(settings.controllerType == 1):
-        print(TAG + "Controlador: Liga-Desliga")
-        
         # Liga-Desliga
+
+        print(TAG + "Controlador: Liga-Desliga")
+
+        PERIOD = 10 # 10 segundos
 
         MIN_TEMP = 20
         MAX_TEMP = 22
@@ -36,16 +43,15 @@ def Controller(lastOutput):
 ##    elif(settings.controllerType == 3):
 ##        #Adaptativo
     
-    (onTime, period) = PWM(output, TAG)
+    (onTime, period) = PWM(output, PERIOD, TAG)
     
     writeRele(onTime, period, TAG)
 
     return output
 
     
-def PWM(output, TAG):
+def PWM(output, PERIOD, TAG):
     OUTPUT_MAX = 100
-    PERIOD = 1 * 60
     
     period = float(PERIOD)
     
@@ -75,6 +81,7 @@ def writeRele(onTime, period, TAG):
             ser=serial.Serial(p[0], 9600, timeout=1)
     
     if (onTime>0):
+        settings.compressorSignal = 1
         data = b"1"
         print(TAG + 'Sinal para o compressor ligar por '+str(onTime)+' segundos')
         ser.write(data)
@@ -83,6 +90,7 @@ def writeRele(onTime, period, TAG):
         time.sleep(onTime)
         
     if (onTime != period):
+        settings.compressorSignal = 0
         data = b"0"
         print(TAG + 'Sinal para o compressor desligar por '+str(period - onTime)+' segundos')
         ser.write(data)
