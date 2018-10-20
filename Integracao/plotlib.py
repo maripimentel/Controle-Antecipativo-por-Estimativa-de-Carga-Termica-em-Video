@@ -11,24 +11,34 @@ def plotModel (database, name):
     humMeetingRoom = []
     tempLara = []
     tempExternal = []
+    compressorSignal = []
     cont = 0
     contArray = []
     
     for line in data:
-        dateTime.append(line[0])
+        time = line[0].decode("utf-8")
+        time = time.split(" ")
+        time = time[1]
+        dateTime.append(time)
+        print(time)
         tempMeetingRoom.append(line[1])
         humMeetingRoom.append(line[2])
         tempLara.append(line[3])
         tempExternal.append(line[4])
+        compressorSignal.append(line[7]*15)
         contArray.append(cont)
         cont = cont+1
         
-        if(cont>1180):
-            break
+##        if(cont>1180):
+##            break
     
     plt.figure()
-    plt.plot(contArray[1000:], tempMeetingRoom[1000:])
-    plt.title("Liga-Desliga")
+    plt.plot(dateTime, tempMeetingRoom)
+    plt.plot(dateTime, tempLara)
+    plt.plot(dateTime, tempExternal)
+    plt.plot(dateTime, compressorSignal)
+    plt.legend(("Temperatura da Sala de Reuniao", "Temperatura do Lara", "Temperatura Externa", "Sinal de Controle"))
+    plt.title("Identificacao do Modelo")
     plt.ylabel("Temperatura")
     plt.xlabel("Minutos")
     #plt.xticks(range(0, 80, 20), dateTime)

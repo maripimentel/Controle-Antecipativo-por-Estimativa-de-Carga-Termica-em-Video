@@ -4,17 +4,29 @@ import struct
 import serial.tools.list_ports
 import settings
 
-def Controller(lastOutput):
+def Controller(lastOutput, cont):
     TAG = '(controller) '
 
     if (settings.controllerType == 0):
         # Identificacao do Modelo
 
-        print(TAG + "Identificação do Modelo")
+        print(TAG + "Identificacao do Modelo")
 
-        PERIOD = 4 * 60 # 4 horas
-        output = 75 # 3 horas ligado e 1 hora desligado
-
+        PERIOD = 60 # 4 horas
+        
+        print(TAG + "Contador: " + str(cont))
+        
+        if (cont >= 3 * 60):
+            output = 0
+            if (cont == 4 * 60):
+                cont = 1
+            else:
+                cont = cont + 1
+        else:
+            output = 100
+            cont = cont + 1 
+        
+        
     elif(settings.controllerType == 1):
         # Liga-Desliga
 
@@ -25,6 +37,7 @@ def Controller(lastOutput):
         MIN_TEMP = 20
         MAX_TEMP = 22
 
+        cont = 1
         
         print(TAG + "Temperatuda da Sala: "+ str(settings.tempMeetingRoom))
         if(float(settings.tempMeetingRoom) > 22.00):
@@ -47,7 +60,7 @@ def Controller(lastOutput):
     
     writeRele(onTime, period, TAG)
 
-    return output
+    return (output, cont)
 
     
 def PWM(output, PERIOD, TAG):

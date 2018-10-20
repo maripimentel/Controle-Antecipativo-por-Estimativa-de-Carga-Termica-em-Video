@@ -44,6 +44,7 @@ def data():
 
         # Read compressor signal
         compressorSignal = settings.compressorSignal
+        print(TAG+'Sinal do Compressor: '+str(compressorSignal))
 
         InsertData(database, dateTime, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal, numPeople, compressorSignal)
         time.sleep(60)
@@ -57,8 +58,9 @@ def counter(timeHour, SAVE_RESULTS):
 def controller():
     global runEvent
     lastOutput = 0
+    cont = 1
     while runEvent.is_set():
-        lastOutput = Controller(lastOutput)
+        (lastOutput, cont) = Controller(lastOutput, cont)
 
 SAVE_RESULTS = False
 
@@ -101,7 +103,7 @@ except KeyboardInterrupt:
     threadPeopleData.join()
     threadController.join()
     
-    writeRele(0, 10, "(controllerlib) ")
+    writeRele(0, 30, "(controllerlib) ")
 
 # print(TAG+'Final2: '+str(numberPeople))
 
