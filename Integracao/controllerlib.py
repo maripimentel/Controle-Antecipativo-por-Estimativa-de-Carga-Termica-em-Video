@@ -32,23 +32,33 @@ def Controller(lastOutput, cont):
 
         print(TAG + "Controlador: Liga-Desliga")
 
-        PERIOD = 30 # 10 segundos
+        PERIOD = 60 # 10 segundos
 
         MIN_TEMP = 20
         MAX_TEMP = 22
 
-        cont = 1
-        
+        print(TAG + "Contador: " + str(cont))
         print(TAG + "Temperatuda da Sala: "+ str(settings.tempMeetingRoom))
-        if(float(settings.tempMeetingRoom) > 22.00):
-            print(TAG + "Liga-Desliga: LIGA")
-            output = 100
-        elif(float(settings.tempMeetingRoom) < 20.00):
-            print(TAG + "Liga-Desliga: DESLIGA")
+        
+        if (cont >= 3 * 60):
             output = 0
+            if (cont == 4 * 60):
+                cont = 1
+            else:
+                cont = cont + 1
         else:
-            print(TAG + "Liga-Desliga: MANTEM")
-            output = lastOutput
+            if(float(settings.tempMeetingRoom) > 22.00):
+                print(TAG + "Liga-Desliga: LIGA")
+                output = 100
+            elif(float(settings.tempMeetingRoom) < 20.00):
+                print(TAG + "Liga-Desliga: DESLIGA")
+                output = 0
+            else:
+                print(TAG + "Liga-Desliga: MANTEM")
+                output = lastOutput
+            cont = cont + 1
+            
+        
 
 ##    elif(settings.controllerType == 2):
 ##        # PI
