@@ -22,14 +22,13 @@ float humMeetingRoom;
 byte shtState = 0;
 
 // LM35
-int pinLara = 8, pinExternal = A1; // Pino analogico para ligacao do LM35
+int pinLara = 8, pinExternal = 9; // Pino analogico para ligacao do LM35
 
 // Definicoes do sensor : pino, tipo
 DHT dhtLara(pinLara, DHTTYPE);
+DHT dhtExternal(pinExternal, DHTTYPE);
 
-float tempLara = 0, tempExternal; // Variaveis que armazenam a temperatura em Celsius
-float samplesLara[8], samplesExternal[8]; // Array para precisão na medição
-int i;
+float tempLara = 0, tempExternal = 0; // Variaveis que armazenam a temperatura em Celsius
 
 // Rele
 float f;
@@ -52,7 +51,7 @@ void setup()
   sht.measHumi(&rawData);              // Maps to: sht.meas(HUMI, &rawData, BLOCK)
   humMeetingRoom = sht.calcHumi(rawData, tempMeetingRoom);
   pinMode(rele, OUTPUT);
-  dht.begin();
+  dhtLara.begin();
   logData();
 }
 
@@ -79,18 +78,12 @@ void loop()
   case 0:
     if (curMillis - trhMillis >= TRHSTEP) {      // Start new temp/humi measurement?
       sht.meas(TEMP, &rawData, NONBLOCK);
-      
-      for(i = 0;i<=7;i++){ // Loop que faz a leitura da temperatura 8 vezes
-        samplesExternal[i] = ( 5.0 * analogRead(pinExternal) * 100.0) / 1024.0;
-        
-        //A cada leitura, incrementa o valor da variavel tempc
-        tempExternal = tempExternal + samplesExternal[i]; 
-      } 
-      
+            
       // Leitura da umidade
-      // float humLara = dht.readHumidity();
+      // float humLara = dhtLara.readHumidity();
       // Leitura da temperatura (Celsius)
-      float tempLara = dht.readTemperature();
+      tempLara = dhtLara.readTemperature();
+      tempExternal = dhtExternal.readTemperature();
       
       shtState++;
       trhMillis = curMillis;
@@ -117,8 +110,6 @@ void loop()
 }
 
 void logData() {
-  tempLara = tempLara/8.0;
-  tempExternal = tempExternal/8.0;
   
   Serial.print("TM:");   Serial.print(tempMeetingRoom);
   Serial.print("|HM:");  Serial.print(humMeetingRoom);
