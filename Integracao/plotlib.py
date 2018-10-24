@@ -13,6 +13,7 @@ def plotModel (database, name):
     tempLara = []
     tempExternal = []
     compressorSignal = []
+    isOn = []
     cont = 0
     contArray = []
     
@@ -26,8 +27,9 @@ def plotModel (database, name):
         tempLara.append(line[3])
         tempExternal.append(line[4])
         compressorSignal.append(line[7]*15)
+        isOn.append(line[8])
         contArray.append(cont)
-        if(cont == 0 or cont%300 == 0):
+        if(cont == 0 or cont%1300 == 0):
             dateTimeClean.append(time)
         cont = cont+1
                 
@@ -39,13 +41,14 @@ def plotModel (database, name):
     plt.plot(dateTime[1:], tempLara[1:])
     plt.plot(dateTime[1:], tempExternal[1:])
     plt.plot(dateTime[1:], compressorSignal[1:])
-    plt.legend(("Temperatura da Sala de Reuniao", "Temperatura do Lara", "Temperatura Externa", "Sinal de Controle"))
-    plt.title("Identificacao do Modelo")
+    plt.plot(dateTime[1:], isOn[1:])
+    plt.legend(("Temperatura da Sala de Reuniao", "Temperatura do Lara", "Temperatura Externa", "Sinal de Controle", "Estado do Sistema"), loc='lower left')
+    plt.title("Controlador Liga-Desliga")
     plt.ylabel("Temperatura")
     plt.xlabel("Horario")
-    plt.xticks(range(0, 1600, 300), dateTimeClean)
+    plt.xticks(range(0, 8000, 1400), dateTimeClean)
     plt.grid(True)
-    plt.savefig("Log/IdentModelo_"+name+".png")
+    plt.savefig("Log/LigaDesliga_"+name+".png")
     plt.show()
     name = name.replace(" ","|")
     print(name)

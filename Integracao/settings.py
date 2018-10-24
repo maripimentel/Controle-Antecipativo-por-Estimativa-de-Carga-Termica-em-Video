@@ -5,11 +5,15 @@ def init():
     global camera
     global controllerType
     global tempMeetingRoom
+    global dutyCycle
+    global isOn
 
     cntUp = 0
     cntDown = 0
     tempMeetingRoom = 0
     compressorSignal = 0
+    dutyCycle = 0
+    isOn = 0
 
     # Tipos de Controladores
     # 0 -> Identificacao do Modelo

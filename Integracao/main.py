@@ -41,13 +41,15 @@ def data():
 
         # TODO: read door signal
         doorSignal = 0
+        dutyCycle = 0
 
         # Read compressor signal
         compressorSignal = settings.compressorSignal
-        print(TAG+'Sinal do Compressor: '+str(compressorSignal))
+        isOn = settings.isOn
+        print(TAG+'Esta Ligado: '+str(isOn))
 
-        InsertData(database, dateTime, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal, numPeople, compressorSignal)
-        time.sleep(60)
+        InsertData(database, dateTime, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal, numPeople, compressorSignal, isOn, dutyCycle)
+        time.sleep(10)
 
 def counter(timeHour, SAVE_RESULTS):
         try:

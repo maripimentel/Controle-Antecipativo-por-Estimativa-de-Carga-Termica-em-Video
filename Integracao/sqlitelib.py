@@ -25,18 +25,19 @@ def CreateTable(database):
 	cursor.execute('''
 	    CREATE TABLE IF NOT EXISTS informacaoSala(dataHora TEXT PRIMARY KEY, tempSala REAL,
 	                       humSala REAL, tempVizinha REAL, tempExterna REAL,
-	                       sinalPorta INTEGER, numPessoas INTEGER, sinalCompressor INTEGER)
+	                       sinalPorta INTEGER, numPessoas INTEGER, sinalCompressor INTEGER,
+	                       estadoLigado INTEGER, cicloDeTrabalho INTEGER)
 	''')
 	database.commit()
 	return database 
 
 # Insert data in table
-def InsertData(database, dateTime, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal, numPeople, compressorSignal):
+def InsertData(database, dateTime, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal, numPeople, compressorSignal, isOn, dutyCycle):
 	cursor = database.cursor()
 	TAG = '(sqlite) '
 	try:
-		cursor.execute('''INSERT INTO informacaoSala(dataHora,tempSala,humSala,tempVizinha,tempExterna,sinalPorta,numPessoas,sinalCompressor)
-	                  VALUES(?,?,?,?,?,?,?,?)''', (dateTime, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal, numPeople, compressorSignal))
+		cursor.execute('''INSERT INTO informacaoSala(dataHora,tempSala,humSala,tempVizinha,tempExterna,sinalPorta,numPessoas,sinalCompressor,estadoLigado,cicloDeTrabalho)
+	                  VALUES(?,?,?,?,?,?,?,?,?,?)''', (dateTime, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal, numPeople, compressorSignal, isOn, dutyCycle))
 		print(TAG+'dataHora:{0} | numPessoas:{1}'.format(dateTime, numPeople))
 	except Exception as e:
 		print(TAG+'Falha ao inserir dados')
@@ -48,14 +49,14 @@ def ReadTable(database):
 	TAG = '(sqlite) '
 	cursor = database.cursor()
 	try:
-		cursor.execute('''SELECT dataHora,tempSala,humSala,tempVizinha,tempExterna,sinalPorta,numPessoas,sinalCompressor FROM informacaoSala''')
+		cursor.execute('''SELECT dataHora,tempSala,humSala,tempVizinha,tempExterna,sinalPorta,numPessoas,sinalCompressor, estadoLigado, cicloDeTrabalho FROM informacaoSala''')
 	except Exception as e:
 		print(TAG+'Falha ao ler os dados')
 	# Prints each line information
 	data = cursor.fetchall()
 	cont = 0
 	for line in data:
-	    print(TAG+'Coluna[{0}] -> dataHora:{1} | tempSala:{2} | humSala:{3} | tempVizinha:{4} | tempExterna:{5} | sinalPorta:{6} | numPessoas:{7} | sinalCompressor:{8}'.format(cont, line[0], line[1], line[2], line[3], line[4], line[5], line[6], line[7]))
+	    print(TAG+'Coluna[{0}] -> dataHora:{1} | tempSala:{2} | humSala:{3} | tempVizinha:{4} | tempExterna:{5} | sinalPorta:{6} | numPessoas:{7} | sinalCompressor:{8} | estadoLigado:{9} | cicloDeTrabalho:{10}'.format(cont, line[0], line[1], line[2], line[3], line[4], line[5], line[6], line[7], line[8], line[9]))
 	    cont = cont + 1
 	return data
 

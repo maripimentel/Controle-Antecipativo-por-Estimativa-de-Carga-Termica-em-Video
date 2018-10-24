@@ -17,12 +17,14 @@ def Controller(lastOutput, cont):
         print(TAG + "Contador: " + str(cont))
         
         if (cont >= 3 * 60):
+            settings.isOn = 0
             output = 0
             if (cont == 4 * 60):
                 cont = 1
             else:
                 cont = cont + 1
         else:
+            settings.isOn = 1
             output = 100
             cont = cont + 1 
         
@@ -32,7 +34,7 @@ def Controller(lastOutput, cont):
 
         print(TAG + "Controlador: Liga-Desliga")
 
-        PERIOD = 60 # 10 segundos
+        PERIOD = 10 # 10 segundos
 
         MIN_TEMP = 20
         MAX_TEMP = 22
@@ -40,13 +42,15 @@ def Controller(lastOutput, cont):
         print(TAG + "Contador: " + str(cont))
         print(TAG + "Temperatuda da Sala: "+ str(settings.tempMeetingRoom))
         
-        if (cont >= 3 * 60):
+        if (cont >= 3 * 60 * 6):
+            settings.isOn = 0
             output = 0
-            if (cont == 4 * 60):
+            if (cont == 4 * 60 * 6):
                 cont = 1
             else:
                 cont = cont + 1
         else:
+            settings.isOn = 1
             if(float(settings.tempMeetingRoom) > 22.00):
                 print(TAG + "Liga-Desliga: LIGA")
                 output = 100
@@ -57,8 +61,6 @@ def Controller(lastOutput, cont):
                 print(TAG + "Liga-Desliga: MANTEM")
                 output = lastOutput
             cont = cont + 1
-            
-        
 
 ##    elif(settings.controllerType == 2):
 ##        # PI
