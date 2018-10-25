@@ -19,6 +19,8 @@ import cv2
 
 def data():
     global runEvent
+    
+    time.sleep(15)
 	
     database = InicializeDatabase(str(timeHour))
     CreateTable(database)
@@ -49,7 +51,7 @@ def data():
         print(TAG+'Esta Ligado: '+str(isOn))
 
         InsertData(database, dateTime, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal, numPeople, compressorSignal, isOn, dutyCycle)
-        time.sleep(10)
+        time.sleep(60)
 
 def counter(timeHour, SAVE_RESULTS):
         try:
