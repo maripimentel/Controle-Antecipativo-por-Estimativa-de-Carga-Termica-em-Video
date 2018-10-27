@@ -64,7 +64,7 @@ def ReadTable(database):
 def CloseTable(database):
 	database.close()
 	
-def readTempHum(tempMeetingRoom, humMeetingRoom, tempLara, tempExternal):
+def readTempHumDoor(tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal):
     TAG = '(sqlite) '
     ports = list(serial.tools.list_ports.comports())
     for p in ports:
@@ -79,11 +79,11 @@ def readTempHum(tempMeetingRoom, humMeetingRoom, tempLara, tempExternal):
     except:
         print(TAG + "Sem dados")
         readOk = False
-        return (readOk, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal)
+        return (readOk, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal)
     
     if(read == "" or len(read) < 4):
         readOk = False
-        return (readOk, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal)
+        return (readOk, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal)
     time.sleep(1)
     read = read.decode("utf-8")
     #print(read)
@@ -114,15 +114,19 @@ def readTempHum(tempMeetingRoom, humMeetingRoom, tempLara, tempExternal):
         elif(key == 'TE' and value != "Not found"):
         #    print("External")
             tempExternal = value
+        elif(key == 'DS' and value != "Not found"):
+        #    print("External")
+            doorSignal = value
             
     print(TAG + "Temperatura Sala de Reuniao: " + str(tempMeetingRoom))
     print(TAG + "Humidade Sala de Reuniao: " + str(humMeetingRoom))
     print(TAG + "Temperatura Lara: " + str(tempLara))
     print(TAG + "Temperatura Externa: " + str(tempExternal))
+    print(TAG + "Sinal da Porta: " + str(doorSignal))
 
     settings.tempMeetingRoom = tempMeetingRoom
 
     readOk = True
             
-    return (readOk, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal)
+    return (readOk, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal)
 
