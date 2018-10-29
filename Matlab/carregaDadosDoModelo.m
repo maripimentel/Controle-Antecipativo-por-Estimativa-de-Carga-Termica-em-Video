@@ -1,6 +1,6 @@
 %% CARREGAR OS DADOS
 clc;
-A = 6.112;
+A = 6.112
 m = 17.62;
 Tn = 243.12;
 C = 2.1674;
