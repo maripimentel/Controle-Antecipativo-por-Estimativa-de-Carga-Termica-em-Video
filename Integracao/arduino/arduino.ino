@@ -92,7 +92,10 @@ void loop()
       }
       else if(compSignal == '0') {
         digitalWrite(rele,HIGH);
-      }
+      } 
+      else if (compSignal == '2') {
+        compSignal = lastCompSignal;
+      }      
     }
     lastCompSignal = compSignal;
     trhMillisCom = curMillisCom;
@@ -154,6 +157,8 @@ char recvInfo() {
     received = Serial.read();
 //    Serial.print("Signal Rele: ");
 //    Serial.println(received);
+  } else {
+    received = '2';
   }
   return received;
 }
