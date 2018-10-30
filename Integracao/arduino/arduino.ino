@@ -34,7 +34,7 @@ float tempLara = 0, tempExternal = 0; // Variaveis que armazenam a temperatura e
 float f;
 char compSignal;
 char lastCompSignal;
-int rele = 7;
+int rele = A0;
 const uint32_t TRHCOM   = 100UL;
 
 // Time

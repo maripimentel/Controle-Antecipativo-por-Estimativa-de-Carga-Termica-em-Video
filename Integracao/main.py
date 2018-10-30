@@ -19,13 +19,11 @@ import cv2
 
 def data():
     global runEvent
-    
-    time.sleep(15)
 	
     database = InicializeDatabase(str(timeHour))
     CreateTable(database)
     
-    (tempMeetingRoom, humMeetingRoom, tempLara, tempExternal) = (0,0,0,0)
+    (tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal) = (0,0,0,0,0)
     
     while runEvent.is_set():
         numPeople = settings.cntUp-settings.cntDown
@@ -37,13 +35,11 @@ def data():
         
         # Read temperatura e humidity sensors
         for i in range (10):
-            (readOk, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal) = readTempHum(tempMeetingRoom, humMeetingRoom, tempLara, tempExternal)
+            (readOk, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal) = readTempHumDoor(tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal)
             if(readOk):
                 break
 
-        # TODO: read door signal
-        doorSignal = 0
-        dutyCycle = 0
+        dutyCycle = settings.dutyCycle
 
         # Read compressor signal
         compressorSignal = settings.compressorSignal

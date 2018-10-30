@@ -3,7 +3,8 @@ import time
 import struct
 import serial.tools.list_ports
 import settings
-import scipy
+from scipy import signal
+from simple_pid import PID
 
 def Controller(lastOutput, cont):
     TAG = '(controller) '
@@ -65,33 +66,47 @@ def Controller(lastOutput, cont):
 
     elif(settings.controllerType == 2):
         # PI
-
         print(TAG + "Controlador: PI")
 
-        PERIOD = 4 * 60
+        PERIOD = 60 * 4
 
-        TEMP = 21
+        TEMP = 20.0
 
         Kp = 0.12
         Ki = 13 * Kp;
+        
+        if(cont > 3 * 15):        
+            settings.isOn = 0
+            output = 0
+            if (cont == 4 * 15):
+                cont = 1
+            else:
+                cont = cont + 1
+        else:
+            settings.isOn = 1
+            
+            cont = cont + 1
+            
+            # PI
+            piController = PID (-Kp, -Ki, 0, setpoint = TEMP)
+            
+            # Erro: diferenca entre temperatura desejada e medida
+            error = float(settings.tempMeetingRoom) - TEMP
+            
+            # Sinal de controle
+            controllerSignal = piController(float(settings.tempMeetingRoom))
+            print(TAG + "Controller Signal: " + str(controllerSignal))
 
-        # PI
-        piController = signal.TransferFunction([Kp Ki], [1 0])
+            # Saturacao
+            if (controllerSignal>1):
+                    controllerSignal = 1;
+            elif (controllerSignal < 0):
+                    controllerSignal = 0;
 
-        # Erro: diferenca entre temperatura desejada e medida
-        error = settings.tempMeetingRoom - TEMP
-
-        # Sinal de controle
-        controllerSignal = error*piController
-
-        # Saturacao
-        if (controllerSignal>1):
-        	controllerSignal = 1;
-        elif (controllerSignal < 0):
-        	controllerSignal = 0;
-
-       	output = controllerSignal * 100;
-
+            output = controllerSignal * 100;
+            
+            print(TAG + "Controller Signal: " + str(output))
+        
 ##    elif(settings.controllerType == 3):
 ##        #Adaptativo
     
@@ -115,6 +130,8 @@ def PWM(output, PERIOD, TAG):
         percentage = 0
     elif percentage < 0.1:
         percentage = 0.1
+    
+    settings.dutyCycle = percentage
     
     onTime = period * percentage
     
