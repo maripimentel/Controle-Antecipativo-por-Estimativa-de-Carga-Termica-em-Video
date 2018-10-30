@@ -3,6 +3,7 @@ import time
 import struct
 import serial.tools.list_ports
 import settings
+import scipy
 
 def Controller(lastOutput, cont):
     TAG = '(controller) '
@@ -62,9 +63,35 @@ def Controller(lastOutput, cont):
                 output = lastOutput
             cont = cont + 1
 
-##    elif(settings.controllerType == 2):
-##        # PI
-##        
+    elif(settings.controllerType == 2):
+        # PI
+
+        print(TAG + "Controlador: PI")
+
+        PERIOD = 4 * 60
+
+        TEMP = 21
+
+        Kp = 0.12
+        Ki = 13 * Kp;
+
+        # PI
+        piController = signal.TransferFunction([Kp Ki], [1 0])
+
+        # Erro: diferenca entre temperatura desejada e medida
+        error = settings.tempMeetingRoom - TEMP
+
+        # Sinal de controle
+        controllerSignal = error*piController
+
+        # Saturacao
+        if (controllerSignal>1):
+        	controllerSignal = 1;
+        elif (controllerSignal < 0):
+        	controllerSignal = 0;
+
+       	output = controllerSignal * 100;
+
 ##    elif(settings.controllerType == 3):
 ##        #Adaptativo
     
