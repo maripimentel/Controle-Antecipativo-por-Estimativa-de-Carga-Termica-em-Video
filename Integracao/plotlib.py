@@ -6,14 +6,19 @@ from sqlitelib import *
 def plotModel (database, name):
     data = ReadTable(database)
     
+    TEMP = 21
+    
     dateTime = []
     dateTimeClean = []
     tempMeetingRoom = []
     humMeetingRoom = []
     tempLara = []
     tempExternal = []
+    reference = []
     compressorSignal = []
+    dutyCycle = []
     isOn = []
+    error = []
     cont = 0
     contArray = []
     
@@ -26,8 +31,11 @@ def plotModel (database, name):
         humMeetingRoom.append(line[2])
         tempLara.append(line[3])
         tempExternal.append(line[4])
-        compressorSignal.append(line[7]*15)
+        reference.append(TEMP)
+        compressorSignal.append(line[7]*14)
         isOn.append(line[8])
+        dutyCycle.append(line[9])
+        error.append(line[1]-TEMP)
         contArray.append(cont)
         if(cont == 0 or cont%100 == 0):
             dateTimeClean.append(time)
@@ -37,12 +45,15 @@ def plotModel (database, name):
 ##            break
     
     plt.figure()
+    plt.plot(dateTime[1:], reference[1:])
     plt.plot(dateTime[1:], tempMeetingRoom[1:])
     plt.plot(dateTime[1:], tempLara[1:])
     plt.plot(dateTime[1:], tempExternal[1:])
     plt.plot(dateTime[1:], compressorSignal[1:])
     plt.plot(dateTime[1:], isOn[1:])
-    plt.legend(("Temperatura da Sala de Reuniao", "Temperatura do Lara", "Temperatura Externa", "Sinal de Controle", "Estado do Sistema"), loc='lower left')
+    plt.plot(dateTime[1:], error[1:])
+    plt.plot(dateTime[1:], dutyCycle[1:])
+    plt.legend(("Referencia","Temperatura da Sala de Reuniao", "Temperatura do Lara", "Temperatura Externa", "Sinal de Controle", "Estado do Sistema", "Erro", "Ciclo de Trabalho"), loc='lower left')
     plt.title("Controlador PI")
     plt.ylabel("Temperatura")
     plt.xlabel("Horario")
@@ -52,4 +63,7 @@ def plotModel (database, name):
     plt.show()
     name = name.replace(" ","|")
     print(name)
+    
+    print(tempMeetingRoom[360])
+    print(dutyCycle[360])
         

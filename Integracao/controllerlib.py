@@ -98,12 +98,12 @@ def Controller(lastOutput, cont):
             print(TAG + "Controller Signal: " + str(controllerSignal))
 
             # Saturacao
-            if (controllerSignal>1):
-                    controllerSignal = 1;
+            if (controllerSignal>0.4):
+                    controllerSignal = 0.4;
             elif (controllerSignal < 0):
                     controllerSignal = 0;
 
-            output = controllerSignal * 100;
+            output = controllerSignal * 2.5 * 100;
             
             print(TAG + "Controller Signal: " + str(output))
         
