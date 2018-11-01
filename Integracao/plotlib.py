@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from sqlitelib import *
+import math
 
 # coding=utf-8
 
@@ -20,6 +21,7 @@ def plotModel (database, name):
     isOn = []
     error = []
     cont = 0
+    tempLaraAnterior = 0.0
     contArray = []
     
     for line in data:
@@ -29,7 +31,11 @@ def plotModel (database, name):
         dateTime.append(time)
         tempMeetingRoom.append(line[1])
         humMeetingRoom.append(line[2])
-        tempLara.append(line[3])
+        if(math.isnan(float(line[3])) or line[3]=='nan'):
+            tempLara.append(tempLaraAnterior)
+        else:
+            tempLara.append(line[3])
+            tempLaraAnterior = line[3]
         tempExternal.append(line[4])
         reference.append(TEMP)
         compressorSignal.append(line[7]*14)
@@ -37,7 +43,7 @@ def plotModel (database, name):
         dutyCycle.append(line[9])
         error.append(line[1]-TEMP)
         contArray.append(cont)
-        if(cont == 0 or cont%100 == 0):
+        if(cont == 0 or cont%400 == 0):
             dateTimeClean.append(time)
         cont = cont+1
                 
@@ -57,7 +63,7 @@ def plotModel (database, name):
     plt.title("Controlador PI")
     plt.ylabel("Temperatura")
     plt.xlabel("Horario")
-    plt.xticks(range(0, 500, 100), dateTimeClean)
+    plt.xticks(range(0, 1500, 400), dateTimeClean)
     plt.grid(True)
     plt.savefig("Log/PI_"+name+".png")
     plt.show()
