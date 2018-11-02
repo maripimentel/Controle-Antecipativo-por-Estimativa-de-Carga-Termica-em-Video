@@ -17,8 +17,11 @@ height, width, layers = frame.shape
 
 video = cv2.VideoWriter(video_name, cv2.VideoWriter_fourcc(*'XVID'), 30, (width,height)) 
 
-for image in images:
-    video.write(cv2.imread(os.path.join(image_folder, image)))
+
+for cont in range(1, 567):
+    for img in os.listdir(image_folder):
+        if img.endswith(str(cont)+"_final.jpg"):
+            video.write(cv2.imread(os.path.join(image_folder, img)))
 
 cv2.destroyAllWindows()
 video.release()
