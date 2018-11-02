@@ -15,9 +15,9 @@ from picamera.array import PiRGBArray
 # Inicialize camera object
 def InicializeCamera():
     camera = PiCamera()
-    camera.resolution = (640, 480)
-    camera.framerate = 32
-    rawCapture = PiRGBArray(camera, size=(640, 480))
+    camera.resolution = (320, 240) # 320 240
+    camera.framerate = 30
+    rawCapture = PiRGBArray(camera, size=(320, 240))
     return (camera,rawCapture)
 
 # Start recording and setup the file name

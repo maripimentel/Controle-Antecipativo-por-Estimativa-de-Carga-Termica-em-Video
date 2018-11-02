@@ -62,7 +62,7 @@ def controller():
     while runEvent.is_set():
         (lastOutput, cont) = Controller(lastOutput, cont)
 
-SAVE_RESULTS = False
+SAVE_RESULTS = True
 
 TAG = '(main) '
 

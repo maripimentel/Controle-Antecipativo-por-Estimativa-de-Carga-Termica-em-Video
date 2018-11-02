@@ -40,19 +40,25 @@ def PeopleCounter(cntUp, cntDown, name, saveResults):
     time.sleep(0.1)
 
     # Calculate the threshold to define if it is or not a person
-    w = 640
-    h = 480
+    w = 320
+    h = 240
     frameArea = h*w
-    areaTH = frameArea/250
+    #areaTH = frameArea/250
+    areaTH = frameArea/50
+    areaTHSuperior = frameArea/4
     print(TAG+'threshold:'+str(areaTH))
 
     # Define up and down line
-    lineUp = int(2*(h/5))
-    lineDown = int(3*(h/5))
+    #lineUp = int(2*(h/5))
+    #lineDown = int(3*(h/5))
+    lineUp = int(13*(h/20))
+    lineDown = int(13*(h/20))
 
     # After this lines memory can be free
-    upLimit = int(1*(h/5))
-    downLimit = int(4*(h/5))
+    #upLimit = int(1*(h/5))
+    #downLimit = int(4*(h/5))
+    upLimit = int(2*(h/20))
+    downLimit = int(18*(h/20))
 
     # Calculate important points
     print(TAG+"y da linha inferior:"+str(lineDown))
@@ -78,7 +84,6 @@ def PeopleCounter(cntUp, cntDown, name, saveResults):
     cont = 1
     for cap in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
     # Para um video continuo camera.capture_continuous(rawCapture, format="bgr", use_video_port=True)
-
         settings.cntDown = cntDown
         settings.cntUp = cntUp
         
@@ -112,7 +117,7 @@ def PeopleCounter(cntUp, cntDown, name, saveResults):
         _, contours0, hierarchy = cv2.findContours(mask2,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
         for cnt in contours0:
             area = cv2.contourArea(cnt)
-            if area > areaTH:
+            if area > areaTH and area < areaTHSuperior:
         
                 #####################
                 #     TRACKING      #
@@ -262,9 +267,8 @@ def preProcess(fgmask, fgmask2, saveResults, path, videoName, cont, kernelOp, ke
 
     return (mask, mask2)
 
-def  defineDirection(i, cx, cy, w, h, new, cntUp, cntDown, lineUp, lineDown, upLimit, downLimit, persons, TAG):
+def defineDirection(i, cx, cy, w, h, new, cntUp, cntDown, lineUp, lineDown, upLimit, downLimit, persons, TAG):
     stopLoop = False
-
     if abs(cx-i.getX()) <= w and abs(cy-i.getY()) <= h:
         # Close to a person already detected
         new = False
@@ -276,6 +280,8 @@ def  defineDirection(i, cx, cy, w, h, new, cntUp, cntDown, lineUp, lineDown, upL
             cntDown += 1;
             print(TAG+str(i.getId()) +' foi para baixo aos '+time.strftime("%c"))
         stopLoop = True
+    else:
+        print(TAG + 'OTHER PERSON')
     if i.getState() == '1':
         if i.getDir() == 'down' and i.getY() > downLimit:
             i.setDone()
