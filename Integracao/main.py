@@ -23,10 +23,12 @@ def data():
     database = InicializeDatabase(str(timeHour))
     CreateTable(database)
     
+    initialNumPeople = 2
+    
     (tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal) = (0,0,0,0,0)
     
     while runEvent.is_set():
-        numPeople = settings.cntUp-settings.cntDown
+        numPeople = settings.cntUp-settings.cntDown + initialNumPeople
         print(TAG+'Numero de Pessoas: '+str(numPeople))
 
         # Calculates inicial time
@@ -62,7 +64,7 @@ def controller():
     while runEvent.is_set():
         (lastOutput, cont) = Controller(lastOutput, cont)
 
-SAVE_RESULTS = True
+SAVE_RESULTS = False
 
 TAG = '(main) '
 

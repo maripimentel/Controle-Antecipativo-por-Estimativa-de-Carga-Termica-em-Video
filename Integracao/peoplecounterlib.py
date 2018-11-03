@@ -159,6 +159,7 @@ def PeopleCounter(cntUp, cntDown, name, saveResults):
         if k == 27:
             camera.close()
             break
+        
         rawCapture.truncate(0)
         
     #################
@@ -280,8 +281,6 @@ def defineDirection(i, cx, cy, w, h, new, cntUp, cntDown, lineUp, lineDown, upLi
             cntDown += 1;
             print(TAG+str(i.getId()) +' foi para baixo aos '+time.strftime("%c"))
         stopLoop = True
-    else:
-        print(TAG + 'OTHER PERSON')
     if i.getState() == '1':
         if i.getDir() == 'down' and i.getY() > downLimit:
             i.setDone()

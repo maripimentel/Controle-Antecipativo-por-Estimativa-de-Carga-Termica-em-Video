@@ -70,7 +70,7 @@ def Controller(lastOutput, cont):
 
         PERIOD = 60 * 4
 
-        TEMP = 20.0
+        TEMP = 23.0
 
         Kp = 0.12
         Ki = 13 * Kp;
@@ -98,12 +98,12 @@ def Controller(lastOutput, cont):
             print(TAG + "Controller Signal: " + str(controllerSignal))
 
             # Saturacao
-            if (controllerSignal>0.4):
-                    controllerSignal = 0.4;
+            if (controllerSignal>0.3):
+                    controllerSignal = 0.3;
             elif (controllerSignal < 0):
                     controllerSignal = 0;
 
-            output = controllerSignal * 2.5 * 100;
+            output = controllerSignal * 100.0 / 0.3;
             
             print(TAG + "Controller Signal: " + str(output))
         

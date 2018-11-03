@@ -7,7 +7,7 @@ import math
 def plotModel (database, name):
     data = ReadTable(database)
     
-    TEMP = 21
+    TEMP = 23
     
     dateTime = []
     dateTimeClean = []
@@ -24,6 +24,9 @@ def plotModel (database, name):
     tempLaraAnterior = 0.0
     contArray = []
     
+    inferior = []
+    superior = []
+    
     for line in data:
         time = line[0].decode("utf-8")
         time = time.split(" ")
@@ -38,12 +41,14 @@ def plotModel (database, name):
             tempLaraAnterior = line[3]
         tempExternal.append(line[4])
         reference.append(TEMP)
+        inferior.append(22.5)
+        superior.append(23.5)
         compressorSignal.append(line[7]*14)
         isOn.append(line[8])
         dutyCycle.append(line[9])
         error.append(line[1]-TEMP)
         contArray.append(cont)
-        if(cont == 0 or cont%400 == 0):
+        if(cont == 0 or cont%300 == 0):
             dateTimeClean.append(time)
         cont = cont+1
                 
@@ -59,11 +64,13 @@ def plotModel (database, name):
     plt.plot(dateTime[1:], isOn[1:])
     plt.plot(dateTime[1:], error[1:])
     plt.plot(dateTime[1:], dutyCycle[1:])
+    #plt.plot(dateTime[1:], inferior[1:])
+    #plt.plot(dateTime[1:], superior[1:])
     plt.legend(("Referencia","Temperatura da Sala de Reuniao", "Temperatura do Lara", "Temperatura Externa", "Sinal de Controle", "Estado do Sistema", "Erro", "Ciclo de Trabalho"), loc='lower left')
     plt.title("Controlador PI")
     plt.ylabel("Temperatura")
     plt.xlabel("Horario")
-    plt.xticks(range(0, 1500, 400), dateTimeClean)
+    plt.xticks(range(0, 1500, 300), dateTimeClean)
     plt.grid(True)
     plt.savefig("Log/PI_"+name+".png")
     plt.show()

@@ -19,7 +19,8 @@ from sqlitelib import *
 # PI
 # name = '2018-10-29 22:16:39'
 # name = '2018-10-30 12:02:54'
-name = '2018-10-31 10:57:30 -FIM'
+# name = '2018-10-31 10:57:30 -FIM'
+name = '2018-11-02 18:40:37 -METADE'
 
 database = InicializeDatabase(name)
 # name = '2018-10-14 13:04:18 3'
