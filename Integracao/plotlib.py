@@ -43,37 +43,46 @@ def plotModel (database, name):
         reference.append(TEMP)
         inferior.append(22.5)
         superior.append(23.5)
-        compressorSignal.append(line[7]*14)
+        compressorSignal.append(line[7])
         isOn.append(line[8])
         dutyCycle.append(line[9])
         error.append(line[1]-TEMP)
         contArray.append(cont)
-        if(cont == 0 or cont%300 == 0):
+        if(cont == 0 or cont%200 == 0):
             dateTimeClean.append(time)
         cont = cont+1
-                
-##        if(cont>1180):
-##            break
     
     plt.figure()
-    plt.plot(dateTime[1:], reference[1:])
     plt.plot(dateTime[1:], tempMeetingRoom[1:])
     plt.plot(dateTime[1:], tempLara[1:])
     plt.plot(dateTime[1:], tempExternal[1:])
-    plt.plot(dateTime[1:], compressorSignal[1:])
-    plt.plot(dateTime[1:], isOn[1:])
-    plt.plot(dateTime[1:], error[1:])
-    plt.plot(dateTime[1:], dutyCycle[1:])
-    #plt.plot(dateTime[1:], inferior[1:])
-    #plt.plot(dateTime[1:], superior[1:])
-    plt.legend(("Referencia","Temperatura da Sala de Reuniao", "Temperatura do Lara", "Temperatura Externa", "Sinal de Controle", "Estado do Sistema", "Erro", "Ciclo de Trabalho"), loc='lower left')
+    plt.plot(dateTime[1:], reference[1:])
+    plt.legend(("Temperatura da Sala de Reuniao", "Temperatura do Lara", "Temperatura Externa", "Referencia"), loc='upper left')
     plt.title("Controlador PI")
     plt.ylabel("Temperatura")
     plt.xlabel("Horario")
-    plt.xticks(range(0, 1500, 300), dateTimeClean)
+    plt.xticks(range(0, 1500, 200), dateTimeClean)
     plt.grid(True)
-    plt.savefig("Log/PI_"+name+".png")
+    plt.savefig("Log/PI_"+name+"_Temp.png")
     plt.show()
+    
+    plt.figure()
+    plt.plot(dateTime[1:], compressorSignal[1:], linewidth=0.5)
+    plt.plot(dateTime[1:], dutyCycle[1:])
+    plt.plot(dateTime[1:], isOn[1:])
+    #plt.plot(dateTime[1:], error[1:])
+    #plt.plot(dateTime[1:], inferior[1:])
+    #plt.plot(dateTime[1:], superior[1:])
+    plt.legend(("Sinal de Controle", "Ciclo de Trabalho", "Estado do Sistema"), loc='lower left')
+    plt.title("Controlador PI")
+    plt.ylabel("Sinal")
+    plt.xlabel("Horario")
+    plt.xticks(range(0, 1500, 200), dateTimeClean)
+    plt.grid(True)
+    plt.savefig("Log/PI_"+name+"_Signal.png")
+    plt.show()
+    
+    
     name = name.replace(" ","|")
     print(name)
     
