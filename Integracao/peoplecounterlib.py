@@ -73,8 +73,8 @@ def PeopleCounter(cntUp, cntDown, name, saveResults):
     fgbg = cv2.createBackgroundSubtractorMOG2(detectShadows = True)
 
     # Necessary to apply filters and morfological transforms
-    kernelOp = np.ones((3,3),np.uint8)
-    kernelOp2 = np.ones((5,5),np.uint8)
+    kernelOp = np.ones((5,5),np.uint8)
+    kernelOp2 = np.ones((7,7),np.uint8)
     kernelCl = np.ones((11,11),np.uint8)
 
     persons = []
@@ -253,6 +253,8 @@ def preProcess(fgmask, fgmask2, saveResults, path, videoName, cont, kernelOp, ke
     # Eliminate shadows
     ret,imBin= cv2.threshold(fgmask,200,255,cv2.THRESH_BINARY)
     ret,imBin2 = cv2.threshold(fgmask2,200,255,cv2.THRESH_BINARY)
+    #ret,imBin= cv2.threshold(fgmask,0,255,cv2.THRESH_BINARY+cv.THRESH_OTSU)
+    #ret,imBin2 = cv2.threshold(fgmask2,0,255,cv2.THRESH_BINARY+cv.THRESH_OTSU)
 
     # Eliminate noise
     mask = cv2.morphologyEx(imBin, cv2.MORPH_OPEN, kernelOp)

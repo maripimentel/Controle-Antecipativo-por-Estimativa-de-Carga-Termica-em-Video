@@ -36,27 +36,27 @@ def Controller(lastOutput, cont):
 
         print(TAG + "Controlador: Liga-Desliga")
 
-        PERIOD = 10 # 10 segundos
+        PERIOD = 15 # 10 segundos
 
-        MIN_TEMP = 20
-        MAX_TEMP = 22
+        MIN_TEMP = 22.7
+        MAX_TEMP = 23.3
 
         print(TAG + "Contador: " + str(cont))
         print(TAG + "Temperatuda da Sala: "+ str(settings.tempMeetingRoom))
         
-        if (cont >= 3 * 60 * 6):
+        if (cont >= 3 * 60 * 4):
             settings.isOn = 0
             output = 0
-            if (cont == 4 * 60 * 6):
+            if (cont == 4 * 60 * 4):
                 cont = 1
             else:
                 cont = cont + 1
         else:
             settings.isOn = 1
-            if(float(settings.tempMeetingRoom) > 22.00):
+            if(float(settings.tempMeetingRoom) > 23.50):
                 print(TAG + "Liga-Desliga: LIGA")
                 output = 100
-            elif(float(settings.tempMeetingRoom) < 20.00):
+            elif(float(settings.tempMeetingRoom) < 22.50):
                 print(TAG + "Liga-Desliga: DESLIGA")
                 output = 0
             else:
