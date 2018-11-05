@@ -7,6 +7,7 @@ def init():
     global tempMeetingRoom
     global dutyCycle
     global isOn
+    global inicialNumPeople
 
     cntUp = 0
     cntDown = 0
@@ -14,6 +15,7 @@ def init():
     compressorSignal = 0
     dutyCycle = 0
     isOn = 0
+    inicialNumPeople = 0
 
     # Tipos de Controladores
     # 0 -> Identificacao do Modelo

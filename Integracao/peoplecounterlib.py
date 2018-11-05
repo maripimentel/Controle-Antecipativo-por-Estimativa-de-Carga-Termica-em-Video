@@ -53,7 +53,7 @@ def PeopleCounter(cntUp, cntDown, name, saveResults):
     #lineDown = int(3*(h/5))
     lineUp = int(13*(h/20))
     lineDown = int(13*(h/20))
-
+    
     # After this lines memory can be free
     #upLimit = int(1*(h/5))
     #downLimit = int(4*(h/5))
@@ -148,7 +148,11 @@ def PeopleCounter(cntUp, cntDown, name, saveResults):
                 
                 # Drawing persons
                 drawPersons(frame, cx, cy, x, y, w, h, saveResults, path, videoName, cont, cnt)
-                
+        
+        if(cntUp - cntDown + settings.initialNumPeople < 0):
+            cntUp = settings.cntUp;
+            cntDown = settings.cntDown;
+        
         # Drawing tracking
         drawTrack(frame, persons, cntUp, cntDown, lineDownColor, lineUpColor, ptsL1, ptsL2, ptsL3, ptsL4, saveResults, path, videoName, cont)
         
@@ -274,12 +278,15 @@ def defineDirection(i, cx, cy, w, h, new, cntUp, cntDown, lineUp, lineDown, upLi
     stopLoop = False
     if abs(cx-i.getX()) <= w and abs(cy-i.getY()) <= h:
         # Close to a person already detected
+        lineLeft = int(8*(320/10))
+        lineRight = int(3*(320/10))
+    
         new = False
         i.updateCoords(cx,cy)   #Refresh
-        if i.going_UP(lineDown,lineUp) == True:
+        if i.going_UP(lineDown,lineUp,lineLeft,lineRight) == True:
             cntUp += 1;
             print(TAG+str(i.getId()) +' foi para cima aos '+time.strftime("%c"))
-        elif i.going_DOWN(lineDown,lineUp) == True:
+        elif i.going_DOWN(lineDown,lineUp,lineLeft,lineRight) == True:
             cntDown += 1;
             print(TAG+str(i.getId()) +' foi para baixo aos '+time.strftime("%c"))
         stopLoop = True

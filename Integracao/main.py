@@ -23,7 +23,9 @@ def data():
     database = InicializeDatabase(str(timeHour))
     CreateTable(database)
     
-    initialNumPeople = 3
+    initialNumPeople = 2
+    
+    settings.initialNumPeople = initialNumPeople
     
     (tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal) = (0,0,0,0,0)
     
