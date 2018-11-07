@@ -23,6 +23,7 @@ def plotModel (database, name):
     cont = 0
     tempLaraAnterior = 0.0
     contArray = []
+    numPeople = []
     
     inferior = []
     superior = []
@@ -43,12 +44,13 @@ def plotModel (database, name):
         reference.append(TEMP)
         inferior.append(22.5)
         superior.append(23.5)
+        numPeople.append(line[6])
         compressorSignal.append(line[7])
         isOn.append(line[8])
         dutyCycle.append(line[9])
         error.append(line[1]-TEMP)
         contArray.append(cont)
-        if(cont == 0 or cont%200 == 0):
+        if(cont == 0 or cont%400 == 0):
             dateTimeClean.append(time)
         cont = cont+1
     
@@ -58,12 +60,12 @@ def plotModel (database, name):
     plt.plot(dateTime[1:], tempExternal[1:])
     plt.plot(dateTime[1:], reference[1:])
     plt.legend(("Temperatura da Sala de Reuniao", "Temperatura do Lara", "Temperatura Externa", "Referencia"), loc='upper left')
-    plt.title("Controlador Liga-Desliga")
+    plt.title("Controlador PI")
     plt.ylabel("Temperatura")
     plt.xlabel("Horario")
-    plt.xticks(range(0, 1500, 200), dateTimeClean)
+    plt.xticks(range(0, 2000, 400), dateTimeClean)
     plt.grid(True)
-    plt.savefig("Log/LigaDesliga_"+name+"_Temp.png")
+    plt.savefig("Log/PI_"+name+"_Temp.png")
     plt.show()
     
     plt.figure()
@@ -74,14 +76,23 @@ def plotModel (database, name):
     #plt.plot(dateTime[1:], inferior[1:])
     #plt.plot(dateTime[1:], superior[1:])
     plt.legend(("Sinal de Controle", "Ciclo de Trabalho", "Estado do Sistema"), loc='lower left')
-    plt.title("Controlador Liga-Desliga")
+    plt.title("Controlador PI")
     plt.ylabel("Sinal")
     plt.xlabel("Horario")
-    plt.xticks(range(0, 1500, 200), dateTimeClean)
+    plt.xticks(range(0, 2000, 400), dateTimeClean)
     plt.grid(True)
-    plt.savefig("Log/LigaDesliga_"+name+"_Signal.png")
+    plt.savefig("Log/PI_"+name+"_Signal.png")
     plt.show()
     
+    plt.figure()
+    plt.plot(dateTime[1:], numPeople[1:])
+    plt.title("Controlador PI")
+    plt.ylabel("Numero de Pessoas")
+    plt.xlabel("Horario")
+    plt.xticks(range(0, 2000, 400), dateTimeClean)
+    plt.grid(True)
+    plt.savefig("Log/PI_"+name+"_People.png")
+    plt.show()
     
     name = name.replace(" ","|")
     print(name)
