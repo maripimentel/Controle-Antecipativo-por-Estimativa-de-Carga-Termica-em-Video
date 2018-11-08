@@ -22,4 +22,4 @@ def init():
     # 1 -> Liga-Desliga
     # 2 -> PI
     # 3 -> Antecipativo
-    controllerType = 1
+    controllerType = 2
