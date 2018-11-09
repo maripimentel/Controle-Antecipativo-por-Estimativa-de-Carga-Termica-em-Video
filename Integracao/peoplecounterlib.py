@@ -164,7 +164,8 @@ def PeopleCounter(cntUp, cntDown, name, saveResults):
             camera.close()
             break
         
-        rawCapture.truncate(0)
+        rawCapture.truncate()
+        rawCapture.seek(0)
         
     #################
     #     CLEAR     #
