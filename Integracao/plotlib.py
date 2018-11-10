@@ -126,11 +126,22 @@ def plotModel (database, name, controllerType):
             nPeopleReal = 3
         elif(hour=='16' and (min == '52' or min == '53')):
             nPeopleReal = 4
+        elif(hour=='17' and (min == '00' or min == '01')):
+            nPeopleReal = 5
+        elif(hour=='17' and (min == '20' or min == '21')):
+            nPeopleReal = 3
+        elif(hour=='17' and (min == '30' or min == '31')):
+            nPeopleReal = 2
+        elif(hour=='17' and (min == '51' or min == '52')):
+            nPeopleReal = 0
             
         numPeopleReal.append(nPeopleReal)
         
-        if(cont == 0 or cont%57 == 0):
-            dateTimeClean.append(hour+":"+min)
+        if(cont == 0 or cont%170 == 0):
+            if(hour != 23):
+                dateTimeClean.append(str(int(hour)+1)+":00")
+            else:
+                dateTimeClean.append("00:00")
         cont = cont+1
     
     plt.figure()
@@ -138,11 +149,11 @@ def plotModel (database, name, controllerType):
     plt.plot(dateTime[1:], tempLara[1:])
     plt.plot(dateTime[1:], tempExternal[1:])
     plt.plot(dateTime[1:], reference[1:])
-    plt.legend(("Temperatura da Sala de Reuniao", "Temperatura do Lara", "Temperatura Externa", "Referencia"), loc='upper left')
+    plt.legend(("Temperatura da Sala de Reuniao", "Temperatura do Lara", "Temperatura Externa", "Referencia"), loc='upper right')
     plt.title(title)
     plt.ylabel("Temperatura")
     plt.xlabel("Horario")
-    plt.xticks(range(0, cont, 58), dateTimeClean)
+    plt.xticks(range(0, cont, 170), dateTimeClean)
     plt.grid(True)
     plt.savefig("Log/"+save+"_"+name+"_Temp.png")
     plt.show()
@@ -163,18 +174,18 @@ def plotModel (database, name, controllerType):
         plt.title(title)
         plt.ylabel("Sinal")
         plt.xlabel("Horario")
-        plt.xticks(range(0, cont, 57), dateTimeClean)
+        plt.xticks(range(0, cont, 170), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_Signal.png")
         plt.show()
     
         plt.figure()
-        plt.plot(dateTime[1:], numPeople[1:])
+        #plt.plot(dateTime[1:], numPeople[1:])
         plt.plot(dateTime[1:], numPeopleReal[1:])
         plt.title(title)
         plt.ylabel("Numero de Pessoas")
         plt.xlabel("Horario")
-        plt.xticks(range(0, cont, 57), dateTimeClean)
+        plt.xticks(range(0, cont, 170), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_People.png")
         plt.show()
