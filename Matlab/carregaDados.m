@@ -1,4 +1,4 @@
-database = '2018-10-20_16:44:16.db';
+database = '2018-10-20_16-44-16.db';
 conn = sqlite(database);
 
 sqlquery = 'SELECT * from informacaoSala';

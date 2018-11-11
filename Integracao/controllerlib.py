@@ -107,8 +107,54 @@ def Controller(lastOutput, cont):
             
             print(TAG + "Controller Signal: " + str(output))
         
-##    elif(settings.controllerType == 3):
-##        #Adaptativo
+    elif(settings.controllerType == 3):
+        #Antecipativo
+        print(TAG + "Controlador: Antecipativo")
+
+        PERIOD = 60 * 4
+
+        TEMP = 23.0
+
+        Kp = 0.12
+        Ki = 13 * Kp;
+        
+        if(cont > 3 * 15):        
+            settings.isOn = 0
+            output = 0
+            if (cont == 4 * 15):
+                cont = 1
+            else:
+                cont = cont + 1
+        else:
+            settings.isOn = 1
+            
+            cont = cont + 1
+            
+            # PI
+            piController = PID (-Kp, -Ki, 0, setpoint = TEMP)
+            
+            # Erro: diferenca entre temperatura desejada e medida
+            error = float(settings.tempMeetingRoom) - TEMP
+            
+            # Sinal de controle
+            controllerSignal = piController(float(settings.tempMeetingRoom))
+            print(TAG + "Controller Signal Original: " + str(controllerSignal))
+            nPeople = settings.cntUp-settings.cntDown + settings.inicialNumPeople
+            controllerSignal = controllerSignal + nPeople*0.01
+            print(TAG + "People: " + str(nPeople))
+            print(TAG + "Controller Signal Feedforward: " + str(controllerSignal))
+            
+
+            # Saturacao
+            if (controllerSignal>0.3):
+                    controllerSignal = 0.3;
+            elif (controllerSignal < 0):
+                    controllerSignal = 0;
+
+            output = controllerSignal * 100.0 / 0.3;
+            
+            print(TAG + "Controller Signal: " + str(output))
+        
     
     (onTime, period) = PWM(output, PERIOD, TAG)
     

@@ -3,6 +3,13 @@ from sqlitelib import *
 
 # coding=utf-8
 
+# Tipos de Controladores
+# 0 -> Identificacao do Modelo
+# 1 -> Liga-Desliga
+# 2 -> PI
+# 3 -> Antecipativo
+controllerType = 3
+
 # Identificacao
 # name = '2018-10-12 15:44:53'
 # name = '2018-10-13 13:10:18'
@@ -23,8 +30,13 @@ from sqlitelib import *
 # name = '2018-10-30 12:02:54'
 # name = '2018-10-31 10:57:30 -FIM'
 #name = '2018-11-02 18:40:37'
-name = '2018-11-05 22:47:36'
+#name = '2018-11-05 22:47:36'
+
+#name = '2018-11-09_09-55-06'
+
+#Antecipativo
+name = '2018-11-10_12-11-55_07'
+
 
 database = InicializeDatabase(name)
-# name = '2018-10-14 13:04:18 3'
-plotModel(database, name)
+plotModel(database, name, controllerType)

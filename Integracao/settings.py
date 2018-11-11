@@ -15,11 +15,11 @@ def init():
     compressorSignal = 0
     dutyCycle = 0
     isOn = 0
-    inicialNumPeople = 0
+    inicialNumPeople = 4
 
     # Tipos de Controladores
     # 0 -> Identificacao do Modelo
     # 1 -> Liga-Desliga
     # 2 -> PI
     # 3 -> Antecipativo
-    controllerType = 2
+    controllerType = 3
