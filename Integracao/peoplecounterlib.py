@@ -149,9 +149,24 @@ def PeopleCounter(cntUp, cntDown, name, saveResults):
                 # Drawing persons
                 drawPersons(frame, cx, cy, x, y, w, h, saveResults, path, videoName, cont, cnt)
         
+        timestamp = time.time()
+        dateTime = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d_%H-%M-%S')
+        
+        time = dateTime.split('_')[1]
+        hour = dateTime.split('-')[0]
+        print(TAG + 'Hour: ' + str(hour))
+        
         if(cntUp - cntDown + settings.initialNumPeople < 0):
             cntUp = settings.cntUp;
             cntDown = settings.cntDown;
+            
+        nightHours = ['23', '00', '01', '02', '03', '04', '05', '06']
+        if(hour in nightHours):
+            if(cntUp != cntDown):
+                if(cntUp > cntDown):
+                    cntDown = cntUp
+                else:
+                    cntUp = cntDown
         
         # Drawing tracking
         drawTrack(frame, persons, cntUp, cntDown, lineDownColor, lineUpColor, ptsL1, ptsL2, ptsL3, ptsL4, saveResults, path, videoName, cont)

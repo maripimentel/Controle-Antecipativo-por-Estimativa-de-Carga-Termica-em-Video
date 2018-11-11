@@ -35,7 +35,7 @@ def data():
 
         # Calculates inicial time
         timestamp = time.time()
-        dateTime = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+        dateTime = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d_%H-%M-%S')
         
         # Read temperatura e humidity sensors
         for i in range (10):
@@ -72,7 +72,7 @@ TAG = '(main) '
 
 # Calculates inicial time
 timestamp = time.time()
-timeHour = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+timeHour = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d_%H-%M-%S')
 
 print(TAG+'data/hora: '+ str(timeHour))
 
