@@ -11,6 +11,7 @@ def plotModel (database, name, controllerType):
     name = name.replace(":","-")
     
     TEMP = 23
+    TEMP_EMPTY_ROOM = 25
     
     if(controllerType == 0):
         title = 'Identificacao do Modelo'
@@ -42,6 +43,7 @@ def plotModel (database, name, controllerType):
     numPeople = []
     numPeopleReal = []
     nPeopleReal = 2
+    doorSignal = []
     
     inferior = []
     superior = []
@@ -49,9 +51,9 @@ def plotModel (database, name, controllerType):
     for line in data:
         
         time = line[0].decode("utf-8")
-        time = time.split(" ")
+        time = time.split("_")
         time = time[1]
-        timeAux = time.split(":")
+        timeAux = time.split("-")
         hour = timeAux[0]
         min = timeAux[1]
         
@@ -64,10 +66,17 @@ def plotModel (database, name, controllerType):
             tempLara.append(line[3])
             tempLaraAnterior = line[3]
         tempExternal.append(line[4])
-        reference.append(TEMP)
+        doorSignal.append(line[5])
+        if(int(line[6])!=0):
+            reference.append(TEMP)
+        else:
+            reference.append(TEMP_EMPTY_ROOM)
         inferior.append(22.5)
         superior.append(23.5)
+        #if(int(line[6]) < 6):
         numPeople.append(line[6])
+        #else:
+            #numPeople.append(6)
         compressorSignal.append(line[7])
         isOn.append(line[8])
         dutyCycle.append(line[9])
@@ -178,7 +187,7 @@ def plotModel (database, name, controllerType):
     
         plt.figure()
         plt.plot(dateTime[1:], numPeople[1:])
-        #plt.plot(dateTime[1:], numPeopleReal[1:])
+        plt.plot(dateTime[1:], doorSignal[1:])
         plt.title(title)
         plt.ylabel("Numero de Pessoas")
         plt.xlabel("Horario")

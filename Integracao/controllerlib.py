@@ -114,6 +114,7 @@ def Controller(lastOutput, cont):
         PERIOD = 60 * 4
 
         TEMP = 23.0
+        TEMP_EMPTY_ROOM = 25.0
 
         Kp = 0.12
         Ki = 13 * Kp;
@@ -130,20 +131,35 @@ def Controller(lastOutput, cont):
             
             cont = cont + 1
             
-            # PI
-            piController = PID (-Kp, -Ki, 0, setpoint = TEMP)
-            
-            # Erro: diferenca entre temperatura desejada e medida
-            error = float(settings.tempMeetingRoom) - TEMP
-            
+    
             # Sinal de controle
-            controllerSignal = piController(float(settings.tempMeetingRoom))
-            print(TAG + "Controller Signal Original: " + str(controllerSignal))
             nPeople = settings.cntUp-settings.cntDown + settings.inicialNumPeople
-            controllerSignal = controllerSignal + nPeople*0.01
             print(TAG + "People: " + str(nPeople))
-            print(TAG + "Controller Signal Feedforward: " + str(controllerSignal))
+            if(nPeople != 0):
+                print(TAG + "TEMP: " + str(TEMP))
+                
+                # PI
+                piController = PID (-Kp, -Ki, 0, setpoint = TEMP)
             
+                # Erro: diferenca entre temperatura desejada e medida
+                error = float(settings.tempMeetingRoom) - TEMP
+                
+                controllerSignal = piController(float(settings.tempMeetingRoom))
+                print(TAG + "Controller Signal Original: " + str(controllerSignal))
+                
+                controllerSignal = controllerSignal + nPeople*0.01
+                print(TAG + "Controller Signal Feedforward: " + str(controllerSignal))
+            else:
+                print(TAG + "TEMP: " + str(TEMP_EMPTY_ROOM))
+                
+                # PI
+                piController = PID (-Kp, -Ki, 0, setpoint = TEMP_EMPTY_ROOM)
+            
+                # Erro: diferenca entre temperatura desejada e medida
+                error = float(settings.tempMeetingRoom) - TEMP_EMPTY_ROOM
+                
+                controllerSignal = piController(float(settings.tempMeetingRoom))
+                print(TAG + "Controller Signal Original: " + str(controllerSignal))
 
             # Saturacao
             if (controllerSignal>0.3):

@@ -15,6 +15,7 @@ import numpy as np
 import cv2
 import personlib
 import time
+import datetime
 import sys
 import os
 
@@ -44,8 +45,8 @@ def PeopleCounter(cntUp, cntDown, name, saveResults):
     h = 240
     frameArea = h*w
     #areaTH = frameArea/250
-    areaTH = frameArea/50
-    areaTHSuperior = frameArea/4
+    areaTH = frameArea/60
+    areaTHSuperior = frameArea/3
     print(TAG+'threshold:'+str(areaTH))
 
     # Define up and down line
@@ -70,7 +71,7 @@ def PeopleCounter(cntUp, cntDown, name, saveResults):
     (ptsL1, ptsL2, ptsL3, ptsL4) = calculateLinePoints(pt1, pt2, pt3, pt4, pt5, pt6, pt7, pt8)
 
     # Creates the backgroud subtractor
-    fgbg = cv2.createBackgroundSubtractorMOG2(history = 1000, varThreshold = 32, detectShadows = False)
+    fgbg = cv2.createBackgroundSubtractorMOG2(history = 500, varThreshold = 16, detectShadows = False)
 
     # Necessary to apply filters and morfological transforms
     kernelOp = np.ones((5,5),np.uint8)
@@ -152,9 +153,8 @@ def PeopleCounter(cntUp, cntDown, name, saveResults):
         timestamp = time.time()
         dateTime = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d_%H-%M-%S')
         
-        time = dateTime.split('_')[1]
-        hour = dateTime.split('-')[0]
-        print(TAG + 'Hour: ' + str(hour))
+        dateTimeHour = dateTime.split('_')[1]
+        hour = dateTimeHour.split('-')[0]
         
         if(cntUp - cntDown + settings.initialNumPeople < 0):
             cntUp = settings.cntUp;
@@ -162,11 +162,8 @@ def PeopleCounter(cntUp, cntDown, name, saveResults):
             
         nightHours = ['23', '00', '01', '02', '03', '04', '05', '06']
         if(hour in nightHours):
-            if(cntUp != cntDown):
-                if(cntUp > cntDown):
-                    cntDown = cntUp
-                else:
-                    cntUp = cntDown
+            if(settings.initialNumPeople != cntDown - cntUp):
+                cntDown = cntUp + settings.initialNumPeople
         
         # Drawing tracking
         drawTrack(frame, persons, cntUp, cntDown, lineDownColor, lineUpColor, ptsL1, ptsL2, ptsL3, ptsL4, saveResults, path, videoName, cont)
