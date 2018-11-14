@@ -15,7 +15,7 @@ def init():
     compressorSignal = 0
     dutyCycle = 0
     isOn = 0
-    inicialNumPeople = 4
+    inicialNumPeople = 2
 
     # Tipos de Controladores
     # 0 -> Identificacao do Modelo

@@ -147,7 +147,7 @@ def Controller(lastOutput, cont):
                 controllerSignal = piController(float(settings.tempMeetingRoom))
                 print(TAG + "Controller Signal Original: " + str(controllerSignal))
                 
-                controllerSignal = controllerSignal + nPeople*0.01
+                controllerSignal = controllerSignal + nPeople*0.02
                 print(TAG + "Controller Signal Feedforward: " + str(controllerSignal))
             else:
                 print(TAG + "TEMP: " + str(TEMP_EMPTY_ROOM))
