@@ -39,6 +39,7 @@ def plotModel (database, name, controllerType):
     error = []
     cont = 0
     tempLaraAnterior = 0.0
+    tempExternalAnterior = 0.0
     contArray = []
     numPeople = []
     numPeopleReal = []
@@ -60,12 +61,19 @@ def plotModel (database, name, controllerType):
         dateTime.append(time)
         tempMeetingRoom.append(line[1])
         humMeetingRoom.append(line[2])
+        
         if(math.isnan(float(line[3])) or line[3]=='nan'):
             tempLara.append(tempLaraAnterior)
         else:
             tempLara.append(line[3])
             tempLaraAnterior = line[3]
-        tempExternal.append(line[4])
+            
+        if(math.isnan(float(line[4])) or line[4]=='nan'):
+            tempExternal.append(tempExternalAnterior)
+        else:
+            tempExternal.append(line[4])
+            tempExternalAnterior = line[4]
+            
         doorSignal.append(line[5])
         if(int(line[6])!=0):
             reference.append(TEMP)
