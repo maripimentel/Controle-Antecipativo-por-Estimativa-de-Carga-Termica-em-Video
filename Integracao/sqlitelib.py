@@ -60,6 +60,23 @@ def ReadTable(database):
 	    cont = cont + 1
 	return data
 
+# Read all data from the table
+def ReadTableIdent(database):
+	TAG = '(sqlite) '
+	cursor = database.cursor()
+	try:
+		cursor.execute('''SELECT dataHora,tempSala,humSala,tempVizinha,tempExterna,sinalCompressor FROM informacaoSala''')
+	except Exception as e:
+		print(TAG+'Falha ao ler os dados')
+	# Prints each line information
+	data = cursor.fetchall()
+	cont = 0
+	for line in data:
+	    print(TAG+'Coluna[{0}] -> dataHora:{1} | tempSala:{2} | humSala:{3} | tempVizinha:{4} | tempExterna:{5} | sinalCompressor:{6}'.format(cont, line[0], line[1], line[2], line[3], line[4], line[5]))
+	    cont = cont + 1
+	return data
+
+
 # Close the table
 def CloseTable(database):
 	database.close()
@@ -125,6 +142,8 @@ def readTempHumDoor(tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doo
     print(TAG + "Sinal da Porta: " + str(doorSignal))
 
     settings.tempMeetingRoom = tempMeetingRoom
+    settings.tempLara = tempLara
+    settings.tempExternal = tempExternal
 
     readOk = True
             

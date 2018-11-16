@@ -5,8 +5,11 @@ import math
 # coding=utf-8
 
 def plotModel (database, name, controllerType):
-    data = ReadTable(database)
-    
+    if(controllerType != 0):
+        data = ReadTable(database)
+    else:
+        data = ReadTableIdent(database)
+        
     name = name.replace(" ","_")
     name = name.replace(":","-")
     
@@ -52,6 +55,10 @@ def plotModel (database, name, controllerType):
     for line in data:
         
         time = line[0].decode("utf-8")
+        
+        time = time.replace(" ","_")
+        time = time.replace(":","-")
+    
         time = time.split("_")
         time = time[1]
         timeAux = time.split("-")
@@ -73,23 +80,24 @@ def plotModel (database, name, controllerType):
         else:
             tempExternal.append(line[4])
             tempExternalAnterior = line[4]
-            
-        doorSignal.append(line[5])
-        if(int(line[6])!=0):
-            reference.append(TEMP)
-        else:
-            reference.append(TEMP_EMPTY_ROOM)
-        inferior.append(22.5)
-        superior.append(23.5)
+        
+        if(controllerType != 0):
+            doorSignal.append(line[5])
+            if(int(line[6])!=0 or controllerType!=3):
+                reference.append(TEMP)
+            else:
+                reference.append(TEMP_EMPTY_ROOM)
+            inferior.append(22.5)
+            superior.append(23.5)
         #if(int(line[6]) < 6):
-        numPeople.append(line[6])
+            numPeople.append(line[6])
         #else:
             #numPeople.append(6)
-        compressorSignal.append(line[7])
-        isOn.append(line[8])
-        dutyCycle.append(line[9])
-        error.append(line[1]-TEMP)
-        contArray.append(cont)
+            compressorSignal.append(line[7])
+            isOn.append(line[8])
+            dutyCycle.append(line[9])
+            error.append(line[1]-TEMP)
+            contArray.append(cont)
 ##        
 ##        if(hour=='10' and (min == '10' or min == '11')):
 ##            nPeopleReal = 3
@@ -153,18 +161,31 @@ def plotModel (database, name, controllerType):
 ##            nPeopleReal = 0
             
 ##        numPeopleReal.append(nPeopleReal)
-        
+        else:
+            compressorSignal.append(line[5])
+            
         if(cont == 0 or cont%170 == 0):
             dateTimeClean.append(str(int(hour))+":00")
+            
+            if(cont == 0):
+                hourInitial = hour
+            else:
+                if(hour == hourInitial):
+                    cont = cont + 1
+                    break
+                
         cont = cont+1
     
     plt.figure()
     plt.plot(dateTime[1:], tempMeetingRoom[1:])
     plt.plot(dateTime[1:], tempLara[1:])
     plt.plot(dateTime[1:], tempExternal[1:])
-    plt.plot(dateTime[1:], reference[1:])
-    plt.legend(("Temperatura da Sala de Reuniao", "Temperatura do Lara", "Temperatura Externa", "Referencia"), loc='upper right')
-    plt.title(title)
+    if(controllerType != 0):
+        plt.plot(dateTime[1:], reference[1:])
+        plt.legend(("Temperatura da Sala de Reuniao", "Temperatura do Lara", "Temperatura Externa", "Referencia"), loc='upper right')
+    else:
+        plt.legend(("Temperatura da Sala de Reuniao", "Temperatura do Lara", "Temperatura Externa"), loc='upper right')
+    plt.title(title + " - Temperatura")
     plt.ylabel("Temperatura")
     plt.xlabel("Horario")
     plt.xticks(range(0, cont, 170), dateTimeClean)
@@ -185,7 +206,7 @@ def plotModel (database, name, controllerType):
             plt.legend(("Sinal de Controle", "Ciclo de Trabalho", "Estado do Sistema"), loc='lower left')
         else:
             plt.legend(("Sinal de Controle", "Estado do Sistema"), loc='lower left')
-        plt.title(title)
+        plt.title(title + " - Acionamento")
         plt.ylabel("Sinal")
         plt.xlabel("Horario")
         plt.xticks(range(0, cont, 170), dateTimeClean)
@@ -195,15 +216,40 @@ def plotModel (database, name, controllerType):
     
         plt.figure()
         plt.plot(dateTime[1:], numPeople[1:])
-        plt.plot(dateTime[1:], doorSignal[1:])
-        plt.title(title)
+        plt.title(title + " - Contagem de Pessoas")
         plt.ylabel("Numero de Pessoas")
         plt.xlabel("Horario")
         plt.xticks(range(0, cont, 170), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_People.png")
         plt.show()
-
+        
+        plt.figure()
+        plt.plot(dateTime[1:], doorSignal[1:])
+        plt.title(title + " - Sinal da Porta")
+        plt.ylabel("Sinal")
+        plt.xlabel("Horario")
+        plt.xticks(range(0, cont, 170), dateTimeClean)
+        plt.grid(True)
+        plt.savefig("Log/"+save+"_"+name+"_Door.png")
+        plt.show()
+    
+    else:
+        plt.figure()
+        plt.plot(dateTime[1:], compressorSignal[1:])
+        plt.title(title + " - Acionamento")
+        plt.ylabel("Sinal")
+        plt.xlabel("Horario")
+        plt.xticks(range(0, cont, 170), dateTimeClean)
+        plt.grid(True)
+        plt.savefig("Log/"+save+"_"+name+"_Signal.png")
+        plt.show()
+        
+    mediaExternal = sum(tempExternal)/float(len(tempExternal))
+    mediaLara = sum(tempLara)/float(len(tempLara))
+    
+    print("Temperatura Externa: " + str(mediaExternal))
+    print("Temperatura Lara: " + str(mediaLara))
     
 
         

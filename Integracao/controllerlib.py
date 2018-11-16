@@ -73,7 +73,7 @@ def Controller(lastOutput, cont):
         TEMP = 23.0
 
         Kp = 0.12
-        Ki = 13 * Kp;
+        Ki = 13 * Kp
         
         if(cont > 3 * 15):        
             settings.isOn = 0
@@ -111,18 +111,20 @@ def Controller(lastOutput, cont):
         #Antecipativo
         print(TAG + "Controlador: Antecipativo")
 
-        PERIOD = 60 * 4
+        PERIOD = 60 * 2
 
         TEMP = 23.0
         TEMP_EMPTY_ROOM = 25.0
 
         Kp = 0.12
-        Ki = 13 * Kp;
+        Ki = 13 * Kp
         
-        if(cont > 3 * 15):        
+        SAT = 0.2
+        
+        if(cont > 3 * 30):        
             settings.isOn = 0
             output = 0
-            if (cont == 4 * 15):
+            if (cont == 4 * 30):
                 cont = 1
             else:
                 cont = cont + 1
@@ -147,8 +149,51 @@ def Controller(lastOutput, cont):
                 controllerSignal = piController(float(settings.tempMeetingRoom))
                 print(TAG + "Controller Signal Original: " + str(controllerSignal))
                 
-                controllerSignal = controllerSignal + nPeople*0.02
+                controllerSignal = controllerSignal + nPeople*SAT*2/30
                 print(TAG + "Controller Signal Feedforward: " + str(controllerSignal))
+                
+                tempLara = float(settings.tempLara)
+                tempExternal = float(settings.tempExternal)
+                
+                print(TAG + "TE: " + str(tempExternal) + "   TL: " + str(tempLara))
+                
+                # Fuzzy
+                if(tempExternal > 29 and tempLara > 29):
+                    print(TAG + "Fuzzy 1")
+                    controllerSignal = controllerSignal + SAT*10/30
+                elif(tempExternal > 29 and tempLara > 26):
+                    print(TAG + "Fuzzy 2")
+                    controllerSignal = controllerSignal + SAT*8/30
+                elif(tempExternal > 29 and tempLara > 23):
+                    print(TAG + "Fuzzy 3")
+                    controllerSignal = controllerSignal + SAT*6/30
+                elif(tempExternal > 29 and tempLara < 23):
+                    print(TAG + "Fuzzy 3.1")
+                    controllerSignal = controllerSignal + SAT*4/30
+                elif(tempExternal > 26 and tempLara > 29):
+                    print(TAG + "Fuzzy 4")
+                    controllerSignal = controllerSignal + SAT*8/30
+                elif(tempExternal > 26 and tempLara > 26):
+                    print(TAG + "Fuzzy 5")
+                    controllerSignal = controllerSignal + SAT*6/30
+                elif(tempExternal > 26 and tempLara > 23):
+                    print(TAG + "Fuzzy 6")
+                    controllerSignal = controllerSignal + SAT*4/30
+                elif(tempExternal > 26 and tempLara < 23):
+                    print(TAG + "Fuzzy 6.1")
+                    controllerSignal = controllerSignal + SAT*2/30
+                elif(tempExternal > 23 and tempLara > 29):
+                    print(TAG + "Fuzzy 7")
+                    controllerSignal = controllerSignal + SAT*6/30
+                elif(tempExternal > 23 and tempLara > 26):
+                    print(TAG + "Fuzzy 8")
+                    controllerSignal = controllerSignal + SAT*4/30
+                elif(tempExternal > 23 and tempLara > 23):
+                    print(TAG + "Fuzzy 9")
+                    controllerSignal = controllerSignal + SAT*2/30
+                
+                print(TAG + "Controller Signal Fuzzy: " + str(controllerSignal))
+                
             else:
                 print(TAG + "TEMP: " + str(TEMP_EMPTY_ROOM))
                 
@@ -162,12 +207,12 @@ def Controller(lastOutput, cont):
                 print(TAG + "Controller Signal Original: " + str(controllerSignal))
 
             # Saturacao
-            if (controllerSignal>0.3):
-                    controllerSignal = 0.3;
+            if (controllerSignal>SAT):
+                    controllerSignal = SAT;
             elif (controllerSignal < 0):
                     controllerSignal = 0;
 
-            output = controllerSignal * 100.0 / 0.3;
+            output = controllerSignal * 100.0 / SAT;
             
             print(TAG + "Controller Signal: " + str(output))
         
@@ -186,12 +231,12 @@ def PWM(output, PERIOD, TAG):
     
     percentage = float(output)/float(OUTPUT_MAX)
     
-    if percentage > 0.9:
+    if percentage > 0.8:
         percentage = 1
     elif percentage <= 0:
         percentage = 0
-    elif percentage < 0.1:
-        percentage = 0.1
+    elif percentage < 0.2:
+        percentage = 0.2
     
     settings.dutyCycle = percentage
     
