@@ -160,38 +160,41 @@ def Controller(lastOutput, cont):
                 # Fuzzy
                 if(tempExternal > 29 and tempLara > 29):
                     print(TAG + "Fuzzy 1")
-                    controllerSignal = controllerSignal + SAT*10/30
+                    controllerSignal = controllerSignal + SAT*15/30
                 elif(tempExternal > 29 and tempLara > 26):
                     print(TAG + "Fuzzy 2")
-                    controllerSignal = controllerSignal + SAT*8/30
+                    controllerSignal = controllerSignal + SAT*13/30
                 elif(tempExternal > 29 and tempLara > 23):
                     print(TAG + "Fuzzy 3")
-                    controllerSignal = controllerSignal + SAT*6/30
+                    controllerSignal = controllerSignal + SAT*11/30
                 elif(tempExternal > 29 and tempLara < 23):
                     print(TAG + "Fuzzy 3.1")
-                    controllerSignal = controllerSignal + SAT*4/30
+                    controllerSignal = controllerSignal + SAT*9/30
                 elif(tempExternal > 26 and tempLara > 29):
                     print(TAG + "Fuzzy 4")
-                    controllerSignal = controllerSignal + SAT*8/30
+                    controllerSignal = controllerSignal + SAT*13/30
                 elif(tempExternal > 26 and tempLara > 26):
                     print(TAG + "Fuzzy 5")
-                    controllerSignal = controllerSignal + SAT*6/30
+                    controllerSignal = controllerSignal + SAT*11/30
                 elif(tempExternal > 26 and tempLara > 23):
                     print(TAG + "Fuzzy 6")
-                    controllerSignal = controllerSignal + SAT*4/30
+                    controllerSignal = controllerSignal + SAT*9/30
                 elif(tempExternal > 26 and tempLara < 23):
                     print(TAG + "Fuzzy 6.1")
-                    controllerSignal = controllerSignal + SAT*2/30
+                    controllerSignal = controllerSignal + SAT*7/30
                 elif(tempExternal > 23 and tempLara > 29):
                     print(TAG + "Fuzzy 7")
-                    controllerSignal = controllerSignal + SAT*6/30
+                    controllerSignal = controllerSignal + SAT*11/30
                 elif(tempExternal > 23 and tempLara > 26):
                     print(TAG + "Fuzzy 8")
-                    controllerSignal = controllerSignal + SAT*4/30
+                    controllerSignal = controllerSignal + SAT*9/30
                 elif(tempExternal > 23 and tempLara > 23):
                     print(TAG + "Fuzzy 9")
-                    controllerSignal = controllerSignal + SAT*2/30
-                
+                    controllerSignal = controllerSignal + SAT*7/30
+                elif(tempExternal > 23 and tempLara < 23):
+                    print(TAG + "Fuzzy 9.1")
+                    controllerSignal = controllerSignal + SAT*3/30
+            
                 print(TAG + "Controller Signal Fuzzy: " + str(controllerSignal))
                 
             else:

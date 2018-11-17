@@ -23,7 +23,7 @@ def data():
     database = InicializeDatabase(str(timeHour))
     CreateTable(database)
     
-    initialNumPeople = 3
+    initialNumPeople = 2
     
     settings.initialNumPeople = initialNumPeople
     
