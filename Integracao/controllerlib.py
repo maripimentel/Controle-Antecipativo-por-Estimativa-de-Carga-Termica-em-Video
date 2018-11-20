@@ -160,16 +160,16 @@ def Controller(lastOutput, cont):
                 # Fuzzy
                 if(tempExternal > 29 and tempLara > 29):
                     print(TAG + "Fuzzy 1")
-                    controllerSignal = controllerSignal + SAT*15/30
+                    controllerSignal = controllerSignal + SAT*22/30
                 elif(tempExternal > 29 and tempLara > 26):
                     print(TAG + "Fuzzy 2")
-                    controllerSignal = controllerSignal + SAT*13/30
+                    controllerSignal = controllerSignal + SAT*20/30
                 elif(tempExternal > 29 and tempLara > 23):
                     print(TAG + "Fuzzy 3")
-                    controllerSignal = controllerSignal + SAT*11/30
+                    controllerSignal = controllerSignal + SAT*18/30
                 elif(tempExternal > 29 and tempLara < 23):
                     print(TAG + "Fuzzy 3.1")
-                    controllerSignal = controllerSignal + SAT*9/30
+                    controllerSignal = controllerSignal + SAT*16/30
                 elif(tempExternal > 26 and tempLara > 29):
                     print(TAG + "Fuzzy 4")
                     controllerSignal = controllerSignal + SAT*13/30

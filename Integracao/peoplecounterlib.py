@@ -71,7 +71,7 @@ def PeopleCounter(cntUp, cntDown, name, saveResults):
     (ptsL1, ptsL2, ptsL3, ptsL4) = calculateLinePoints(pt1, pt2, pt3, pt4, pt5, pt6, pt7, pt8)
 
     # Creates the backgroud subtractor
-    fgbg = cv2.createBackgroundSubtractorMOG2(history = 500, varThreshold = 16, detectShadows = False)
+    fgbg = cv2.createBackgroundSubtractorMOG2(history = 500, varThreshold = 16, detectShadows = True)
 
     # Necessary to apply filters and morfological transforms
     kernelOp = np.ones((5,5),np.uint8)

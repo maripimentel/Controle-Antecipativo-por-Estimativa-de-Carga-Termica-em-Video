@@ -42,7 +42,8 @@ controllerType = 3
 # name = '2018-11-15_19-45-00_02'
 # name = '2018-11-16_13-32-54_02'
 # name = '2018-11-16_16-40-57_04'
-name = '2018-11-16_16-40-57'
+# name = '2018-11-17_17-12-29_01'
+name = '2018-11-19_09-42-35'
 
 database = InicializeDatabase(name)
 plotModel(database, name, controllerType)
