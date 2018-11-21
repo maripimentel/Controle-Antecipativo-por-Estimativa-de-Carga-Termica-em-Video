@@ -1,4 +1,6 @@
+# coding=utf-8
 import matplotlib.pyplot as plt
+import matplotlib
 from sqlitelib import *
 import math
 
@@ -176,22 +178,63 @@ def plotModel (database, name, controllerType):
                 
         cont = cont+1
     
+    N = 15
+    cumsum, movingAves = [0], []
+    
+    for i, x in enumerate(tempMeetingRoom, 1):
+        cumsum.append(cumsum[i-1] + x)
+        if i>=N:
+            movingAve = (cumsum[i] - cumsum[i-N])/N
+            movingAves.append(movingAve)
+    
+    integralE = 0
+    integralL = 0
+    integralError = 0
+    for i in range(len(tempExternal)):
+        tempE = tempExternal[i]
+        tempL = tempLara[i]
+        e = error[i]
+        
+        if(tempE > 23):
+            integralE = integralE + (tempE - 23)
+        if(tempL > 23):
+            integralL = integralL + (tempL - 23)
+            
+        if(e > 0):
+            integralError = integralError + e
+        else:
+            integralError = integralError - e
+    
+    #matplotlib.rc('text', usetex=True)
+    #matplotlib.rc('font', family='Arial')
     plt.figure()
     plt.plot(dateTime[1:], tempMeetingRoom[1:])
-    plt.plot(dateTime[1:], tempLara[1:])
-    plt.plot(dateTime[1:], tempExternal[1:])
+    plt.plot(dateTime[15:], movingAves[1:])
     if(controllerType != 0):
         plt.plot(dateTime[1:], reference[1:])
-        plt.legend(("Temperatura da Sala de Reuniao", "Temperatura do Lara", "Temperatura Externa", "Referencia"), loc='upper right')
+        plt.legend((r"$Temperatura\ da\ Sala\ de\ Reuni\~ao$", r"$M\'e dia\ M\'ovel\ da\ Temperatura$", r"$Refer\^encia$"), loc='upper right')
     else:
-        plt.legend(("Temperatura da Sala de Reuniao", "Temperatura do Lara", "Temperatura Externa"), loc='upper right')
+        plt.legend((r"$Temperatura\ da\ Sala\ de\ Reuni\~ao$", r"$M\'edia\ M\'ovel\ da\ Temperatura$"), loc='upper right')
     plt.title(title + " - Temperatura")
-    plt.ylabel("Temperatura")
-    plt.xlabel("Horario")
+    plt.ylabel(r"$Temperatura$")
+    plt.xlabel(r"$Hor\'ario$")
     plt.xticks(range(0, cont, 170), dateTimeClean)
     plt.grid(True)
     plt.savefig("Log/"+save+"_"+name+"_Temp.png")
     plt.show()
+    
+    plt.figure()
+    plt.plot(dateTime[1:], tempLara[1:])
+    plt.plot(dateTime[1:], tempExternal[1:])
+    plt.legend((r"$Temperatura\ da\ Sala\ Vizinha$", r"$Temperatura\ Externa$"), loc='upper right')
+    plt.title(title + " - Perturbacoes de Temperaturas")
+    plt.ylabel(r"$Temperatura$")
+    plt.xlabel(r"$Hor\'ario$")
+    plt.xticks(range(0, cont, 170), dateTimeClean)
+    plt.grid(True)
+    plt.savefig("Log/"+save+"_"+name+"_TempExt.png")
+    plt.show()
+    
     
     if(controllerType != 0):
         plt.figure()
@@ -203,12 +246,12 @@ def plotModel (database, name, controllerType):
         #plt.plot(dateTime[1:], inferior[1:])
         #plt.plot(dateTime[1:], superior[1:])
         if(controllerType != 1):
-            plt.legend(("Sinal de Controle", "Ciclo de Trabalho", "Estado do Sistema"), loc='lower left')
+            plt.legend((r"$Sinal\ de\ Controle$", r"$Ciclo\ de\ Trabalho$", r"$Estado\ do\ Sistema$"), loc='lower left')
         else:
-            plt.legend(("Sinal de Controle", "Estado do Sistema"), loc='lower left')
+            plt.legend((r"$Sinal\ de\ Controle$", r"$Estado\ do\ Sistema$"), loc='lower left')
         plt.title(title + " - Acionamento")
-        plt.ylabel("Sinal")
-        plt.xlabel("Horario")
+        plt.ylabel(r"$Sinal$")
+        plt.xlabel(r"$Hor\'ario$")
         plt.xticks(range(0, cont, 170), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_Signal.png")
@@ -217,8 +260,8 @@ def plotModel (database, name, controllerType):
         plt.figure()
         plt.plot(dateTime[1:], numPeople[1:])
         plt.title(title + " - Contagem de Pessoas")
-        plt.ylabel("Numero de Pessoas")
-        plt.xlabel("Horario")
+        plt.ylabel(r"$N\'umero\ de\ Pessoas$")
+        plt.xlabel(r"$Hor\'ario$")
         plt.xticks(range(0, cont, 170), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_People.png")
@@ -227,8 +270,8 @@ def plotModel (database, name, controllerType):
         plt.figure()
         plt.plot(dateTime[1:], doorSignal[1:])
         plt.title(title + " - Sinal da Porta")
-        plt.ylabel("Sinal")
-        plt.xlabel("Horario")
+        plt.ylabel(r"$Sinal$")
+        plt.xlabel(r"$Hor\'ario$")
         plt.xticks(range(0, cont, 170), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_Door.png")
@@ -238,8 +281,8 @@ def plotModel (database, name, controllerType):
         plt.figure()
         plt.plot(dateTime[1:], compressorSignal[1:])
         plt.title(title + " - Acionamento")
-        plt.ylabel("Sinal")
-        plt.xlabel("Horario")
+        plt.ylabel(r"$Sinal$")
+        plt.xlabel(r"$Hor\'ario$")
         plt.xticks(range(0, cont, 170), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_Signal.png")
@@ -248,8 +291,19 @@ def plotModel (database, name, controllerType):
     mediaExternal = sum(tempExternal)/float(len(tempExternal))
     mediaLara = sum(tempLara)/float(len(tempLara))
     
-    print("Temperatura Externa: " + str(mediaExternal))
-    print("Temperatura Lara: " + str(mediaLara))
+    print("\n\n---------------------------------")
+    print("-------Analise de Dados----------")
+    print("---------------------------------")
     
-
+    print("\n------ Temperatura Externa ------")
+    print("Media: " + str(mediaExternal))
+    print("Integral: " + str(integralE))
+    
+    print("\n-- Temperatura da Sala Vizinha --")
+    print("Media: " + str(mediaLara))
+    print("Integral: " + str(integralL))
+    
+    print("\n-------- Conforto Termico -------")
+    print("Integral do erro: " + str(integralError))
+    
         
