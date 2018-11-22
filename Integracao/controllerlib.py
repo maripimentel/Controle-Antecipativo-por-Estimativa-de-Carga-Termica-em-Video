@@ -44,7 +44,8 @@ def Controller(lastOutput, cont):
         print(TAG + "Contador: " + str(cont))
         print(TAG + "Temperatuda da Sala: "+ str(settings.tempMeetingRoom))
         
-        if (cont >= 3 * 60 * 4):
+        allTimeOn = True
+        if ((not allTimeOn) and cont >= 3 * 60 * 4):
             settings.isOn = 0
             output = 0
             if (cont == 4 * 60 * 4):
@@ -75,7 +76,8 @@ def Controller(lastOutput, cont):
         Kp = 0.12
         Ki = 13 * Kp
         
-        if(cont > 3 * 15):        
+        allTimeOn = True
+        if((not allTimeOn) and cont > 3 * 15):        
             settings.isOn = 0
             output = 0
             if (cont == 4 * 15):
