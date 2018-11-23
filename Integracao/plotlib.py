@@ -18,8 +18,22 @@ def plotModel (database, name, controllerType):
     TEMP = 23
     TEMP_EMPTY_ROOM = 25
     
+    if(name == '2018-11-23_09-51-38_05'):
+        energyTime = ['09-40','10-20','10-52','11-14','11-43','13-22','13-46','14-16','14-36']
+        energyValue = [9041.93,9041.25,9042.61,9042.85,9043.26,9044.82,9045.35,9046.03,9046.46]
+    else:
+        energyTime = []
+        energyValue = []
+    
+    energyHour = []
+    energyMin = []
+    for t in energyTime:
+        t = t.split('-')
+        energyHour.append(t[0])
+        energyMin.append(t[1])
+        
     if(controllerType == 0):
-        title = 'Identificacao do Modelo'
+        title = 'Identificação do Modelo'.decode('utf-8')
         save = 'Ident'
     elif(controllerType == 1):
         title = 'Controlador Liga-Desliga'
@@ -54,6 +68,10 @@ def plotModel (database, name, controllerType):
     inferior = []
     superior = []
     
+    contEnergy = 0
+    
+    energy = []
+    
     for line in data:
         
         time = line[0].decode("utf-8")
@@ -66,6 +84,12 @@ def plotModel (database, name, controllerType):
         timeAux = time.split("-")
         hour = timeAux[0]
         min = timeAux[1]
+        
+        if(len(energyHour)>contEnergy+1):
+            if(int(hour)>energyHour[contEnergy+1] and int(min)>energyMin[contEnergy+1]):
+                contEnergy = contEnergy+1
+        if(len(energyHour)>0):
+            energy.append(energyValue[contEnergy])
         
         dateTime.append(time)
         tempMeetingRoom.append(line[1])
@@ -111,7 +135,7 @@ def plotModel (database, name, controllerType):
 ##            nPeopleReal = 4
 ##        elif(hour=='10' and (min == '51' or min == '52')):
 ##            nPeopleReal = 2
-##        elif(hour=='10' and (min == '55' or min == '56')):
+##        elif(hour=='10' and (min == '55' or min == '170')):
 ##            nPeopleReal = 4
 ##        elif(hour=='11' and (min == '04' or min == '05')):
 ##            nPeopleReal = 5
@@ -166,7 +190,7 @@ def plotModel (database, name, controllerType):
         else:
             compressorSignal.append(line[5])
             
-        if(cont == 0 or cont%56 == 0):
+        if(cont == 0 or cont%170 == 0):
             dateTimeClean.append(str(int(hour))+":00")
             
             if(cont == 0):
@@ -191,63 +215,64 @@ def plotModel (database, name, controllerType):
     integralL = 0
     integralError = 0
     PMV = []
-    for i in range(len(tempExternal)):
-        tempE = tempExternal[i]
-        tempL = tempLara[i]
-        e = error[i]
-        tempR = tempMeetingRoom[i]
+    if(controllerType != 0):
+        for i in range(len(tempExternal)):
+            tempE = tempExternal[i]
+            tempL = tempLara[i]
+            e = error[i]
+            tempR = tempMeetingRoom[i]
+            
+            if(tempE > 23):
+                integralE = integralE + (tempE - 23)
+            if(tempL > 23):
+                integralL = integralL + (tempL - 23)
+                
+            if(e > 0):
+                integralError = integralError + e
+            else:
+                integralError = integralError - e
+                
+            if(tempR < 17):
+                pmv = -1.77
+            elif(tempR < 18):
+                pmv = -1.5
+            elif(tempR < 19):
+                pmv = -1.27
+            elif(tempR < 20):
+                pmv = -1.02
+            elif(tempR < 21):
+                pmv = -0.77
+            elif(tempR < 22):
+                pmv = -0.5
+            elif(tempR < 22.7):
+                pmv = -0.25
+            elif(tempR < 23.3):
+                pmv = 0
+            elif(tempR < 25):
+                pmv = 0.27
+            elif(tempR < 26):
+                pmv = 0.5
+            elif(tempR < 27):
+                pmv = 0.78
+            elif(tempR < 28):
+                pmv = 1
+            elif(tempR < 29):
+                pmv = 1.29
+            elif(tempR < 30):
+                pmv = 1.6
+            else:
+                pmv = 1.8
+                
+            PMV.append(pmv)
+            
+        N = 15
+        cumsum, PMVFilter = [0], []
         
-        if(tempE > 23):
-            integralE = integralE + (tempE - 23)
-        if(tempL > 23):
-            integralL = integralL + (tempL - 23)
-            
-        if(e > 0):
-            integralError = integralError + e
-        else:
-            integralError = integralError - e
-            
-        if(tempR < 17):
-            pmv = -1.77
-        elif(tempR < 18):
-            pmv = -1.5
-        elif(tempR < 19):
-            pmv = -1.27
-        elif(tempR < 20):
-            pmv = -1.02
-        elif(tempR < 21):
-            pmv = -0.77
-        elif(tempR < 22):
-            pmv = -0.5
-        elif(tempR < 22.7):
-            pmv = -0.25
-        elif(tempR < 23.3):
-            pmv = 0
-        elif(tempR < 25):
-            pmv = 0.27
-        elif(tempR < 26):
-            pmv = 0.5
-        elif(tempR < 27):
-            pmv = 0.78
-        elif(tempR < 28):
-            pmv = 1
-        elif(tempR < 29):
-            pmv = 1.29
-        elif(tempR < 30):
-            pmv = 1.6
-        else:
-            pmv = 1.8
-            
-        PMV.append(pmv)
-        
-    N = 15
-    cumsum, PMVFilter = [0], []
-    
-    for i, x in enumerate(PMV, 1):
-        cumsum.append(cumsum[i-1] + x)
-        if i>=N:
-            movingAve = (cumsum[i] - cumsum[i-N])/N
-            PMVFilter.append(movingAve)
+        for i, x in enumerate(PMV, 1):
+            cumsum.append(cumsum[i-1] + x)
+            if i>=N:
+                movingAve = (cumsum[i] - cumsum[i-N])/N
+                PMVFilter.append(movingAve)
     
     
     #matplotlib.rc('text', usetex=True)
@@ -263,7 +288,7 @@ def plotModel (database, name, controllerType):
     plt.title(title + " - Temperatura")
     plt.ylabel(r"$Temperatura$")
     plt.xlabel(r"$Hor\'ario$")
-    plt.xticks(range(0, cont, 56), dateTimeClean)
+    plt.xticks(range(0, cont, 170), dateTimeClean)
     plt.grid(True)
     plt.savefig("Log/"+save+"_"+name+"_Temp.png")
     plt.show()
@@ -275,7 +300,7 @@ def plotModel (database, name, controllerType):
     plt.title(title + " - Perturbacoes de Temperaturas")
     plt.ylabel(r"$Temperatura$")
     plt.xlabel(r"$Hor\'ario$")
-    plt.xticks(range(0, cont, 56), dateTimeClean)
+    plt.xticks(range(0, cont, 170), dateTimeClean)
     plt.grid(True)
     plt.savefig("Log/"+save+"_"+name+"_TempExt.png")
     plt.show()
@@ -287,21 +312,30 @@ def plotModel (database, name, controllerType):
         plt.title(title + " - PMV")
         plt.ylabel(r"$PMV$")
         plt.xlabel(r"$Hor\'ario$")
-        plt.xticks(range(0, cont, 56), dateTimeClean)
+        plt.xticks(range(0, cont, 170), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_PMV.png")
         plt.show()
         
         plt.figure()
-        plt.plot(dateTime[1:], compressorSignal[1:])
-        plt.plot(dateTime[1:], dutyCycle[1:])
-        plt.legend((r"$Sinal\ de\ Controle$", r"$Ciclo\ de\ Trabalho$"), loc='lower left')
-        plt.title(title + " - Acionamento")
-        plt.ylabel(r"$Sinal$")
+        plt.plot(dateTime[15:], PMVFilter[1:])
+        #plt.legend((r"$Sinal\ de\ Controle$", r"$Estado\ do\ Sistema$"), loc='lower left')
+        plt.title(title + " - PMV")
+        plt.ylabel(r"$PMV$")
         plt.xlabel(r"$Hor\'ario$")
-        plt.xticks(range(0, cont, 56), dateTimeClean)
+        plt.xticks(range(0, cont, 170), dateTimeClean)
         plt.grid(True)
-        plt.savefig("Log/"+save+"_"+name+"_Signal.png")
+        plt.savefig("Log/"+save+"_"+name+"_PMV.png")
+        plt.show()
+        
+        plt.figure()
+        plt.plot(dateTime[1:], energy[1:])
+        plt.title(title + " - Consumo")
+        plt.ylabel(r"$Consumo (KWh)$")
+        plt.xlabel(r"$Hor\'ario$")
+        plt.xticks(range(0, cont, 170), dateTimeClean)
+        plt.grid(True)
+        plt.savefig("Log/"+save+"_"+name+"_Energy.png")
         plt.show()
     
         plt.figure()
@@ -309,7 +343,7 @@ def plotModel (database, name, controllerType):
         plt.title(title + " - Contagem de Pessoas")
         plt.ylabel(r"$N\'umero\ de\ Pessoas$")
         plt.xlabel(r"$Hor\'ario$")
-        plt.xticks(range(0, cont, 56), dateTimeClean)
+        plt.xticks(range(0, cont, 170), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_People.png")
         plt.show()
@@ -319,7 +353,7 @@ def plotModel (database, name, controllerType):
         plt.title(title + " - Sinal da Porta")
         plt.ylabel(r"$Sinal$")
         plt.xlabel(r"$Hor\'ario$")
-        plt.xticks(range(0, cont, 56), dateTimeClean)
+        plt.xticks(range(0, cont, 170), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_Door.png")
         plt.show()
@@ -330,7 +364,7 @@ def plotModel (database, name, controllerType):
         plt.title(title + " - Acionamento")
         plt.ylabel(r"$Sinal$")
         plt.xlabel(r"$Hor\'ario$")
-        plt.xticks(range(0, cont, 56), dateTimeClean)
+        plt.xticks(range(0, cont, 170), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_Signal.png")
         plt.show()

@@ -95,18 +95,18 @@ def Controller(lastOutput, cont):
             # Erro: diferenca entre temperatura desejada e medida
             error = float(settings.tempMeetingRoom) - TEMP
             
-            if((error < 0.4 and lastOutput != 100) or error <= -0.2):
+            if((error < 0.3 and lastOutput != 100) or error <= -0.3):
                 # Sinal de controle
                 controllerSignal = piController(float(settings.tempMeetingRoom))
                 print(TAG + "Controller Signal: " + str(controllerSignal))
 
                 # Saturacao
-                if (controllerSignal>0.2):
-                        controllerSignal = 0.2;
+                if (controllerSignal>0.05):
+                        controllerSignal = 0.05;
                 elif (controllerSignal < 0):
                         controllerSignal = 0;
 
-                output = controllerSignal * 100.0 / 0.2;
+                output = controllerSignal * 100.0 / 0.05;
                 
                 print(TAG + "Controller Signal: " + str(output))
             else:
