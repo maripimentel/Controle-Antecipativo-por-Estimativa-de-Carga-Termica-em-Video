@@ -69,7 +69,7 @@ def Controller(lastOutput, cont):
         # PI
         print(TAG + "Controlador: PI")
 
-        PERIOD = 60 * 4
+        PERIOD = 90
 
         TEMP = 23.0
 
@@ -95,20 +95,28 @@ def Controller(lastOutput, cont):
             # Erro: diferenca entre temperatura desejada e medida
             error = float(settings.tempMeetingRoom) - TEMP
             
-            # Sinal de controle
-            controllerSignal = piController(float(settings.tempMeetingRoom))
-            print(TAG + "Controller Signal: " + str(controllerSignal))
+            if((error < 0.4 and lastOutput != 100) or error <= -0.2):
+                # Sinal de controle
+                controllerSignal = piController(float(settings.tempMeetingRoom))
+                print(TAG + "Controller Signal: " + str(controllerSignal))
 
-            # Saturacao
-            if (controllerSignal>0.3):
-                    controllerSignal = 0.3;
-            elif (controllerSignal < 0):
-                    controllerSignal = 0;
+                # Saturacao
+                if (controllerSignal>0.2):
+                        controllerSignal = 0.2;
+                elif (controllerSignal < 0):
+                        controllerSignal = 0;
 
-            output = controllerSignal * 100.0 / 0.3;
+                output = controllerSignal * 100.0 / 0.2;
+                
+                print(TAG + "Controller Signal: " + str(output))
+            else:
+                PERIOD = 15
+                output = 100.0
+                print(TAG + "******* ATENCAO *******")
+                print(TAG + "****CORRIGINDO O PI****")
+                print(TAG + "Controller Signal: " + str(output))
+                    
             
-            print(TAG + "Controller Signal: " + str(output))
-        
     elif(settings.controllerType == 3):
         #Antecipativo
         print(TAG + "Controlador: Antecipativo")
@@ -123,7 +131,8 @@ def Controller(lastOutput, cont):
         
         SAT = 0.2
         
-        if(cont > 3 * 30):        
+        allTimeOn = True
+        if((not allTimeOn) and cont > 3 * 30):        
             settings.isOn = 0
             output = 0
             if (cont == 4 * 30):
@@ -236,12 +245,12 @@ def PWM(output, PERIOD, TAG):
     
     percentage = float(output)/float(OUTPUT_MAX)
     
-    if percentage > 0.8:
+    if percentage > 0.6:
         percentage = 1
     elif percentage <= 0:
         percentage = 0
-    elif percentage < 0.2:
-        percentage = 0.2
+    elif percentage < 0.4:
+        percentage = 0.4
     
     settings.dutyCycle = percentage
     
