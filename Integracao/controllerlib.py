@@ -121,15 +121,15 @@ def Controller(lastOutput, cont):
         #Antecipativo
         print(TAG + "Controlador: Antecipativo")
 
-        PERIOD = 60 * 2
+        PERIOD = 90
 
         TEMP = 23.0
-        TEMP_EMPTY_ROOM = 25.0
+        TEMP_EMPTY_ROOM = 30.0
         
         Kp = 0.12
         Ki = 13 * Kp
         
-        SAT = 0.2
+        SAT = 0.05
         
         allTimeOn = True
         if((not allTimeOn) and cont > 3 * 30):        
@@ -142,8 +142,7 @@ def Controller(lastOutput, cont):
         else:
             settings.isOn = 1
             
-            cont = cont + 1
-            
+            cont = cont + 1    
     
             # Sinal de controle
             nPeople = settings.cntUp-settings.cntDown + settings.inicialNumPeople
@@ -157,57 +156,33 @@ def Controller(lastOutput, cont):
                 # Erro: diferenca entre temperatura desejada e medida
                 error = float(settings.tempMeetingRoom) - TEMP
                 
-                controllerSignal = piController(float(settings.tempMeetingRoom))
-                print(TAG + "Controller Signal Original: " + str(controllerSignal))
-                
-                controllerSignal = controllerSignal + nPeople*SAT*2/30
-                print(TAG + "Controller Signal Feedforward: " + str(controllerSignal))
-                
-                tempLara = float(settings.tempLara)
-                tempExternal = float(settings.tempExternal)
-                
-                print(TAG + "TE: " + str(tempExternal) + "   TL: " + str(tempLara))
-                
-                # Fuzzy
-                if(tempExternal > 29 and tempLara > 29):
-                    print(TAG + "Fuzzy 1")
-                    controllerSignal = controllerSignal + SAT*22/30
-                elif(tempExternal > 29 and tempLara > 26):
-                    print(TAG + "Fuzzy 2")
-                    controllerSignal = controllerSignal + SAT*20/30
-                elif(tempExternal > 29 and tempLara > 23):
-                    print(TAG + "Fuzzy 3")
-                    controllerSignal = controllerSignal + SAT*18/30
-                elif(tempExternal > 29 and tempLara < 23):
-                    print(TAG + "Fuzzy 3.1")
-                    controllerSignal = controllerSignal + SAT*16/30
-                elif(tempExternal > 26 and tempLara > 29):
-                    print(TAG + "Fuzzy 4")
-                    controllerSignal = controllerSignal + SAT*13/30
-                elif(tempExternal > 26 and tempLara > 26):
-                    print(TAG + "Fuzzy 5")
-                    controllerSignal = controllerSignal + SAT*11/30
-                elif(tempExternal > 26 and tempLara > 23):
-                    print(TAG + "Fuzzy 6")
-                    controllerSignal = controllerSignal + SAT*9/30
-                elif(tempExternal > 26 and tempLara < 23):
-                    print(TAG + "Fuzzy 6.1")
-                    controllerSignal = controllerSignal + SAT*7/30
-                elif(tempExternal > 23 and tempLara > 29):
-                    print(TAG + "Fuzzy 7")
-                    controllerSignal = controllerSignal + SAT*11/30
-                elif(tempExternal > 23 and tempLara > 26):
-                    print(TAG + "Fuzzy 8")
-                    controllerSignal = controllerSignal + SAT*9/30
-                elif(tempExternal > 23 and tempLara > 23):
-                    print(TAG + "Fuzzy 9")
-                    controllerSignal = controllerSignal + SAT*7/30
-                elif(tempExternal > 23 and tempLara < 23):
-                    print(TAG + "Fuzzy 9.1")
-                    controllerSignal = controllerSignal + SAT*3/30
-            
-                print(TAG + "Controller Signal Fuzzy: " + str(controllerSignal))
-                
+                if((error < 0.3 and lastOutput != 100) or error <= -0.3):
+                    # Sinal de controle
+                    controllerSignal = piController(float(settings.tempMeetingRoom))
+                    print(TAG + "Controller Signal: " + str(controllerSignal))
+
+                    controllerSignal = controllerSignal + nPeople*SAT*2/30
+                    print(TAG + "Controller Signal Feedforward: " + str(controllerSignal))
+
+                    # Saturacao
+                    if (controllerSignal>0.05):
+                            controllerSignal = 0.05;
+                    elif (controllerSignal < 0):
+                            controllerSignal = 0;
+
+                    output = controllerSignal * 100.0 / 0.05;
+                    
+                    print(TAG + "Controller Signal: " + str(output))
+                    
+                else:
+                    PERIOD = 15
+                    controllerSignal = SAT
+                    output = 100.0
+                    print(TAG + "******* ATENCAO *******")
+                    print(TAG + "****CORRIGINDO O PI****")
+                    print(TAG + "Controller Signal: " + str(output))
+                 
+                    
             else:
                 print(TAG + "TEMP: " + str(TEMP_EMPTY_ROOM))
                 
@@ -247,7 +222,7 @@ def PWM(output, PERIOD, TAG):
     
     if percentage > 0.6:
         percentage = 1
-    elif percentage <= 0:
+    elif percentage <= 0.1:
         percentage = 0
     elif percentage < 0.4:
         percentage = 0.4
