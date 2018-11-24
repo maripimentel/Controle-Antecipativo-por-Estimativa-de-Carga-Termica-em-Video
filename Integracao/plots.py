@@ -49,7 +49,7 @@ name = '2018-10-20_16-44-16' # OFICIAL
 # name = '2018-11-16_16-40-57' # oficial
 # name = '2018-11-17_17-12-29_01'
 # name = '2018-11-19_09-42-35'
-# name = '2018-11-24_09-55-53_06' # 8 HORAS
+# name = '2018-11-24_09-55-53_07' # 8 HORAS
 
 database = InicializeDatabase(name)
 plotModel(database, name, controllerType)

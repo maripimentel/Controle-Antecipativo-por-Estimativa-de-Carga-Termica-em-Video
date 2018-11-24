@@ -206,11 +206,18 @@ def plotModel (database, name, controllerType):
     N = 15
     cumsum, movingAves = [0], []
     
-    for i, x in enumerate(tempMeetingRoom, 1):
+    tempMeetingRoomBig = []
+    for i in range(N-1):
+        tempMeetingRoomBig.append(tempMeetingRoom[1])
+    for i in tempMeetingRoom:
+        tempMeetingRoomBig.append(i)
+    
+    for i, x in enumerate(tempMeetingRoomBig, 1):
         cumsum.append(cumsum[i-1] + x)
         if i>=N:
             movingAve = (cumsum[i] - cumsum[i-N])/N
             movingAves.append(movingAve)
+            
     
     integralE = 0
     integralL = 0
@@ -285,7 +292,7 @@ def plotModel (database, name, controllerType):
     #matplotlib.rc('font', family='Arial')
     plt.figure()
     plt.plot(dateTime[1:], tempMeetingRoom[1:])
-    plt.plot(dateTime[15:], movingAves[1:])
+    plt.plot(dateTime[1:], movingAves[1:])
     if(controllerType != 0):
         plt.plot(dateTime[1:], reference[1:])
         plt.legend((r"$Temperatura\ da\ Sala\ de\ Reuni\~ao$", r"$M\'e dia\ M\'ovel\ da\ Temperatura$", r"$Refer\^encia$"), loc='upper right')
