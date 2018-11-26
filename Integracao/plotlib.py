@@ -227,16 +227,18 @@ def plotModel (database, name, controllerType):
     if(controllerType != 0):
         for i in range(len(tempExternal)):
             tempE = tempExternal[i]
+            isOnNow = isOn[i]
             tempL = tempLara[i]
             e = error[i]
             tempR = tempMeetingRoom[i]
             
-            if(tempE > 23):
-                integralE = integralE + (tempE - 23)  
+            if(isOnNow):
+                if(tempE > 23):
+                    integralE = integralE + (tempE - 23)  
+                    
+                if(tempL > 23):
+                    integralL = integralL + (tempL - 23)
                 
-            if(tempL > 23):
-                integralL = integralL + (tempL - 23)
-            
             if(reference[i] == 23):
                 if(e > 0):
                     integralError = integralError + e
@@ -314,7 +316,7 @@ def plotModel (database, name, controllerType):
     plt.figure()
     plt.plot(dateTime[1:], tempLara[1:])
     plt.plot(dateTime[1:], tempExternal[1:])
-    plt.legend((r"$Temperatura\ da\ Sala\ Vizinha$", r"$Temperatura\ Externa$"), loc='lower right')
+    plt.legend((r"$Temperatura\ da\ Sala\ Vizinha$", r"$Temperatura\ Externa$"), loc='upper left')
     plt.title(title + " - Perturbações de Temperaturas".decode("utf-8"))
     plt.ylabel(r"$Temperatura\ (^o C)$")
     plt.xlabel(r"$Hor\'ario$")
@@ -347,10 +349,11 @@ def plotModel (database, name, controllerType):
         plt.show()
         
         plt.figure()
-        plt.plot(dateTime[1:], compressorSignal[1:])
+        plt.plot(dateTime[1:], compressorSignal[1:], linewidth = 0.5)
         plt.plot(dateTime[1:], dutyCycle[1:])
+        plt.plot(dateTime[1:], isOn[1:])
         plt.title(title + " - Acionamento")
-        plt.legend((r"$Sinal\ de\ Controle$", r"$Ciclo\ de\ Trabalho$"), loc='lower left')
+        plt.legend((r"$Sinal\ de\ Controle$", r"$Ciclo\ de\ Trabalho$", r"$Estado\ do\ Sistema$"), loc='lower left')
         plt.ylabel(r"$Sinal$")
         plt.xlabel(r"$Hor\'ario$")
         plt.xticks(range(0, cont,  170), dateTimeClean)
