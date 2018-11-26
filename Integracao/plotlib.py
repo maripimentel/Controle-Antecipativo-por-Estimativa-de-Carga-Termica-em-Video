@@ -302,7 +302,7 @@ def plotModel (database, name, controllerType):
     plt.plot(dateTime[1:], movingAves[1:])
     if(controllerType != 0):
         plt.plot(dateTime[1:], reference[1:])
-        plt.legend((r"$Temperatura\ da\ Sala\ de\ Reuni\~ao$", r"$M\'e dia\ M\'ovel\ da\ Temperatura$", r"$Refer\^encia$"), loc='upper left')
+        plt.legend((r"$Temperatura\ da\ Sala\ de\ Reuni\~ao$", r"$M\'e dia\ M\'ovel\ da\ Temperatura$", r"$Refer\^encia$"), loc='upper right')
     else:
         plt.legend((r"$Temperatura\ da\ Sala\ de\ Reuni\~ao$", r"$M\'edia\ M\'ovel\ da\ Temperatura$"), loc='upper right')
     plt.title(title + " - Temperatura")
@@ -316,7 +316,7 @@ def plotModel (database, name, controllerType):
     plt.figure()
     plt.plot(dateTime[1:], tempLara[1:])
     plt.plot(dateTime[1:], tempExternal[1:])
-    plt.legend((r"$Temperatura\ da\ Sala\ Vizinha$", r"$Temperatura\ Externa$"), loc='upper left')
+    plt.legend((r"$Temperatura\ da\ Sala\ Vizinha$", r"$Temperatura\ Externa$"), loc='upper right')
     plt.title(title + " - Perturbações de Temperaturas".decode("utf-8"))
     plt.ylabel(r"$Temperatura\ (^o C)$")
     plt.xlabel(r"$Hor\'ario$")
@@ -347,13 +347,16 @@ def plotModel (database, name, controllerType):
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_PPD.png")
         plt.show()
-        
         plt.figure()
         plt.plot(dateTime[1:], compressorSignal[1:], linewidth = 0.5)
-        plt.plot(dateTime[1:], dutyCycle[1:])
+        if(controllerType != 1):
+            plt.plot(dateTime[1:], dutyCycle[1:])
         plt.plot(dateTime[1:], isOn[1:])
         plt.title(title + " - Acionamento")
-        plt.legend((r"$Sinal\ de\ Controle$", r"$Ciclo\ de\ Trabalho$", r"$Estado\ do\ Sistema$"), loc='lower left')
+        if(controllerType != 1):
+            plt.legend((r"$Sinal\ de\ Controle$", r"$Ciclo\ de\ Trabalho$", r"$Estado\ do\ Sistema$"), loc='lower left')
+        else:
+            plt.legend((r"$Sinal\ de\ Controle$", r"$Estado\ do\ Sistema$"), loc='lower left')
         plt.ylabel(r"$Sinal$")
         plt.xlabel(r"$Hor\'ario$")
         plt.xticks(range(0, cont,  170), dateTimeClean)
