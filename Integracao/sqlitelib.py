@@ -61,6 +61,23 @@ def ReadTable(database):
 	return data
 
 # Read all data from the table
+def ReadTableLd(database):
+	TAG = '(sqlite) '
+	cursor = database.cursor()
+	try:
+		cursor.execute('''SELECT dataHora,tempSala,humSala,tempVizinha,tempExterna,sinalPorta,numPessoas,sinalCompressor, estadoLigado FROM informacaoSala''')
+	except Exception as e:
+		print(TAG+'Falha ao ler os dados')
+	# Prints each line information
+	data = cursor.fetchall()
+	cont = 0
+	for line in data:
+	    print(TAG+'Coluna[{0}] -> dataHora:{1} | tempSala:{2} | humSala:{3} | tempVizinha:{4} | tempExterna:{5} | sinalPorta:{6} | numPessoas:{7} | sinalCompressor:{8} | estadoLigado:{9}'.format(cont, line[0], line[1], line[2], line[3], line[4], line[5], line[6], line[7], line[8]))
+	    cont = cont + 1
+	return data
+
+
+# Read all data from the table
 def ReadTableIdent(database):
 	TAG = '(sqlite) '
 	cursor = database.cursor()

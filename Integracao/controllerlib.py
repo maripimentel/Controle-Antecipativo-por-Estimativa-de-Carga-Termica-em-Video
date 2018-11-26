@@ -69,7 +69,7 @@ def Controller(lastOutput, cont):
         # PI
         print(TAG + "Controlador: PI")
 
-        PERIOD = 90
+        PERIOD = 120
 
         TEMP = 23.0
 
@@ -220,12 +220,12 @@ def PWM(output, PERIOD, TAG):
     
     percentage = float(output)/float(OUTPUT_MAX)
     
-    if percentage > 0.6:
+    if percentage > 0.7:
         percentage = 1
-    elif percentage <= 0.1:
+    elif percentage < 0.15:
         percentage = 0
-    elif percentage < 0.4:
-        percentage = 0.4
+    elif percentage < 0.3:
+        percentage = 0.3
     
     settings.dutyCycle = percentage
     
