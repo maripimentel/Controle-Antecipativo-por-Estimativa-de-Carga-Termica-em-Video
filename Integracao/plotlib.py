@@ -117,7 +117,11 @@ def plotModel (database, name, controllerType):
             inferior.append(22.5)
             superior.append(23.5)
         #if(int(line[6]) < 6):
-            numPeople.append(line[6])
+            if(line[6] < 0):
+                numPeople.append(0)
+            else:
+                numPeople.append(line[6])
+            
         #else:
             #numPeople.append(6)
             compressorSignal.append(line[7])
@@ -221,6 +225,7 @@ def plotModel (database, name, controllerType):
     
     integralE = 0
     integralL = 0
+    integralNP = 0
     integralError = 0
     PMV = []
     PPD = []
@@ -231,6 +236,9 @@ def plotModel (database, name, controllerType):
             tempL = tempLara[i]
             e = error[i]
             tempR = tempMeetingRoom[i]
+            npeople = numPeople[i]
+            
+            integralNP = integralNP + npeople
             
             if(isOnNow):
                 if(tempE > 23):
@@ -408,6 +416,9 @@ def plotModel (database, name, controllerType):
         
     mediaExternal = sum(tempExternal)/float(len(tempExternal))
     mediaLara = sum(tempLara)/float(len(tempLara))
+    mediaNP = sum(numPeople)/float(len(numPeople))
+    
+    
     
     print("\n\n---------------------------------")
     print("-------Analise de Dados----------")
@@ -420,6 +431,11 @@ def plotModel (database, name, controllerType):
     print("\n-- Temperatura da Sala Vizinha --")
     print("Media: " + str(mediaLara))
     print("Integral: " + str(integralL))
+    
+    print("\n------- Numero de Pessoas -------")
+    print("Media: " + str(mediaLara))
+    print("Integral: " + str(integralL))
+    
     
     print("\n-------- Conforto Termico -------")
     print("Integral do erro: " + str(integralError))
