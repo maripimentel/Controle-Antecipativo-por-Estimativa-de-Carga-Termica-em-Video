@@ -129,7 +129,7 @@ def Controller(lastOutput, cont):
         Kp = 0.12
         Ki = 13 * Kp
         
-        SAT = 0.05
+        SAT = 0.1
         
         allTimeOn = True
         if((not allTimeOn) and cont > 3 * 30):        
@@ -156,7 +156,7 @@ def Controller(lastOutput, cont):
                 # Erro: diferenca entre temperatura desejada e medida
                 error = float(settings.tempMeetingRoom) - TEMP
                 
-                if((error < 0.3 and lastOutput != 100) or error <= -0.3):
+                if((error < 0.3 and lastOutput != 100) or error <= -0.2):
                     # Sinal de controle
                     controllerSignal = piController(float(settings.tempMeetingRoom))
                     print(TAG + "Controller Signal: " + str(controllerSignal))
@@ -165,12 +165,12 @@ def Controller(lastOutput, cont):
                     print(TAG + "Controller Signal Feedforward: " + str(controllerSignal))
 
                     # Saturacao
-                    if (controllerSignal>0.05):
-                            controllerSignal = 0.05;
+                    if (controllerSignal>0.1):
+                            controllerSignal = 0.1;
                     elif (controllerSignal < 0):
                             controllerSignal = 0;
 
-                    output = controllerSignal * 100.0 / 0.05;
+                    output = controllerSignal * 100.0 / 0.1;
                     
                     print(TAG + "Controller Signal: " + str(output))
                     

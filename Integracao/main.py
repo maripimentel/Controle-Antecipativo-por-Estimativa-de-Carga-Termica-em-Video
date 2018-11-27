@@ -51,7 +51,7 @@ def data():
         print(TAG+'Esta Ligado: '+str(isOn))
 
         InsertData(database, dateTime, tempMeetingRoom, humMeetingRoom, tempLara, tempExternal, doorSignal, numPeople, compressorSignal, isOn, dutyCycle)
-        time.sleep(60)
+        time.sleep(15)
 
 def counter(timeHour, SAVE_RESULTS):
         try:
