@@ -44,7 +44,7 @@ def Controller(lastOutput, cont):
         print(TAG + "Contador: " + str(cont))
         print(TAG + "Temperatuda da Sala: "+ str(settings.tempMeetingRoom))
         
-        allTimeOn = True
+        allTimeOn = False
         if ((not allTimeOn) and cont >= 3 * 60 * 4):
             settings.isOn = 0
             output = 0
@@ -54,10 +54,10 @@ def Controller(lastOutput, cont):
                 cont = cont + 1
         else:
             settings.isOn = 1
-            if(float(settings.tempMeetingRoom) > 23.50):
+            if(float(settings.tempMeetingRoom) > 23.30):
                 print(TAG + "Liga-Desliga: LIGA")
                 output = 100
-            elif(float(settings.tempMeetingRoom) < 22.50):
+            elif(float(settings.tempMeetingRoom) < 22.70):
                 print(TAG + "Liga-Desliga: DESLIGA")
                 output = 0
             else:
@@ -131,11 +131,11 @@ def Controller(lastOutput, cont):
         
         SAT = 0.1
         
-        allTimeOn = True
-        if((not allTimeOn) and cont > 3 * 30):        
+        allTimeOn = False
+        if((not allTimeOn) and cont > 120):        
             settings.isOn = 0
             output = 0
-            if (cont == 4 * 30):
+            if (cont == 160):
                 cont = 1
             else:
                 cont = cont + 1
