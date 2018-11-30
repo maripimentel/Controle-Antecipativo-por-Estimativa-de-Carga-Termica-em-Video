@@ -204,7 +204,7 @@ def plotModel (database, name, controllerType):
         else:
             compressorSignal.append(line[5])
             
-        if(cont == 0 or cont % (170*4) == 0):
+        if(cont == 0 or cont % (170) == 0):
             dateTimeClean.append(str(int(hour))+":00")
             
             if(cont == 0):
@@ -244,6 +244,10 @@ def plotModel (database, name, controllerType):
     PPD = []
     rmse = 0
     contOnTime = 0
+    contOnTimeRef = 0
+    wasOff = True
+    rmsePermanente = 0
+    contOnTimePermanente = 0
     if(controllerType != 0):
         for i in range(len(tempExternal)):
             tempE = tempExternal[i]
@@ -264,12 +268,26 @@ def plotModel (database, name, controllerType):
                     integralL = integralL + (tempL - 23)
                 
                 if(reference[i] == 23):
+                    if(wasOff):
+                        if(tempR < 23.5):
+                            wasOff = False
+                            contOnTimePermanente = contOnTimePermanente + 1
+                            rmsePermanente = rmsePermanente + pow(e,2)
+                    else:
+                        contOnTimePermanente = contOnTimePermanente + 1
+                        rmsePermanente = rmsePermanente + pow(e,2)
+                    
+                    contOnTimeRef = contOnTimeRef + 1
                     rmse = rmse + pow(e,2)
                     if(e > 0):
                         integralError = integralError + e
                     else:
                         integralError = integralError - e
-                    
+                else:
+                    wasOff = True
+            else:
+                wasOff = True
+            
             if(tempR < 17):
                 pmv = -1.77
             elif(tempR < 18):
@@ -348,13 +366,13 @@ def plotModel (database, name, controllerType):
     plt.plot(dateTime[1:], movingAves[1:])
     if(controllerType != 0):
         plt.plot(dateTime[1:], reference[1:])
-        plt.legend((r"$Temperatura\ da\ Sala\ de\ Reuni\~ao$", r"$M\'e dia\ M\'ovel\ da\ Temperatura$", r"$Refer\^encia$"), loc='upper left')
+        plt.legend((r"$Temperatura\ da\ Sala\ de\ Reuni\~ao$", r"$M\'e dia\ M\'ovel\ da\ Temperatura$", r"$Refer\^encia$"), loc='upper right')
     else:
         plt.legend((r"$Temperatura\ da\ Sala\ de\ Reuni\~ao$", r"$M\'edia\ M\'ovel\ da\ Temperatura$"), loc='upper right')
     plt.title(title + " - Temperatura")
     plt.ylabel(r"$Temperatura\ (^o C)$")
     plt.xlabel(r"$Hor\'ario$")
-    plt.xticks(range(0, cont,  (170*4)), dateTimeClean)
+    plt.xticks(range(0, cont,  (170)), dateTimeClean)
     plt.grid(True)
     plt.savefig("Log/"+save+"_"+name+"_Temp.png")
     plt.show()
@@ -362,11 +380,11 @@ def plotModel (database, name, controllerType):
     plt.figure()
     plt.plot(dateTime[1:], tempLara[1:])
     plt.plot(dateTime[1:], tempExternal[1:])
-    plt.legend((r"$Temperatura\ da\ Sala\ Vizinha$", r"$Temperatura\ Externa$"), loc='upper left')
+    plt.legend((r"$Temperatura\ da\ Sala\ Vizinha$", r"$Temperatura\ Externa$"), loc='upper right')
     plt.title(title + " - Perturbações de Temperaturas".decode("utf-8"))
     plt.ylabel(r"$Temperatura\ (^o C)$")
     plt.xlabel(r"$Hor\'ario$")
-    plt.xticks(range(0, cont,  (170*4)), dateTimeClean)
+    plt.xticks(range(0, cont,  (170)), dateTimeClean)
     plt.grid(True)
     plt.savefig("Log/"+save+"_"+name+"_TempExt.png")
     plt.show()
@@ -378,7 +396,7 @@ def plotModel (database, name, controllerType):
         plt.title(title + " - PMV")
         plt.ylabel(r"$PMV$")
         plt.xlabel(r"$Hor\'ario$")
-        plt.xticks(range(0, cont,  (170*4)), dateTimeClean)
+        plt.xticks(range(0, cont,  (170)), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_PMV.png")
         plt.show()
@@ -412,7 +430,7 @@ def plotModel (database, name, controllerType):
         plt.title(title + " - PPD")
         plt.ylabel(r"$PPD$")
         plt.xlabel(r"$Hor\'ario$")
-        plt.xticks(range(0, cont,  (170*4)), dateTimeClean)
+        plt.xticks(range(0, cont,  (170)), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_PPD.png")
         plt.show()
@@ -429,7 +447,7 @@ def plotModel (database, name, controllerType):
             plt.legend((r"$Sinal\ de\ Controle$", r"$Estado\ do\ Sistema$"), loc='lower left')
         plt.ylabel(r"$Sinal$")
         plt.xlabel(r"$Hor\'ario$")
-        plt.xticks(range(0, cont,  (170*4)), dateTimeClean)
+        plt.xticks(range(0, cont,  (170)), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_Signal.png")
         plt.show()
@@ -440,7 +458,7 @@ def plotModel (database, name, controllerType):
             plt.title(title + " - Consumo")
             plt.ylabel(r"$Consumo (KWh)$")
             plt.xlabel(r"$Hor\'ario$")
-            plt.xticks(range(0, cont,  (170*4)), dateTimeClean)
+            plt.xticks(range(0, cont,  (170)), dateTimeClean)
             plt.grid(True)
             plt.savefig("Log/"+save+"_"+name+"_Energy.png")
             plt.show()
@@ -450,7 +468,7 @@ def plotModel (database, name, controllerType):
         plt.title(title + " - Contagem de Pessoas")
         plt.ylabel(r"$N\'umero\ de\ Pessoas$")
         plt.xlabel(r"$Hor\'ario$")
-        plt.xticks(range(0, cont,  (170*4)), dateTimeClean)
+        plt.xticks(range(0, cont,  (170)), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_People.png")
         plt.show()
@@ -460,7 +478,7 @@ def plotModel (database, name, controllerType):
         plt.title(title + " - Sinal da Porta")
         plt.ylabel(r"$Sinal$")
         plt.xlabel(r"$Hor\'ario$")
-        plt.xticks(range(0, cont,  (170*4)), dateTimeClean)
+        plt.xticks(range(0, cont,  (170)), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_Door.png")
         plt.show()
@@ -471,7 +489,7 @@ def plotModel (database, name, controllerType):
         plt.title(title + " - Acionamento")
         plt.ylabel(r"$Sinal$")
         plt.xlabel(r"$Hor\'ario$")
-        plt.xticks(range(0, cont,  (170*4)), dateTimeClean)
+        plt.xticks(range(0, cont,  (170)), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_Signal.png")
         plt.show()
@@ -498,10 +516,14 @@ def plotModel (database, name, controllerType):
     print("Media: " + str(mediaNP))
     print("Integral: " + str(integralNP))
     
-    rmse = pow((rmse/float(contOnTime)),0.5)
-    print(contOnTime)
+    rmseF = pow((rmse/float(contOnTime)),0.5)
+    rmseC = pow((rmse/float(contOnTimeRef)),0.5)
+    rmsePermanente = pow((rmsePermanente/float(contOnTimePermanente)),0.5)
+    
     print("\n-------- Conforto Termico -------")
     print("Integral do erro: " + str(integralError))
-    print("RMSE: "+str(rmse))
+    print("RMSE F: "+str(rmseF))
+    print("RMSE C: "+str(rmseC))
+    print("RMSE P: "+str(rmsePermanente))
     
         

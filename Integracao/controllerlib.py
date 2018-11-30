@@ -131,7 +131,7 @@ def Controller(lastOutput, cont):
         
         SAT = 0.1
         
-        allTimeOn = False
+        allTimeOn = True
         if((not allTimeOn) and cont > 120):        
             settings.isOn = 0
             output = 0
@@ -147,7 +147,8 @@ def Controller(lastOutput, cont):
             # Sinal de controle
             nPeople = settings.cntUp-settings.cntDown + settings.inicialNumPeople
             print(TAG + "People: " + str(nPeople))
-            if(nPeople != 0):
+            dontTurnOff = True
+            if(dontTurnOff or nPeople != 0):
                 print(TAG + "TEMP: " + str(TEMP))
                 
                 # PI
