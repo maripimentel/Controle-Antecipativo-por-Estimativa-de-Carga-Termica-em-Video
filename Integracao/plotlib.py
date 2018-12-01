@@ -87,7 +87,7 @@ def plotModel (database, name, controllerType):
         min = timeAux[1]
         
         if(len(energyHour)>contEnergy+1):
-            if(int(hour)>energyHour[contEnergy+1] and int(min)>energyMin[contEnergy+1]):
+            if(int(hour)>eneryHour[contEnergy+1] and int(min)>energyMin[contEnergy+1]):
                 contEnergy = contEnergy+1
         if(len(energyHour)>0):
             energy.append(energyValue[contEnergy])
@@ -105,8 +105,11 @@ def plotModel (database, name, controllerType):
         if(math.isnan(float(line[4])) or line[4]=='nan'):
             tempExternal.append(tempExternalAnterior)
         else:
-            tempExternal.append(line[4])
-            tempExternalAnterior = line[4]
+            if(int(line[4]) < 27):
+                tempExternal.append(line[4])
+                tempExternalAnterior = line[4]
+            else:
+                tempExternal.append(27+((line[4]-30)/4))
         
         if(controllerType != 0):
             doorSignal.append(line[5])
@@ -123,8 +126,8 @@ def plotModel (database, name, controllerType):
             else:
                 if(line[6] < 0):
                     numPeople.append(0)
-                elif(line[6] > 9):
-                    numPeople.append(9)
+                elif(line[6] > 2):
+                    numPeople.append(2)
                 else:
                     numPeople.append(line[6])
             
@@ -372,7 +375,7 @@ def plotModel (database, name, controllerType):
     plt.title(title + " - Temperatura")
     plt.ylabel(r"$Temperatura\ (^o C)$")
     plt.xlabel(r"$Hor\'ario$")
-    plt.xticks(range(0, cont,  (225)), dateTimeClean)
+    plt.xticks(range(0, cont,  (262)), dateTimeClean)
     plt.grid(True)
     plt.savefig("Log/"+save+"_"+name+"_Temp.png")
     plt.show()
@@ -380,11 +383,11 @@ def plotModel (database, name, controllerType):
     plt.figure()
     plt.plot(dateTime[1:], tempLara[1:])
     plt.plot(dateTime[1:], tempExternal[1:])
-    plt.legend((r"$Temperatura\ da\ Sala\ Vizinha$", r"$Temperatura\ Externa$"), loc='upper right')
+    plt.legend((r"$Temperatura\ da\ Sala\ Vizinha$", r"$Temperatura\ Externa$"), loc='upper left')
     plt.title(title + " - Perturbações de Temperaturas".decode("utf-8"))
     plt.ylabel(r"$Temperatura\ (^o C)$")
     plt.xlabel(r"$Hor\'ario$")
-    plt.xticks(range(0, cont,  (225)), dateTimeClean)
+    plt.xticks(range(0, cont,  (262)), dateTimeClean)
     plt.grid(True)
     plt.savefig("Log/"+save+"_"+name+"_TempExt.png")
     plt.show()
@@ -396,7 +399,7 @@ def plotModel (database, name, controllerType):
         plt.title(title + " - PMV")
         plt.ylabel(r"$PMV$")
         plt.xlabel(r"$Hor\'ario$")
-        plt.xticks(range(0, cont,  (225)), dateTimeClean)
+        plt.xticks(range(0, cont,  (262)), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_PMV.png")
         plt.show()
@@ -430,7 +433,7 @@ def plotModel (database, name, controllerType):
         plt.title(title + " - PPD")
         plt.ylabel(r"$PPD$")
         plt.xlabel(r"$Hor\'ario$")
-        plt.xticks(range(0, cont,  (225)), dateTimeClean)
+        plt.xticks(range(0, cont,  (262)), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_PPD.png")
         plt.show()
@@ -447,7 +450,7 @@ def plotModel (database, name, controllerType):
             plt.legend((r"$Sinal\ de\ Controle$", r"$Estado\ do\ Sistema$"), loc='lower left')
         plt.ylabel(r"$Sinal$")
         plt.xlabel(r"$Hor\'ario$")
-        plt.xticks(range(0, cont,  (225)), dateTimeClean)
+        plt.xticks(range(0, cont,  (262)), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_Signal.png")
         plt.show()
@@ -458,7 +461,7 @@ def plotModel (database, name, controllerType):
             plt.title(title + " - Consumo")
             plt.ylabel(r"$Consumo (KWh)$")
             plt.xlabel(r"$Hor\'ario$")
-            plt.xticks(range(0, cont,  (225)), dateTimeClean)
+            plt.xticks(range(0, cont,  (262)), dateTimeClean)
             plt.grid(True)
             plt.savefig("Log/"+save+"_"+name+"_Energy.png")
             plt.show()
@@ -468,7 +471,7 @@ def plotModel (database, name, controllerType):
         plt.title(title + " - Contagem de Pessoas")
         plt.ylabel(r"$N\'umero\ de\ Pessoas$")
         plt.xlabel(r"$Hor\'ario$")
-        plt.xticks(range(0, cont,  (225)), dateTimeClean)
+        plt.xticks(range(0, cont,  (262)), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_People.png")
         plt.show()
@@ -478,7 +481,7 @@ def plotModel (database, name, controllerType):
         plt.title(title + " - Sinal da Porta")
         plt.ylabel(r"$Sinal$")
         plt.xlabel(r"$Hor\'ario$")
-        plt.xticks(range(0, cont,  (225)), dateTimeClean)
+        plt.xticks(range(0, cont,  (262)), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_Door.png")
         plt.show()
@@ -489,7 +492,7 @@ def plotModel (database, name, controllerType):
         plt.title(title + " - Acionamento")
         plt.ylabel(r"$Sinal$")
         plt.xlabel(r"$Hor\'ario$")
-        plt.xticks(range(0, cont,  (225)), dateTimeClean)
+        plt.xticks(range(0, cont,  (262)), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_Signal.png")
         plt.show()

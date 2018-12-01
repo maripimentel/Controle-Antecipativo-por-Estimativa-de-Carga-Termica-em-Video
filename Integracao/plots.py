@@ -9,7 +9,7 @@ from sqlitelib import *
 # 1 -> Liga-Desliga
 # 2 -> PI
 # 3 -> Antecipativo
-controllerType = 3
+controllerType = 1
 
 # Identificacao
 # name = '2018-10-12 15:44:53'
@@ -30,6 +30,7 @@ controllerType = 3
 # name = '2018-11-21_09-44-52_01'
 #name = '2018-11-05_22-47-36'
 #name = '2018-11-27_19-49-04' # COM PERTURBACAO
+name = '2018-12-01_09-36-33'
 
 # PI
 # name = '2018-10-29 22:16:39'
@@ -55,7 +56,7 @@ controllerType = 3
 # name = '2018-11-19_09-42-35'
 #name = '2018-11-24_09-55-53' 
 #name = '2018-11-27_09-38-54' #8 HORAS OFICIAL
-name = '2018-11-30_09-51-26' # 8 HORAS OFICIAL sem mudar ref
+#name = '2018-11-30_09-51-26' # 8 HORAS OFICIAL sem mudar ref
 
 database = InicializeDatabase(name)
 plotModel(database, name, controllerType)
