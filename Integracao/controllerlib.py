@@ -36,7 +36,7 @@ def Controller(lastOutput, cont):
 
         print(TAG + "Controlador: Liga-Desliga")
 
-        PERIOD = 15 # 10 segundos
+        PERIOD = 27 # 10 segundos
 
         MIN_TEMP = 22.7
         MAX_TEMP = 23.3
@@ -44,7 +44,7 @@ def Controller(lastOutput, cont):
         print(TAG + "Contador: " + str(cont))
         print(TAG + "Temperatuda da Sala: "+ str(settings.tempMeetingRoom))
         
-        allTimeOn = False
+        allTimeOn = True
         if ((not allTimeOn) and cont >= 3 * 60 * 4):
             settings.isOn = 0
             output = 0
