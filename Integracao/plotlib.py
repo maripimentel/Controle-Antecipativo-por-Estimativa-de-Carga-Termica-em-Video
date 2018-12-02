@@ -126,7 +126,7 @@ def plotModel (database, name, controllerType):
             else:
                 if(line[6] < 0):
                     numPeople.append(0)
-                elif(line[6] > 2):
+                elif(line[6] > 9):
                     numPeople.append(2)
                 else:
                     numPeople.append(line[6])
