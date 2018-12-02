@@ -36,7 +36,7 @@ def Controller(lastOutput, cont):
 
         print(TAG + "Controlador: Liga-Desliga")
 
-        PERIOD = 27 # 10 segundos
+        PERIOD = 15 # 10 segundos
 
         MIN_TEMP = 22.7
         MAX_TEMP = 23.3
