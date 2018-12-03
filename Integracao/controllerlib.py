@@ -54,10 +54,10 @@ def Controller(lastOutput, cont):
                 cont = cont + 1
         else:
             settings.isOn = 1
-            if(float(settings.tempMeetingRoom) > 23.50):
+            if(float(settings.tempMeetingRoom) > 23.30):
                 print(TAG + "Liga-Desliga: LIGA")
                 output = 100
-            elif(float(settings.tempMeetingRoom) < 22.50):
+            elif(float(settings.tempMeetingRoom) < 22.70):
                 print(TAG + "Liga-Desliga: DESLIGA")
                 output = 0
             else:
@@ -129,13 +129,13 @@ def Controller(lastOutput, cont):
         Kp = 0.12
         Ki = 13 * Kp
         
-        SAT = 0.05
+        SAT = 0.1
         
-        allTimeOn = True
-        if((not allTimeOn) and cont > 3 * 30):        
+        allTimeOn = False
+        if((not allTimeOn) and cont > 120):        
             settings.isOn = 0
             output = 0
-            if (cont == 4 * 30):
+            if (cont == 160):
                 cont = 1
             else:
                 cont = cont + 1
@@ -147,7 +147,8 @@ def Controller(lastOutput, cont):
             # Sinal de controle
             nPeople = settings.cntUp-settings.cntDown + settings.inicialNumPeople
             print(TAG + "People: " + str(nPeople))
-            if(nPeople != 0):
+            dontTurnOff = False
+            if(dontTurnOff or nPeople != 0):
                 print(TAG + "TEMP: " + str(TEMP))
                 
                 # PI
@@ -156,7 +157,7 @@ def Controller(lastOutput, cont):
                 # Erro: diferenca entre temperatura desejada e medida
                 error = float(settings.tempMeetingRoom) - TEMP
                 
-                if((error < 0.3 and lastOutput != 100) or error <= -0.3):
+                if((error < 0.3 and lastOutput != 100) or error <= -0.2):
                     # Sinal de controle
                     controllerSignal = piController(float(settings.tempMeetingRoom))
                     print(TAG + "Controller Signal: " + str(controllerSignal))
@@ -165,12 +166,12 @@ def Controller(lastOutput, cont):
                     print(TAG + "Controller Signal Feedforward: " + str(controllerSignal))
 
                     # Saturacao
-                    if (controllerSignal>0.05):
-                            controllerSignal = 0.05;
+                    if (controllerSignal>0.1):
+                            controllerSignal = 0.1;
                     elif (controllerSignal < 0):
                             controllerSignal = 0;
 
-                    output = controllerSignal * 100.0 / 0.05;
+                    output = controllerSignal * 100.0 / 0.1;
                     
                     print(TAG + "Controller Signal: " + str(output))
                     
