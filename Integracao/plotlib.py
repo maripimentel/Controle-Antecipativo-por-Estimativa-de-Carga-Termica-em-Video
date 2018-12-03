@@ -17,7 +17,7 @@ def plotModel (database, name, controllerType):
     name = name.replace(":","-")
     
     TEMP = 23
-    TEMP_EMPTY_ROOM = 30
+    TEMP_EMPTY_ROOM = 25
     
     if(name == '2018-11-23_09-51-38_05'):
         energyTime = ['09-40','10-20','10-52','11-14','11-43','13-22','13-46','14-16','14-36']
@@ -105,7 +105,7 @@ def plotModel (database, name, controllerType):
         if(math.isnan(float(line[4])) or line[4]=='nan'):
             tempExternal.append(tempExternalAnterior)
         else:
-            if(int(line[4]) < 25):
+            if(int(line[4]) < 40):
                 tempExternal.append(line[4])
                 tempExternalAnterior = line[4]
             else:
@@ -126,7 +126,7 @@ def plotModel (database, name, controllerType):
             else:
                 if(line[6] < 0):
                     numPeople.append(0)
-                elif(line[6] > 2):
+                elif(line[6] > 9):
                     numPeople.append(2)
                 else:
                     numPeople.append(line[6])
@@ -207,7 +207,7 @@ def plotModel (database, name, controllerType):
         else:
             compressorSignal.append(line[5])
             
-        if(cont == 0 or cont % (225) == 0):
+        if(cont == 0 or cont % (170) == 0):
             dateTimeClean.append(str(int(hour))+":00")
             
             if(cont == 0):
@@ -223,7 +223,7 @@ def plotModel (database, name, controllerType):
 ##                
         cont = cont+1
     
-    N = 15*4
+    N = 15
     cumsum, movingAves = [0], []
     
     tempMeetingRoomBig = []
@@ -375,7 +375,7 @@ def plotModel (database, name, controllerType):
     plt.title(title + " - Temperatura")
     plt.ylabel(r"$Temperatura\ (^o C)$")
     plt.xlabel(r"$Hor\'ario$")
-    plt.xticks(range(0, cont,  (230)), dateTimeClean)
+    plt.xticks(range(0, cont,  (170)), dateTimeClean)
     plt.grid(True)
     plt.savefig("Log/"+save+"_"+name+"_Temp.png")
     plt.show()
@@ -387,7 +387,7 @@ def plotModel (database, name, controllerType):
     plt.title(title + " - Perturbações de Temperaturas".decode("utf-8"))
     plt.ylabel(r"$Temperatura\ (^o C)$")
     plt.xlabel(r"$Hor\'ario$")
-    plt.xticks(range(0, cont,  (230)), dateTimeClean)
+    plt.xticks(range(0, cont,  (170)), dateTimeClean)
     plt.grid(True)
     plt.savefig("Log/"+save+"_"+name+"_TempExt.png")
     plt.show()
@@ -399,7 +399,7 @@ def plotModel (database, name, controllerType):
         plt.title(title + " - PMV")
         plt.ylabel(r"$PMV$")
         plt.xlabel(r"$Hor\'ario$")
-        plt.xticks(range(0, cont,  (230)), dateTimeClean)
+        plt.xticks(range(0, cont,  (170)), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_PMV.png")
         plt.show()
@@ -433,29 +433,30 @@ def plotModel (database, name, controllerType):
         plt.title(title + " - PPD")
         plt.ylabel(r"$PPD$")
         plt.xlabel(r"$Hor\'ario$")
-        plt.xticks(range(0, cont,  (230)), dateTimeClean)
+        plt.xticks(range(0, cont,  (170)), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_PPD.png")
         plt.show()
         plt.figure()
-        plotIsOn = False
-        if(plotIsOn):
-            plt.plot(dateTime[1:], isOn[1:])
+        plotIsOn = True
         if(controllerType != 1):
             plt.plot(dateTime[1:], dutyCycle[1:], linewidth = 0.7)
         else:
             plt.plot(dateTime[1:], compressorSignal[1:], linewidth = 0.5)
+        if(plotIsOn):
+            plt.plot(dateTime[1:], isOn[1:],linewidth = 0.5)
+        
         plt.title(title + " - Acionamento")
         if(controllerType != 1):
             if(plotIsOn):
-                plt.legend((r"$Estado\ do\ Sistema$", r"$Ciclo\ de\ Trabalho$"), loc='upper left')
+                plt.legend((r"$Ciclo\ de\ Trabalho$", r"$Ar-Condicionado\ em\ Uso$"), loc='upper left')
             #else:
                # plt.legend((r"$Ciclo\ de\ Trabalho$"), loc='upper left')
-        #else:
-            #plt.legend((r"$Estado\ do\ Sistema$", r"$Sinal\ de\ Controle$"), loc='lower left')
+        else:
+            plt.legend((r"$Sinal\ de\ Controle$", r"$Ar-Condicionado\ em\ Uso$"), loc='lower left')
         plt.ylabel(r"$Sinal$")
         plt.xlabel(r"$Hor\'ario$")
-        plt.xticks(range(0, cont,  (230)), dateTimeClean)
+        plt.xticks(range(0, cont,  (170)), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_Signal.png")
         plt.show()
@@ -466,7 +467,7 @@ def plotModel (database, name, controllerType):
             plt.title(title + " - Consumo")
             plt.ylabel(r"$Consumo (KWh)$")
             plt.xlabel(r"$Hor\'ario$")
-            plt.xticks(range(0, cont,  (230)), dateTimeClean)
+            plt.xticks(range(0, cont,  (170)), dateTimeClean)
             plt.grid(True)
             plt.savefig("Log/"+save+"_"+name+"_Energy.png")
             plt.show()
@@ -476,7 +477,7 @@ def plotModel (database, name, controllerType):
         plt.title(title + " - Contagem de Pessoas")
         plt.ylabel(r"$N\'umero\ de\ Pessoas$")
         plt.xlabel(r"$Hor\'ario$")
-        plt.xticks(range(0, cont,  (230)), dateTimeClean)
+        plt.xticks(range(0, cont,  (170)), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_People.png")
         plt.show()
@@ -486,7 +487,7 @@ def plotModel (database, name, controllerType):
         plt.title(title + " - Sinal da Porta")
         plt.ylabel(r"$Sinal$")
         plt.xlabel(r"$Hor\'ario$")
-        plt.xticks(range(0, cont,  (230)), dateTimeClean)
+        plt.xticks(range(0, cont,  (170)), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_Door.png")
         plt.show()
@@ -497,7 +498,7 @@ def plotModel (database, name, controllerType):
         plt.title(title + " - Acionamento")
         plt.ylabel(r"$Sinal$")
         plt.xlabel(r"$Hor\'ario$")
-        plt.xticks(range(0, cont,  (230)), dateTimeClean)
+        plt.xticks(range(0, cont,  (170)), dateTimeClean)
         plt.grid(True)
         plt.savefig("Log/"+save+"_"+name+"_Signal.png")
         plt.show()

@@ -9,7 +9,7 @@ from sqlitelib import *
 # 1 -> Liga-Desliga
 ## 2 -> PI
 # 3 -> Antecipativo
-controllerType = 1
+controllerType = 3
 
 # Identificacao
 # name = '2018-10-12 15:44:53'
@@ -31,7 +31,7 @@ controllerType = 1
 #name = '2018-11-05_22-47-36'
 #name = '2018-11-27_19-49-04' # COM PERTURBACAO
 #name = '2018-12-01_09-36-33'
-name = '2018-12-02_09-46-36'
+#name = '2018-12-02_09-46-36'
 
 # PI
 # name = '2018-10-29 22:16:39'
@@ -52,7 +52,7 @@ name = '2018-12-02_09-46-36'
 # name = '2018-11-14_19-29-21'
 # name = '2018-11-15_19-45-00_02'
 # name = '2018-11-16_13-32-54_02'
-#name = '2018-11-16_16-40-57' # oficial
+name = '2018-11-16_16-40-57' # oficial
 # name = '2018-11-17_17-12-29_01'
 # name = '2018-11-19_09-42-35'
 #name = '2018-11-24_09-55-53' 
