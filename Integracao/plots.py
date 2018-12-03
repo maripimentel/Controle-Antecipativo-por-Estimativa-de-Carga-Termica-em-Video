@@ -56,8 +56,8 @@ controllerType = 3
 # name = '2018-11-17_17-12-29_01'
 # name = '2018-11-19_09-42-35'
 #name = '2018-11-24_09-55-53' 
-#name = '2018-11-27_09-38-54' #8 HORAS OFICIAL
-name = '2018-11-30_09-51-26' # 8 HORAS OFICIAL sem mudar ref
+name = '2018-11-27_09-38-54' #8 HORAS OFICIAL
+#name = '2018-11-30_09-51-26' # 8 HORAS OFICIAL sem mudar ref
 #name = '2018-12-02_18-42-01_01'
 
 database = InicializeDatabase(name)

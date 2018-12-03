@@ -17,7 +17,7 @@ def plotModel (database, name, controllerType):
     name = name.replace(":","-")
     
     TEMP = 23
-    TEMP_EMPTY_ROOM = 23
+    TEMP_EMPTY_ROOM = 30
     
     if(name == '2018-11-23_09-51-38_05'):
         energyTime = ['09-40','10-20','10-52','11-14','11-43','13-22','13-46','14-16','14-36']
@@ -322,8 +322,8 @@ def plotModel (database, name, controllerType):
             else:
                 pmv = 1.8
                 
-            if(reference[i] != 23):
-                pmv = 0
+##            if(reference[i] != 23):
+##                pmv = 0
                 
             PMV.append(pmv)
             
