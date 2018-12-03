@@ -35,7 +35,7 @@ tempMeetingRoom = cell2mat(tempMeetingRoom);
 tempMeetingRoom = double(tempMeetingRoom);
 
 dateTime = cell2mat(time);
-dateTime = datetime(dateTime, 'InputFormat', 'yyyy-MM-dd HH:mm:ss');
+%dateTime = datetime(dateTime, 'InputFormat', 'yyyy-MM-dd HH:mm:ss');
 
 compressorSignal = cell2mat(compressorSignal);
 compressorSignal = double(compressorSignal);
@@ -69,6 +69,7 @@ anp = 16.5; %Atraso da influência do nº de pessoas
 
 %Montando estruturas para a simulacao
 rangeData = size(tempMeetingRoom);
+rangeData = rangeData(1);
 
 time = 1:rangeData;
 
@@ -101,7 +102,7 @@ numeroPessoasDetectadas = numeroPessoas;
 
 %Simulacoes (Descomentar o desejado)
 %sim('simulink_ma') %Malha Aberta
-%sim('simulink_ld') %Liga-Desliga
+sim('simulink_ld') %Liga-Desliga
 %sim('simulink_pi') %PI
 %sim('simulink_antecipativo') %Antecipativo
 
@@ -114,7 +115,7 @@ for i = 1:rangeData
 end
 ref = double(ref);
 
-subplot(211);
+subplot(311);
 plot(ref, 'r')
 grid on;
 hold on;
@@ -122,7 +123,7 @@ plot(ScopeData.time,ScopeData.signals.values, 'b');
 
 %Descomentar o desejado
 %title('Malha Aberta');
-%title('Controlador Liga-Desliga');
+title('Controlador Liga-Desliga');
 %title('Controlador PI');
 %title('Controlador Antecipativo');
 
@@ -138,10 +139,18 @@ ylabel('Temperatura (ºC)');
 legend('Referência', 'Temperatura da Sala de Reunião Simulada', 'Média Móvel da Temperatura', 'Temperatura da Sala Vizinha', 'Temperatura Externa');
 
 %No caso de Malha Aberta, comentar esta parte abaixo e a linha 117
-subplot(212);
-plot(numeroPessoas.time, numeroPessoas.signals.values);
+subplot(312);
+stairs(numeroPessoas.time, numeroPessoas.signals.values);
 grid on;
 title('Contagem de Pessoas');
 axis([0 rangeData 0 9]); %Ajustar para ficar visivel
 xlabel('Tempo (min)');
 ylabel('Nº de Pessoas');
+
+subplot(313);
+stairs(ScopeData1.time,ScopeData1.signals.values);
+grid on;
+title('Sinal de controle');
+%axis([0 rangeData 0 9]); %Ajustar para ficar visivel
+xlabel('Sinal');
+ylabel('Tensão (V)');
